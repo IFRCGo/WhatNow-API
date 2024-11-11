@@ -1,0 +1,31 @@
+id: 40986
+name: gdpc-whatnow-rcn-api
+environments:
+    test:
+        cache: gdpc-whatnow-rcn-api-redis
+        database: gdpc-whatnow-rds-secondary
+        memory: 1024
+        cli-memory: 512
+        runtime: 'php-7.4:al2'
+        build:
+            - 'composer install --no-dev'
+            - 'php artisan event:cache'
+    staging:
+        cache: gdpc-whatnow-rcn-api-redis
+        database: gdpc-whatnow-rds-secondary
+        memory: 1024
+        cli-memory: 512
+        runtime: 'php-7.4:al2'
+        build:
+            - 'composer install --no-dev'
+            - 'php artisan event:cache'
+    production:
+        cache: gdpc-whatnow-rcn-api-redis
+        database: gdpc-whatnow-rds-primary
+        storage: static-api.preparecenter.org
+        memory: 1024
+        cli-memory: 512
+        runtime: 'php-7.4:al2'
+        build:
+            - 'composer install --no-dev'
+            - 'php artisan event:cache'

@@ -1,0 +1,94 @@
+image: 3sidedcube/php:7.4
+
+definitions:
+  services:
+    db:
+      image: mysql:8.0.23
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: preparecenter
+        MYSQL_USER: preparecenter
+        MYSQL_PASSWORD: preparecenter
+    stats_db:
+      image: mysql:8.0.23
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: usage_logs
+        MYSQL_USER: preparecenter
+        MYSQL_PASSWORD: preparecenter
+
+pipelines:
+  branches:
+    "{feature/*,bugfix/*,hotfix/*,develop,main}":
+        - step:
+            name: "Install Composer dependencies"
+            caches:
+              - composer
+            script:
+              - "composer self-update"
+              - "composer install --ignore-platform-reqs"
+              - "cp .env.bitbucket-pipelines .env"
+              - "php artisan key:generate"
+            artifacts:
+              - "vendor/**"
+              - ".env"
+        - step:
+            name: "Run the test suite"
+            size: 2x
+            services:
+              - db
+            script:
+              - "sleep 15"
+              - php artisan migrate --seed
+              - php artisan serve &
+              # Planning to integrate PHPCSFixer but not until the codebase is up-to-date, there's a lot of code that will fail linting at the moment
+              # - "vendor/bin/php-cs-fixer fix -v --dry-run --stop-on-violation --using-cache=no"
+              - "vendor/bin/phpunit --verbose"
+  custom:
+    deploy-to-staging:
+      - step:
+          name: Install PHP dependencies
+          image: composer:2
+          caches:
+            - composer
+          artifacts:
+            - vendor/**
+          script:
+            - composer install --no-interaction --prefer-dist --no-suggest --optimize-autoloader
+
+      - step:
+          name: Deploy
+          script:
+            - ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts
+            - cat deploy_known_hosts >> ~/.ssh/known_hosts
+            - (umask 077; echo $DEPLOY_SSH_KEY | base64 -d > ~/.ssh/id_rsa)
+            - tar -czf ~/rcnapi-release.tar.gz .
+            - scp ~/rcnapi-release.tar.gz rcnapi@rcnapi-admin-staging.3sidedcube.com:/home/rcnapi
+            - ssh -T rcnapi@rcnapi-admin-staging.3sidedcube.com <deploy-staging.sh
+    deploy-to-production:
+      - step:
+          name: Install PHP dependencies
+          image: composer:2
+          caches:
+            - composer
+          artifacts:
+            - vendor/**
+          script:
+            - composer install --no-interaction --prefer-dist --no-suggest --optimize-autoloader
+
+      - step:
+          name: Deploy
+          script:
+            - ssh-keyscan -H bitbucket.org >> ~/.ssh/known_hosts
+            - cat deploy_known_hosts >> ~/.ssh/known_hosts
+            - (umask 077; echo $DEPLOY_SSH_KEY | base64 -d > ~/.ssh/id_rsa)
+            - tar -czf ~/rcnapi-release.tar.gz .
+            - scp ~/rcnapi-release.tar.gz ubuntu@52.208.98.220:/home/ubuntu
+            - ssh -T ubuntu@52.208.98.220 < deploy-production.sh
+
+    get-known-host:
+      - step:
+          name: Get known host value
+          script:
+            - ssh-keyscan -H 52.208.98.220 >> ~/.ssh/known_hosts
+            - cat ~/.ssh/known_hosts

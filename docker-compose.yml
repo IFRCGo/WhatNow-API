@@ -1,0 +1,69 @@
+version: "3"
+
+services:
+  mysql:
+    image: 'mysql/mysql-server:8.0'
+    container_name: db
+    ports:
+      - '${FORWARD_DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+    volumes:
+      - 'whatnow-mysql:/var/lib/mysql'
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - whatnow
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
+      retries: 3
+      timeout: 5s
+
+  mysql_stats:
+    image: 'mysql/mysql-server:8.0'
+    container_name: stats_db
+    ports:
+      - '${FORWARD_DB_PORT:-3307}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${STATS_DB_PASSWORD}'
+      MYSQL_DATABASE: '${STATS_DB_DATABASE}'
+      MYSQL_USER: '${STATS_DB_USERNAME}'
+      MYSQL_PASSWORD: '${STATS_DB_PASSWORD}'
+    volumes:
+      - 'whatnow-mysql-stats:/var/lib/mysql'
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - whatnow
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
+      retries: 3
+      timeout: 5s
+
+  # The main php application
+  app:
+    depends_on:
+      - mysql
+      - mysql_stats
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    env_file:
+      - '.env'
+    networks:
+      - whatnow
+    ports:
+      - 8080:80
+    volumes:
+      - .:/var/www/html
+
+networks:
+  whatnow:
+    driver: bridge
+
+volumes:
+  whatnow-mysql:
+    driver: local
+  whatnow-mysql-stats:
+    driver: local
