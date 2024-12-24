@@ -17,7 +17,7 @@ RUN docker-php-ext-install \
     pdo_mysql \
     && a2enmod rewrite
 
-COPY ./docker/vhost.conf /etc/apache2/sites-available/000-default.conf
+COPY vhost.conf /etc/apache2/sites-available/000-default.conf
 COPY . /var/www/html
 RUN mkdir -p storage/framework/sessions
 RUN chmod -R 775 storage
