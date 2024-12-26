@@ -25,5 +25,21 @@ spec:
                       - name: {{ $key }}
                         value: "{{ $value }}"
                     {{- end }}
+                  livenessProbe: # Checks if the container is running
+                      httpGet:
+                          path: /health # Or another appropriate endpoint
+                          port: 80
+                      initialDelaySeconds: 15 # Wait 15 seconds after container starts
+                      periodSeconds: 10      # Check every 10 seconds
+                      timeoutSeconds: 5      # Timeout after 5 seconds
+                      failureThreshold: 3    # Mark as unhealthy after 3 consecutive failures
+                  readinessProbe: # Checks if the container is ready to accept traffic
+                      httpGet:
+                          path: /health # Same endpoint as liveness probe
+                          port: 80
+                      initialDelaySeconds: 5
+                      periodSeconds: 5
+                      timeoutSeconds: 3
+                      failureThreshold: 3
             imagePullSecrets:
                 - name: acr-credentials

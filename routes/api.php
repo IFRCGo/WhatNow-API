@@ -81,3 +81,7 @@ Route::group([
     Route::patch('whatnow/{id}/revisions/{translationId}',  'WhatNowController@patchTranslation');
     Route::delete('whatnow/{id}', 'WhatNowController@deleteById');
 });
+
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok']); // Or a more detailed status
+});

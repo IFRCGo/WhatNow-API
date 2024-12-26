@@ -23,6 +23,8 @@ RUN docker-php-ext-install \
 
 
 RUN mkdir -p storage/framework/sessions
+RUN mkdir -p storage/framework/views
+RUN mkdir -p storage/framework/cache
 RUN chmod -R 775 storage
 RUN chown -R www-data:www-data storage
 
