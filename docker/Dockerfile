@@ -11,16 +11,14 @@ RUN apt update && apt install -y \
     libzip-dev \
     zip
 
-
-COPY ./docker/vhost.conf /etc/apache2/sites-available/000-default.conf
-COPY ./ /var/www/html
-
 RUN docker-php-ext-install \
     zip \
     pdo \
     pdo_mysql \
     && a2enmod rewrite
 
+COPY ./docker/vhost.conf /etc/apache2/sites-available/000-default.conf
+COPY ./ /var/www/html
 
 RUN mkdir -p storage/framework/sessions
 RUN mkdir -p storage/framework/views
