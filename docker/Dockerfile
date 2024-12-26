@@ -20,6 +20,10 @@ RUN docker-php-ext-install \
 COPY ./docker/vhost.conf /etc/apache2/sites-available/000-default.conf
 COPY ./ /var/www/html
 
+# Install Composer dependencies
+WORKDIR /var/www/html
+RUN composer install --no-dev --prefer-dist --optimize-autoloader
+
 RUN mkdir -p storage/framework/sessions
 RUN mkdir -p storage/framework/views
 RUN mkdir -p storage/framework/cache
