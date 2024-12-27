@@ -25,6 +25,14 @@ spec:
                       - name: {{ $key }}
                         value: "{{ $value }}"
                     {{- end }}
+                    {{- range $key, $value := .Values.secrets.variables }}
+                      - name: {{ $key }}
+                        valueFrom:
+                            secretKeyRef:
+                                name: {{ $.Values.secrets.dbSecretName }}
+                                key: "{{ $value }}"
+                    {{- end }}
+
                   livenessProbe: # Checks if the container is running
                       httpGet:
                           path: /health # Or another appropriate endpoint
