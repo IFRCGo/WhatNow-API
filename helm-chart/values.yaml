@@ -63,10 +63,10 @@ secrets:
 
 # Ingress (if using)
 ingress:
-    enabled: false
+    enabled: true
     annotations: { }
     hosts:
-        - host: ""
+        - host: "api.whatnow"
           paths:
               - path: /
                 pathType: ImplementationSpecific
