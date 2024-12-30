@@ -9,7 +9,7 @@ replicaCount: 1
 # Kubernetes service configuration
 service:
     type: LoadBalancer
-    port: 80
+    port: 8081
     targetPort: 80
 # Environment variables
 env:
