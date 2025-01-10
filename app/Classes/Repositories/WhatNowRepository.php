@@ -156,6 +156,10 @@ class WhatNowRepository implements WhatNowRepositoryInterface
             $query->whereIn('event_type', $eventTypes);
         }
 
+        if (! empty($regId)) {
+            $query->where('region_id', $regId);
+        }
+
         return $query->get();
     }
 

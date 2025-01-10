@@ -188,17 +188,19 @@ class WhatNowController extends Controller
 
         $feed->setOrganisation($org);
 
-
-        try {
-            $regName = $this->request->query('region', null);
-            $reg = $this->regionRepo->findBySlug($org->id, $regName);
-        } catch (\Exception $e) {
-            Log::error('Region not found', ['message' => $e->getMessage()]);
+        $regName = $this->request->query('region', null);
+        if ($regName) {
+            try {
+                $reg = $this->regionRepo->findBySlug($org->id, $regName);
+                $feed->setRegion($reg);
+            } catch (\Exception $e) {
+                Log::error('Region not found', ['message' => $e->getMessage()]);
+            }
         }
+
 
         $feed->setLanguage($this->request->query('language', null));
         $feed->setEventTypeFilter($this->request->query('eventType', null));
-        $feed->setRegion($reg);
         $feed->loadData();
 
         return response()->json(['data' => $feed->getResponseData()], 200);

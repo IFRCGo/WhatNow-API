@@ -135,7 +135,7 @@ class WhatNowFeed implements JsonFeedInterface
 			$this->organisation->id,
 			$this->language,
 			$this->filterEventTypes,
-			$this->region->id
+			$this->region->id ?? null
 		);
 
 		if ($data instanceof Collection) {
