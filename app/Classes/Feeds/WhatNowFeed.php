@@ -9,6 +9,7 @@ use App\Classes\Repositories\WhatNowTranslationRepositoryInterface;
 use App\Classes\Serializers\CustomDataSerializer;
 use App\Classes\Transformers\WhatNowEntityTransformer;
 use App\Models\Organisation;
+use App\Models\Region;
 use App\Models\WhatNowEntity;
 
 class WhatNowFeed implements JsonFeedInterface
@@ -17,6 +18,11 @@ class WhatNowFeed implements JsonFeedInterface
 	 * @var string
 	 */
 	protected $language;
+
+	/**
+	 * @var Region
+	 */
+	protected $region;
 
 	/**
 	 * @var Organisation
@@ -85,14 +91,24 @@ class WhatNowFeed implements JsonFeedInterface
 	}
 
 	/**
+	 * @param null $region
+	 * @return $this
+	 */
+	public function setRegion(Region $region = null)
+	{
+		$this->region = $region;
+		return $this;
+	}
+
+	/**
 	 * @param string $lang
 	 * @return $this
 	 */
-	public function setLanguage($lang = 'en_US')
+	public function setLanguage($lang = null)
 	{
 		// @todo validate locale
 		$this->language = $lang;
-
+		$this->transformer->setLang($lang);
 		return $this;
 	}
 
@@ -118,7 +134,8 @@ class WhatNowFeed implements JsonFeedInterface
 		$data = $this->whatNowRepo->findItemsForOrgId(
 			$this->organisation->id,
 			$this->language,
-			$this->filterEventTypes
+			$this->filterEventTypes,
+			$this->region->id
 		);
 
 		if ($data instanceof Collection) {

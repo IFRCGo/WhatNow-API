@@ -148,7 +148,7 @@ class WhatNowRepository implements WhatNowRepositoryInterface
      * @param null $lang
      * @param array $eventTypes
      */
-    public function findItemsForOrgId($orgId, $lang = null, array $eventTypes = [])
+    public function findItemsForOrgId($orgId, $lang = null, array $eventTypes = [], $regId = null)
     {
         $query = $this->whatNowModel->where('org_id', $orgId);
 
