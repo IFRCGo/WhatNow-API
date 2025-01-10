@@ -185,7 +185,6 @@ class WhatNowController extends Controller
 
             return response(null, 404);
         }
-
         $feed->setOrganisation($org);
 
         $regName = $this->request->query('region', null);
@@ -198,8 +197,15 @@ class WhatNowController extends Controller
             }
         }
 
+        $langParam = $this->request->query('language', null);
+        $langHeader = $this->request->header('Accept-Language', null);
 
-        $feed->setLanguage($this->request->query('language', null));
+        if ($langParam) {
+            $feed->setLanguage($langParam);
+        } elseif ($langHeader) {
+            $feed->setLanguage(locale_accept_from_http($langHeader));
+        }
+
         $feed->setEventTypeFilter($this->request->query('eventType', null));
         $feed->loadData();
 

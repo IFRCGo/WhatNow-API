@@ -106,9 +106,8 @@ class WhatNowFeed implements JsonFeedInterface
 	 */
 	public function setLanguage($lang = null)
 	{
-		// @todo validate locale
-		$this->language = $lang;
-		$this->transformer->setLang($lang);
+		$this->language = $lang ? substr($lang, 0, 2) : null;
+		$this->transformer->setLang($this->language);
 		return $this;
 	}
 
