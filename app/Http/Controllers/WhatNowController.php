@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\Feeds\WhatNowFeed;
 use App\Classes\Repositories\OrganisationRepositoryInterface;
+use App\Classes\Repositories\RegionRepositoryInterface;
 use App\Classes\Repositories\WhatNowRepositoryInterface;
 use App\Classes\Repositories\WhatNowTranslationRepositoryInterface;
 use App\Classes\Serializers\CustomDataSerializer;
@@ -26,6 +27,11 @@ class WhatNowController extends Controller
      * @var OrganisationRepositoryInterface
      */
     protected $orgRepo;
+
+    /**
+     * @var RegionRepositoryInterface
+     */
+    protected $regionRepo;
 
     /**
      * @var WhatNowRepositoryInterface
@@ -58,12 +64,14 @@ class WhatNowController extends Controller
      */
     public function __construct(
         OrganisationRepositoryInterface $orgRepo,
+        RegionRepositoryInterface $regionRepo,
         WhatNowRepositoryInterface $wnRepo,
         WhatNowTranslationRepositoryInterface $wnTransRepo,
         Request $request,
         Manager $manager
     ) {
         $this->orgRepo = $orgRepo;
+        $this->regionRepo = $regionRepo;
         $this->wnRepo = $wnRepo;
         $this->wnTransRepo = $wnTransRepo;
         $this->request = $request;
@@ -177,18 +185,26 @@ class WhatNowController extends Controller
 
             return response(null, 404);
         }
-
         $feed->setOrganisation($org);
 
-        // @todo lang filter
-        /*$langParam = $this->request->query('language', null);
+        $regName = $this->request->query('region', null);
+        if ($regName) {
+            try {
+                $reg = $this->regionRepo->findBySlug($org->id, $regName);
+                $feed->setRegion($reg);
+            } catch (\Exception $e) {
+                Log::error('Region not found', ['message' => $e->getMessage()]);
+            }
+        }
+
+        $langParam = $this->request->query('language', null);
         $langHeader = $this->request->header('Accept-Language', null);
 
         if ($langParam) {
-            $feed->setLanguage($this->request->query('language'));
+            $feed->setLanguage($langParam);
         } elseif ($langHeader) {
             $feed->setLanguage(locale_accept_from_http($langHeader));
-        }*/
+        }
 
         $feed->setEventTypeFilter($this->request->query('eventType', null));
         $feed->loadData();

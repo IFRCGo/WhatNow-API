@@ -132,14 +132,23 @@ WHERE wet2.created_at IS NULL AND wet1.entity_id = :entityId'), ['entityId' => $
      * @param $id
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getLatestPublishedTranslations($id)
+    public function getLatestPublishedTranslations($id, $lang = null)
     {
         $model = $this->whatNowTranslationModel;
 
-        return $model::fromQuery(DB::raw('SELECT wet1.*
-FROM whatnow_entity_translations wet1
-LEFT JOIN whatnow_entity_translations wet2 ON wet1.entity_id = wet2.entity_id AND wet1.language_code = wet2.language_code AND wet1.published_at < wet2.published_at
-WHERE wet2.published_at IS NULL AND wet1.entity_id = :entityId AND wet1.published_at IS NOT NULL'), ['entityId' => $id]);
+        $query = 'SELECT wet1.*
+              FROM whatnow_entity_translations wet1
+              LEFT JOIN whatnow_entity_translations wet2 ON wet1.entity_id = wet2.entity_id AND wet1.language_code = wet2.language_code AND wet1.published_at < wet2.published_at
+              WHERE wet2.published_at IS NULL AND wet1.entity_id = :entityId AND wet1.published_at IS NOT NULL';
+        
+        $bindings = ['entityId' => $id];
+
+        if ($lang !== null) {
+            $query .= ' AND wet1.language_code = :lang';
+            $bindings['lang'] = $lang;
+        }
+
+        return $model::fromQuery(DB::raw($query), $bindings);
     }
 
     /**
