@@ -8,30 +8,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use League\Fractal\Manager;
+use App\Classes\CustomPaginator;
 
 class UsageLogController extends Controller
 {
-    /**
-     * @var ApplicationRepositoryInterface
-     */
     protected $applicationRepo;
-
-    /**
-     * @var UsageLogRepositoryInterface
-     */
     protected $usageLogRepo;
-
-    /**
-     * @var Manager
-     */
     protected $manager;
 
-    /**
-     * Create a new controller instance.
-     *
-     * @param UsageLogRepositoryInterface $usageLogRepo
-     * @param Manager $manager
-     */
     public function __construct(ApplicationRepositoryInterface $applicationRepo, UsageLogRepositoryInterface $usageLogRepo, Manager $manager)
     {
         $this->applicationRepo = $applicationRepo;
@@ -60,6 +44,18 @@ class UsageLogController extends Controller
                     'requestCount' => count($this->usageLogRepo->getForApplication($app->id, $request->fromDate, $request->toDate)),
                 ]);
             }
+
+            $paginated = new CustomPaginator(
+                $usageLogs->forPage($request->page, 10),
+                $usageLogs->count(),
+                10,
+                $request->page
+            );
+
+            return response()->json([
+                'data' => $paginated->toArray(),
+            ], 200);
+
         } catch (\Exception $e) {
             Log::error('Could not get Usage Log', ['message' => $e->getMessage()]);
 
@@ -69,18 +65,6 @@ class UsageLogController extends Controller
                 'errors' => [],
             ], 500);
         }
-
-        $paginated = $usageLogs->paginate(10)->toArray();
-
-        // TODO: Create custom paginator class
-        unset($paginated['first_page_url']);
-        unset($paginated['last_page_url']);
-        unset($paginated['next_page_url']);
-        unset($paginated['prev_page_url']);
-
-        return response()->json([
-            'data' => $paginated,
-        ], 200);
     }
 
     public function getEndpointLogs(Request $request)
@@ -93,16 +77,26 @@ class UsageLogController extends Controller
         try {
             $usageLogs = $this->usageLogRepo->listByEndpoint($request->fromDate, $request->toDate);
 
-            $usageLogs = $usageLogs->map(function ($usageLog) {
+            $usageLogs->transform(function ($usageLog) {
                 $application = $this->applicationRepo->find($usageLog->application_id);
 
                 $usageLog->application_name = $application['name'] ?? 'Unknown';
                 $usageLog->application_tenant_user_id = $application['tenant_user_id'] ?? null;
 
-                //Log::info(json_encode($application));
-
                 return $usageLog;
             });
+
+            $paginated = new CustomPaginator(
+                $usageLogs->forPage($request->page, 10),
+                $usageLogs->count(),
+                10,
+                $request->page
+            );
+
+            return response()->json([
+                'data' => $paginated->toArray(),
+            ], 200);
+
         } catch (\Exception $e) {
             Log::error('Could not get Usage Log', ['message' => $e->getMessage()]);
 
@@ -112,17 +106,6 @@ class UsageLogController extends Controller
                 'errors' => [],
             ], 500);
         }
-
-        $paginated = $usageLogs->paginate(10)->toArray();
-
-        unset($paginated['first_page_url']);
-        unset($paginated['last_page_url']);
-        unset($paginated['next_page_url']);
-        unset($paginated['prev_page_url']);
-
-        return response()->json([
-            'data' => $usageLogs,
-        ], 200);
     }
 
     public function export(Request $request)
@@ -134,6 +117,31 @@ class UsageLogController extends Controller
 
         try {
             $usageLogs = $this->usageLogRepo->whereBetween($request->fromDate, $request->toDate, ['*']);
+
+            $csv = \League\Csv\Writer::createFromFileObject(new \SplTempFileObject());
+
+            $csv->insertOne([
+                'Application Name',
+                'Endpoint',
+                'Method',
+                'Timestamp',
+            ]);
+
+            $applications = $this->applicationRepo->all();
+
+            foreach ($usageLogs as $usageLog) {
+                $application = $applications->where('id', $usageLog->application_id)->first();
+
+                $csv->insertOne([
+                    $application ? $application->name : 'Unknown',
+                    $usageLog->endpoint,
+                    $usageLog->method,
+                    $usageLog->timestamp,
+                ]);
+            }
+
+            print_r($csv->toString());
+
         } catch (\Exception $e) {
             Log::error('Could not export Usage Logs', ['message' => $e->getMessage()]);
 
@@ -143,48 +151,19 @@ class UsageLogController extends Controller
                 'errors' => [],
             ], 500);
         }
-
-        // Create CSV
-        $csv = \League\Csv\Writer::createFromFileObject(new \SplTempFileObject());
-
-        $csv->insertOne([
-            'Application Name',
-            'Endpoint',
-            'Method',
-            'Timestamp',
-        ]);
-
-        $applications = $this->applicationRepo->all();
-
-        // Insert usage log records
-        foreach ($usageLogs as $usageLog) {
-            $application = $applications->where('id', $usageLog->application_id)->first();
-
-            $csv->insertOne([
-                $application ? $application->name : 'Unknown',
-                $usageLog->endpoint,
-                $usageLog->method,
-                $usageLog->timestamp,
-            ]);
-        }
-
-        // Print raw CSV as response
-        print_r($csv->toString());
     }
 
-    /**
-     * @param int $applicationId
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
     public function getForApplication(int $applicationId)
     {
         try {
-            // Cache to be enabled in production
-            // $usageLogs = Cache::remember("usage.application.{$applicationId}", 3600, function () use ($applicationId) {
-            //     return $this->usageLogRepo->getForApplication($applicationId);
-            // });
+            $usageLogs = Cache::remember("usage.application.{$applicationId}", 3600, function () use ($applicationId) {
+                return $this->usageLogRepo->getForApplication($applicationId);
+            });
 
-            $usageLogs = $this->usageLogRepo->getForApplication($applicationId);
+            return response()->json([
+                'count' => count($usageLogs),
+            ], 200);
+
         } catch (\Exception $e) {
             Log::error('Could not get Usage Logs for application', ['message' => $e->getMessage()]);
 
@@ -194,34 +173,30 @@ class UsageLogController extends Controller
                 'errors' => [],
             ], 500);
         }
-
-        return response()->json([
-            'count' => count($usageLogs),
-        ], 200);
     }
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
     public function getTotals()
     {
         try {
-            // Cache to be enabled in production
-            //$totals = Cache::remember('usage.totals', 3600 * 24, function () {
-            $applications = $this->applicationRepo->all();
-            $usageLogs = $this->usageLogRepo->all();
+            $totals = Cache::remember('usage.totals', 3600 * 24, function () {
+                $applications = $this->applicationRepo->all();
+                $usageLogs = $this->usageLogRepo->all();
 
-            // Calculate total estimated users
-            $totalEstimatedUsers = $applications->map(function ($application) {
-                return $application->estimated_users_count;
-            })->sum();
+                $totalEstimatedUsers = $applications->map(function ($application) {
+                    return $application->estimated_users_count;
+                })->sum();
 
-            $totals = [
-                'applications' => count($applications),
-                'estimatedUsers' => $totalEstimatedUsers,
-                'hits' => count($usageLogs),
-            ];
-            //});
+                return [
+                    'applications' => count($applications),
+                    'estimatedUsers' => $totalEstimatedUsers,
+                    'hits' => count($usageLogs),
+                ];
+            });
+
+            return response()->json([
+                'data' => $totals,
+            ], 200);
+
         } catch (\Exception $e) {
             Log::error('Could not get Usage Log totals', ['message' => $e->getMessage()]);
 
@@ -231,9 +206,5 @@ class UsageLogController extends Controller
                 'errors' => [],
             ], 500);
         }
-
-        return response()->json([
-            'data' => $totals,
-        ], 200);
     }
 }

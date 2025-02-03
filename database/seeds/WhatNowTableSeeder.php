@@ -59,7 +59,6 @@ class WhatNowTableSeeder extends Seeder
 				'translation_id' => $row[1],
 				'language_code' => $row[2],
 				'stage' => $row[3],
-				'content' => json_encode(json_decode($row[4])),
 			]);
 
 		}

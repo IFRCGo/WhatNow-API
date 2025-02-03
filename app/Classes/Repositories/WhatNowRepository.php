@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\Log;
 class WhatNowRepository implements WhatNowRepositoryInterface
 {
     public const EVENT_STAGES = [
-        'mitigation',
-        'seasonalForecast',
-        'watch',
-        'warning',
         'immediate',
-        'recover',
+        'warning',
+        'anticipated',
+        'assess_and_plan',
+        'mitigate_risks',
+        'prepare_to_respond',
+        'recover'
     ];
 
     /**
@@ -53,7 +54,7 @@ class WhatNowRepository implements WhatNowRepositoryInterface
         return $this->whatNowModel->all($columns);
     }
 
-    /**
+      /**
      * @param array $attributes
      * @return WhatNowEntity
      */
