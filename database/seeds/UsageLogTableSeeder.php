@@ -21,7 +21,7 @@ class UsageLogTableSeeder extends Seeder
         $file->setFlags(SplFileObject::SKIP_EMPTY | SplFileObject::READ_AHEAD | SplFileObject::DROP_NEW_LINE | SplFileObject::READ_CSV);
 
         foreach ($file as $row) {
-            DB::connection('stats_mysql')->table('usage_logs')->insert([
+            DB::table('usage_logs')->insert([
                 'id' => $row[0],
                 'method' => $row[1],
                 'application_id' => $row[2],

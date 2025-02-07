@@ -13,7 +13,7 @@ class CreateUsageLogsTable extends Migration
      */
     public function up()
     {
-        Schema::connection('stats_mysql')->create('usage_logs', function (Blueprint $table) {
+        Schema::create('usage_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->bigInteger('application_id');
             $table->string('method');
