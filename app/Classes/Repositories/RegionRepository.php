@@ -33,7 +33,7 @@ class RegionRepository implements RegionRepositoryInterface
     {
         $slug = strtolower($slug);
         $slug = str_replace(' ', '-', $slug);
-        return $this->regModel->where('slug', $slug)->where('organisation_id', $orgId)->first();
+        return $this->regModel->where('slug', $slug)->where('organisation_id', $orgId)->firstOrFail();;
     }
 
     public function mapTranslationInput($regionId, $language_code, $data)

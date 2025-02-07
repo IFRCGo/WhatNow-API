@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Application;
+use App\Models\UsageLog;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Support\Facades\Log;
@@ -23,20 +24,17 @@ class ApiAuthMiddleware extends BasicAuthMiddleware
         if (! $application) {
             return parent::handle($request, $next);
         }
-
-        // Configure payload for logging API usage data
-        $event = [
-            'type' => 'APIRequestEvent',
-            'payload' => [
-                'app_id' => $application->id,
-                'endpoint' => $request->path(),
-                'method' => $request->method(),
-                'timestamp' => Carbon::now()->toDateTimeString(),
-            ],
-        ];
-
-        // Log request to CloudWatch
-        Log::channel('cloudwatch_access')->info(json_encode($event));
+        $usageLog = new UsageLog;
+        $usageLog->application_id = $application->id;
+        $usageLog->method = $request->method();
+        $usageLog->endpoint = $request->path();
+        $usageLog->timestamp = Carbon::now()->toDateTimeString();
+        $usageLog->code_status = 200;
+        $usageLog->language = $request->input('language', false) ? $request->input('language', null) : $request->header('Accept-Language', null);
+        $usageLog->region = $request->input('region', null);
+        $usageLog->event_type = $request->input('eventType', null);
+        $usageLog->save();
+        $request->usageLog=$usageLog;
 
         return $next($request);
     }
