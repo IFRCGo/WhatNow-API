@@ -43,7 +43,6 @@ class WhatNowEntityStage extends Model
         'translation_id',
 		'language_code',
 		'stage',
-		'content'
 	];
 
 	/**
@@ -54,7 +53,6 @@ class WhatNowEntityStage extends Model
 	protected $rules = [
 		'language_code' => 'required|string|between:2,10',
 		'stage' => 'string|max:10',
-		'content' => 'string'
 	];
 
 	/**
@@ -85,6 +83,11 @@ class WhatNowEntityStage extends Model
 	public function translation()
 	{
 		return $this->belongsTo('App\Models\WhatNowEntityTranslation', 'translation_id', 'id');
+	}
+
+	public function keyMessages()
+	{
+		return $this->hasMany(KeyMessage::class, 'entities_stage_id', 'id');
 	}
 }
 
