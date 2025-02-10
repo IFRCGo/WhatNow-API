@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 
-class WhatNowEntityStage extends Model
+class KeyMessage extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'whatnow_entity_stages';
+    protected $table = 'key_messages';
 
     /**
      * @var
@@ -29,11 +29,7 @@ class WhatNowEntityStage extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'translation_id',
-        'language_code',
-
-    ];
+    protected $fillable = ['entities_stage_id', 'title'];
 
     /**
      * Model validation rules
@@ -41,13 +37,10 @@ class WhatNowEntityStage extends Model
      * @var array
      */
     protected $rules = [
-        'language_code' => 'required|string|between:2,10',
+        'entities_stage_id' => 'required|integer',
+        'title' => 'required|string|between:2,255',
     ];
 
-    /**
-     * @param $data
-     * @return bool
-     */
     public function validate($data)
     {
         $v = Validator::make($data, $this->rules);
@@ -69,13 +62,13 @@ class WhatNowEntityStage extends Model
         return $this->errors;
     }
 
-    public function translation()
+    public function entityStage()
     {
-        return $this->belongsTo('App\Models\WhatNowEntityTranslation', 'translation_id', 'id');
+        return $this->belongsTo(WhatnowEntityStage::class, 'entities_stage_id');
     }
 
-    public function keyMessages()
-	{
-		return $this->hasMany(KeyMessage::class, 'entities_stage_id', 'id');
-	}
+    public function supportingMessages()
+    {
+        return $this->hasMany(SupportingMessage::class, 'key_message_id');
+    }
 }

@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 
-class WhatNowEntityStage extends Model
+class SupportingMessage extends Model
 {
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'whatnow_entity_stages';
+    protected $table = 'supporting_messages';
 
     /**
      * @var
@@ -26,22 +26,17 @@ class WhatNowEntityStage extends Model
 
     /**
      * The attributes that are mass assignable.
-     *
      * @var array
      */
-    protected $fillable = [
-        'translation_id',
-        'language_code',
-
-    ];
+    protected $fillable = ['key_message_id', 'content'];
 
     /**
      * Model validation rules
-     *
      * @var array
      */
     protected $rules = [
-        'language_code' => 'required|string|between:2,10',
+        'key_message_id' => 'required|integer',
+        'content' => 'required|string|between:2,1000',
     ];
 
     /**
@@ -69,13 +64,8 @@ class WhatNowEntityStage extends Model
         return $this->errors;
     }
 
-    public function translation()
+    public function keyMessage()
     {
-        return $this->belongsTo('App\Models\WhatNowEntityTranslation', 'translation_id', 'id');
+        return $this->belongsTo(KeyMessage::class, 'key_message_id');
     }
-
-    public function keyMessages()
-	{
-		return $this->hasMany(KeyMessage::class, 'entities_stage_id', 'id');
-	}
 }
