@@ -63,26 +63,6 @@ return [
             ]) : [],
         ],
 
-        // This connection is used for the stats database
-        'stats_mysql' => [
-            'driver' => 'mysql',
-            'url' => env('STATS_DATABASE_URL'),
-            'host' => env('STATS_DB_HOST', '127.0.0.1'),
-            'port' => env('STATS_DB_PORT', '3306'),
-            'database' => env('STATS_DB_DATABASE', 'forge'),
-            'username' => env('STATS_DB_USERNAME', 'forge'),
-            'password' => env('STATS_DB_PASSWORD', ''),
-            'unix_socket' => env('STATS_DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'prefix_indexes' => true,
-            'strict' => true,
-            'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
-            ]) : [],
-        ],
 
         'pgsql' => [
             'driver' => 'pgsql',

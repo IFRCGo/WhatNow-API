@@ -86,7 +86,7 @@ class UsageLogRepository implements UsageLogRepositoryInterface
 
     public function listByEndpoint($fromDate = null, $toDate = null)
     {
-        $query = DB::connection('stats_mysql')->table('usage_logs')
+        $query = DB::table('usage_logs')
             ->select('endpoint', 'application_id', DB::raw('count(*) as hit_count'))
             ->groupBy('application_id', 'endpoint')
             ->orderBy('hit_count', 'desc');
