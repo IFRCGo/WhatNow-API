@@ -27,6 +27,7 @@ class WhatNowEntityTransformer extends TransformerAbstract
 	 * @param WhatNowTranslationRepositoryInterface $repo
 	 * @param array $configuration
 	 */
+
 	function __construct(WhatNowTranslationRepositoryInterface $repo, $configuration = [])
 	{
 		if(isset($configuration['unpublished']) && is_bool($configuration['unpublished'])) {
@@ -60,7 +61,7 @@ class WhatNowEntityTransformer extends TransformerAbstract
 				'url' => $model->organisation->attribution_url,
 				'imageUrl' => $model->organisation->attribution_file_name ? $model->organisation->getAttributionImageUrl() : null,
 				'translations' => null
-			]
+			],
 		];
 
 		if ($model->organisation->details->count()) {
@@ -78,9 +79,9 @@ class WhatNowEntityTransformer extends TransformerAbstract
 		}
 
 		if ($this->unpublished) {
-			$translations = $this->wnTransRepo->getLatestTranslations($model->id);
+			$translations = $this->wnTransRepo->getLatestTranslations($model->id) ?? [];
 		} else {
-			$translations = $this->wnTransRepo->getLatestPublishedTranslations($model->id);
+			$translations = $this->wnTransRepo->getLatestPublishedTranslations($model->id) ?? [];
 		}
 
 		$defaultStages = [];
@@ -89,14 +90,28 @@ class WhatNowEntityTransformer extends TransformerAbstract
 		}
 
 		if ($translations) {
-
+			$response['translations'] = [];
 			/** @var WhatNowEntityTranslation $trans */
 			foreach ($translations as $trans) {
 
 				$stages = $defaultStages;
 				if($trans->stages){
 					foreach ($trans->stages as $stage) {
-						$stages[$stage->stage] = json_decode($stage['content']);
+						$stage->load('keyMessages');
+						$keyMessages = $stage->keyMessages;
+
+						foreach ($keyMessages as $keyMessage) {
+							$keyMessage->load('supportingMessages');
+						}
+
+						$stages[$stage->stage] = $keyMessages->map(function($keyMessage) {
+							return [
+								'title' => $keyMessage->title,
+								'content' => $keyMessage->supportingMessages->map(function($supportingMessage) {
+									return $supportingMessage->content;
+								})->toArray()
+							];
+						})->toArray();
 					}
 				}
 
