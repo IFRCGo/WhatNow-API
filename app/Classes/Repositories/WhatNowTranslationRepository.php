@@ -15,12 +15,20 @@ class WhatNowTranslationRepository implements WhatNowTranslationRepositoryInterf
      */
     protected $whatNowTranslationModel;
 
+    /** @var KeyMessageRepositoryInterface */
+    protected $keyMessageRepository;
+
+    /** @var SupportingMessageRepositoryInterface */
+    protected $supportingMessageRepository;
+
     /**
      * @param WhatNowEntityTranslation $whatNowTranslationModel
      */
-    public function __construct(WhatNowEntityTranslation $whatNowTranslationModel)
+    public function __construct(WhatNowEntityTranslation $whatNowTranslationModel, KeyMessageRepositoryInterface $keyMessageRepository, SupportingMessageRepositoryInterface $supportingMessageRepository)
     {
         $this->whatNowTranslationModel = $whatNowTranslationModel;
+        $this->keyMessageRepository = $keyMessageRepository;
+        $this->supportingMessageRepository = $supportingMessageRepository;
     }
 
     /**
@@ -73,11 +81,23 @@ class WhatNowTranslationRepository implements WhatNowTranslationRepositoryInterf
                     if (empty($transStage)) {
                         if (! empty($content)) {
                             try {
-                                $translation->stages()->create([
+                                $stage = $translation->stages()->create([
                                     'language_code' => $trans['lang'],
                                     'stage' => $stage,
-                                    'content' => json_encode($content),
                                 ]);
+                                foreach ($content as $message) {
+                                    $keyMessage = $this->keyMessageRepository->create([
+                                        'entities_stage_id' => $stage->id,
+                                        'title' => $message['title'], 
+                                    ]);
+                                    
+                                    foreach ($message['content'] as $supportMessage) {
+                                        $this->supportingMessageRepository->create([
+                                            'key_message_id' => $keyMessage->id,
+                                            'content' => $supportMessage,
+                                        ]);
+                                    }
+                                }
                             } catch (\Exception $e) {
                                 Log::error('ERROR', [$e->getMessage()]);
                             }
