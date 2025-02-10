@@ -12,14 +12,14 @@ class CreateKeyMessagesTable extends Migration
 */
 public function up()
 {
-Schema::dropIfExists('key_messages'); // Drop the table if it already exists
+    Schema::dropIfExists('key_messages'); // Drop the table if it already exists
 
-Schema::create('key_messages', function (Blueprint $table) {
-$table->increments('id');
-$table->unsignedInteger('entities_stage_id');
-$table->string('title');
-$table->foreign('entities_stage_id')->references('id')->on('whatnow_entity_stages')->onDelete('cascade');
-});
+    Schema::create('key_messages', function (Blueprint $table) {
+        $table->increments('id');
+        $table->unsignedInteger('entities_stage_id');
+        $table->string('title', 255);
+        $table->foreign('entities_stage_id')->references('id')->on('whatnow_entity_stages')->onDelete('cascade');
+    });
 }
 
 /**

@@ -23,7 +23,7 @@ interface WhatNowTranslationRepositoryInterface extends RepositoryInterface
 	 * @param $id
 	 * @return \Illuminate\Database\Eloquent\Collection
 	 */
-	public function getLatestPublishedTranslations($id);
+	public function getLatestPublishedTranslations($id, $lang = null);
 
 	/**
 	 * @param array $ids

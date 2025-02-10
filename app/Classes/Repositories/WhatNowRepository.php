@@ -9,13 +9,15 @@ use Illuminate\Support\Facades\Log;
 class WhatNowRepository implements WhatNowRepositoryInterface
 {
     public const EVENT_STAGES = [
-        'immediate',
         'warning',
+        'immediate',
+        'recover',
         'anticipated',
         'assess_and_plan',
         'mitigate_risks',
         'prepare_to_respond',
-        'recover'
+
+        
     ];
 
     /**
@@ -54,7 +56,7 @@ class WhatNowRepository implements WhatNowRepositoryInterface
         return $this->whatNowModel->all($columns);
     }
 
-      /**
+    /**
      * @param array $attributes
      * @return WhatNowEntity
      */
@@ -149,12 +151,16 @@ class WhatNowRepository implements WhatNowRepositoryInterface
      * @param null $lang
      * @param array $eventTypes
      */
-    public function findItemsForOrgId($orgId, $lang = null, array $eventTypes = [])
+    public function findItemsForOrgId($orgId, $lang = null, array $eventTypes = [], $regId = null)
     {
         $query = $this->whatNowModel->where('org_id', $orgId);
 
         if (count($eventTypes)) {
             $query->whereIn('event_type', $eventTypes);
+        }
+
+        if ($regId) {
+            $query->where('region_id', $regId);
         }
 
         return $query->get();

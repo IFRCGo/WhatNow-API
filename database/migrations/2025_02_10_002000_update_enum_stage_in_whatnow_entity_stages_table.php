@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class UpdateEnumStageInWhatnowEntityStagesTable extends Migration
 {
@@ -12,7 +14,9 @@ class UpdateEnumStageInWhatnowEntityStagesTable extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE whatnow_entity_stages MODIFY COLUMN stage ENUM('immediate', 'warning', 'anticipated', 'assess_and_plan', 'mitigate_risks', 'prepare_to_respond', 'recover') NOT NULL");
+        Schema::table('whatnow_entity_stages', function (Blueprint $table) {
+            DB::statement("ALTER TABLE whatnow_entity_stages MODIFY COLUMN stage ENUM('immediate', 'warning', 'anticipated', 'assess_and_plan', 'mitigate_risks', 'prepare_to_respond', 'recover') NOT NULL");
+        });
     }
 
     /**
@@ -22,6 +26,8 @@ class UpdateEnumStageInWhatnowEntityStagesTable extends Migration
      */
     public function down()
     {
-        //roolback
+        Schema::table('whatnow_entity_stages', function (Blueprint $table) {
+            DB::statement("ALTER TABLE whatnow_entity_stages MODIFY COLUMN stage ENUM('immediate', 'warning', 'anticipated', 'assess_and_plan', 'mitigate_risks', 'prepare_to_respond', 'recover') NOT NULL");
+        });
     }
 }

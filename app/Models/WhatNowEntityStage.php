@@ -2,80 +2,92 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 
 class WhatNowEntityStage extends Model
 {
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'whatnow_entity_stages';
+	public static $stages = [
+		'mitigation',
+		'seasonalForecast',
+		'watch',
+		'warning',
+		'immediate',
+		'recover'
+	];
 
-    /**
-     * @var
-     */
-    protected $errors;
+	/**
+	 * The database table used by the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'whatnow_entity_stages';
 
-    /**
-     * @var bool
-     */
-    public $timestamps = false;
+	/**
+	 * @var
+	 */
+	protected $errors;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
+	/**
+	 * @var bool
+	 */
+	public $timestamps = false;
+
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [
         'translation_id',
-        'language_code',
+		'language_code',
+		'stage',
+	];
 
-    ];
+	/**
+	 * Model validation rules
+	 *
+	 * @var array
+	 */
+	protected $rules = [
+		'language_code' => 'required|string|between:2,10',
+		'stage' => 'string|max:10',
+	];
 
-    /**
-     * Model validation rules
-     *
-     * @var array
-     */
-    protected $rules = [
-        'language_code' => 'required|string|between:2,10',
-    ];
+	/**
+	 * @param $data
+	 * @return bool
+	 */
+	public function validate($data)
+	{
+		$v = Validator::make($data, $this->rules);
 
-    /**
-     * @param $data
-     * @return bool
-     */
-    public function validate($data)
-    {
-        $v = Validator::make($data, $this->rules);
+		if ($v->fails()) {
+			$this->errors = $v->errors();
 
-        if ($v->fails()) {
-            $this->errors = $v->errors();
+			return false;
+		}
 
-            return false;
-        }
+		return true;
+	}
 
-        return true;
-    }
+	/**
+	 * @return mixed
+	 */
+	public function errors()
+	{
+		return $this->errors;
+	}
 
-    /**
-     * @return mixed
-     */
-    public function errors()
-    {
-        return $this->errors;
-    }
+	public function translation()
+	{
+		return $this->belongsTo('App\Models\WhatNowEntityTranslation', 'translation_id', 'id');
+	}
 
-    public function translation()
-    {
-        return $this->belongsTo('App\Models\WhatNowEntityTranslation', 'translation_id', 'id');
-    }
-
-    public function keyMessages()
+	public function keyMessages()
 	{
 		return $this->hasMany(KeyMessage::class, 'entities_stage_id', 'id');
 	}
 }
+
