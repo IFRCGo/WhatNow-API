@@ -14,6 +14,7 @@ class WhatNowEntityTransformer extends TransformerAbstract
 	 * @var bool
 	 */
 	private $unpublished = false;
+	private $lang = null;
 
 	/**
 	 * @var bool
@@ -38,7 +39,16 @@ class WhatNowEntityTransformer extends TransformerAbstract
             $this->castDateToBoolean = $configuration['castDateToBoolean'];
         }
 
+		if(isset($configuration['lang'])) {
+			$this->lang = $configuration['lang'];
+		}
+
 		$this->wnTransRepo = $repo;
+	}
+
+	public function setLang($lang)
+	{
+		$this->lang = $lang;
 	}
 
 	/**
@@ -81,7 +91,7 @@ class WhatNowEntityTransformer extends TransformerAbstract
 		if ($this->unpublished) {
 			$translations = $this->wnTransRepo->getLatestTranslations($model->id) ?? [];
 		} else {
-			$translations = $this->wnTransRepo->getLatestPublishedTranslations($model->id) ?? [];
+			$translations = $this->wnTransRepo->getLatestPublishedTranslations($model->id, $this->lang);
 		}
 
 		$defaultStages = [];

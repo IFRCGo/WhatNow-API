@@ -9,7 +9,7 @@ interface WhatNowRepositoryInterface extends RepositoryInterface
      * @param null $lang
      * @param array $eventTypes
      */
-    public function findItemsForOrgId($orgId, $lang = null, array $eventTypes = []);
+    public function findItemsForOrgId($orgId, $lang = null, array $eventTypes = [], $regionName = null);
 
     /**
      * @param $orgId

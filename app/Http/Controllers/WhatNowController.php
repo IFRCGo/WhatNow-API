@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Classes\Feeds\WhatNowFeed;
 use App\Classes\Repositories\OrganisationRepositoryInterface;
+use App\Classes\Repositories\RegionRepositoryInterface;
 use App\Classes\Repositories\WhatNowRepositoryInterface;
 use App\Classes\Repositories\WhatNowTranslationRepositoryInterface;
 use App\Classes\Serializers\CustomDataSerializer;
@@ -26,6 +27,11 @@ class WhatNowController extends Controller
      * @var OrganisationRepositoryInterface
      */
     protected $orgRepo;
+
+    /**
+     * @var RegionRepositoryInterface
+     */
+    protected $regionRepo;
 
     /**
      * @var WhatNowRepositoryInterface
@@ -58,12 +64,14 @@ class WhatNowController extends Controller
      */
     public function __construct(
         OrganisationRepositoryInterface $orgRepo,
+        RegionRepositoryInterface $regionRepo,
         WhatNowRepositoryInterface $wnRepo,
         WhatNowTranslationRepositoryInterface $wnTransRepo,
         Request $request,
         Manager $manager
     ) {
         $this->orgRepo = $orgRepo;
+        $this->regionRepo = $regionRepo;
         $this->wnRepo = $wnRepo;
         $this->wnTransRepo = $wnTransRepo;
         $this->request = $request;
@@ -171,29 +179,54 @@ class WhatNowController extends Controller
     public function getFeed(WhatNowFeed $feed, $code)
     {
         try {
-            $org = $this->orgRepo->findByCountryCode(strtoupper($code));
-        } catch (\Exception $e) {
-            Log::error('Organisation not found', ['message' => $e->getMessage()]);
+            try {
+                $org = $this->orgRepo->findByCountryCode(strtoupper($code));
+            } catch (\Exception $e) {
+                Log::error('Organisation not found', ['message' => $e->getMessage()]);
+                $this->changeLogStatus(404);
+                return response()->json(['message' => 'Organisation not found'], 404);
+            }
+            $feed->setOrganisation($org);
 
-            return response(null, 404);
+            $regName = $this->request->query('region', null);
+            if ($regName) {
+                try {
+                    $reg = $this->regionRepo->findBySlug($org->id, $regName);
+                    $feed->setRegion($reg);
+                } catch (\Exception $e) {
+                    Log::error('Region not found', ['message' => $e->getMessage()]);
+                    $this->changeLogStatus(404);
+                    return response()->json(['message' => 'Region not found'], 404);
+                }
+            }
+
+            $langParam = $this->request->query('language', null);
+            $langHeader = $this->request->header('Accept-Language', null);
+
+            if ($langParam) {
+                $feed->setLanguage($langParam);
+            } elseif ($langHeader) {
+                $feed->setLanguage(locale_accept_from_http($langHeader));
+            }
+
+            $feed->setEventTypeFilter($this->request->query('eventType', null));
+            $feed->loadData();
+            $data = $feed->getResponseData();
+            if(empty($data)){
+                $this->changeLogStatus(204);
+            }
+            return response()->json(['data' => $data]);
+        }catch(\Exception $e){
+            $this->changeLogStatus(500);
+            return response()->json(['message' => $e], 500);
         }
+    }
 
-        $feed->setOrganisation($org);
-
-        // @todo lang filter
-        /*$langParam = $this->request->query('language', null);
-        $langHeader = $this->request->header('Accept-Language', null);
-
-        if ($langParam) {
-            $feed->setLanguage($this->request->query('language'));
-        } elseif ($langHeader) {
-            $feed->setLanguage(locale_accept_from_http($langHeader));
-        }*/
-
-        $feed->setEventTypeFilter($this->request->query('eventType', null));
-        $feed->loadData();
-
-        return response()->json(['data' => $feed->getResponseData()], 200);
+    protected function changeLogStatus($status){
+        if(isset($this->request->usageLog)){
+            $this->request->usageLog->code_status = $status;
+            $this->request->usageLog->save();
+        }
     }
 
     /**
