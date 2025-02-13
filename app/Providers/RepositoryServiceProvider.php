@@ -42,5 +42,13 @@ class RepositoryServiceProvider extends ServiceProvider
             'App\Classes\Repositories\WhatNowTranslationRepositoryInterface',
             'App\Classes\Repositories\WhatNowTranslationRepository'
         );
+        $this->app->bind(
+            'App\Classes\Repositories\KeyMessageRepositoryInterface',
+            'App\Classes\Repositories\KeyMessageRepository'
+        );
+        $this->app->bind(
+            'App\Classes\Repositories\SupportingMessageRepositoryInterface',
+            'App\Classes\Repositories\SupportingMessageRepository'
+        );
     }
 }
