@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use League\Fractal\Manager;
+use App\Models\UsageLog;
 
 class UsageLogController extends Controller
 {
@@ -203,13 +204,38 @@ class UsageLogController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getTotals()
+    public function getTotals(Request $request)
     {
+        $this->validate($request, [
+            'society' => 'sometimes|string',
+            'region' => 'sometimes|int',
+            'hazard' => 'sometimes|string',
+            'date' => 'sometimes|date',
+            'language' => 'sometimes|string',
+        ]);
         try {
             // Cache to be enabled in production
-            //$totals = Cache::remember('usage.totals', 3600 * 24, function () {
+            $usageLog = new UsageLog;
+            $query = $usageLog->query();
+
+            if (isset($request->society)) {
+                $query->where('endpoint', 'v1/org/'.$request->society.'/whatnow');
+            }
+            if (isset($request->region)) {
+                $query->where('region', $request->region);
+            }
+            if (isset($request->hazard)) {
+                $query->where('event_type', 'like', '%' . $request->hazard . '%');
+            }
+            if (isset($request->date)) {
+                $query->whereDate('timestamp', $request->date);
+            }
+            if (isset($request->language)) {
+                $query->where('language', $request->language);
+            }
+            $usageLogs = $query->get();
+
             $applications = $this->applicationRepo->all();
-            $usageLogs = $this->usageLogRepo->all();
 
             // Calculate total estimated users
             $totalEstimatedUsers = $applications->map(function ($application) {
@@ -221,7 +247,6 @@ class UsageLogController extends Controller
                 'estimatedUsers' => $totalEstimatedUsers,
                 'hits' => count($usageLogs),
             ];
-            //});
         } catch (\Exception $e) {
             Log::error('Could not get Usage Log totals', ['message' => $e->getMessage()]);
 
