@@ -235,7 +235,9 @@ class UsageLogController extends Controller
             }
             $usageLogs = $query->get();
 
-            $applications = $this->applicationRepo->all();
+            $uniqueApplicationIds = $usageLogs->pluck('application_id')->unique();
+
+            $applications = $this->applicationRepo->findIn($uniqueApplicationIds->toArray());
 
             // Calculate total estimated users
             $totalEstimatedUsers = $applications->map(function ($application) {
@@ -243,13 +245,12 @@ class UsageLogController extends Controller
             })->sum();
 
             $totals = [
-                'applications' => count($applications),
+                'applications' => count($uniqueApplicationIds),
                 'estimatedUsers' => $totalEstimatedUsers,
                 'hits' => count($usageLogs),
             ];
         } catch (\Exception $e) {
             Log::error('Could not get Usage Log totals', ['message' => $e->getMessage()]);
-
             return response()->json([
                 'status' => 500,
                 'error_message' => 'Could not get Usage Log totals',
