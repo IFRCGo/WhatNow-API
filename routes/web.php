@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect()->to('https://whatnow.preparecenter.org');
 });
+// API documentation
+Route::get('/endpoints', [\App\Http\Controllers\RouteController::class, 'index'])
+    ->name('endpoints.index');  // Displays list of available API endpoints with documentation
