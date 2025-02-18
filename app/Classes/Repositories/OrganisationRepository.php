@@ -3,6 +3,7 @@
 namespace App\Classes\Repositories;
 
 use App\Models\Organisation;
+use App\Models\Contributor;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -87,9 +88,9 @@ class OrganisationRepository implements OrganisationRepositoryInterface
             if (count($input['translations'])) {
                 DB::transaction(function () use ($org, $input) {
                     $org->details()->delete();
-
+                    
                     foreach ($input['translations'] as $lang => $data) {
-                        $org->details()->updateOrCreate([
+                        $currentDetail = $org->details()->updateOrCreate([
                             'language_code' => strtolower($lang),
                         ], [
                             'language_code' => strtolower($lang),
@@ -97,6 +98,21 @@ class OrganisationRepository implements OrganisationRepositoryInterface
                             'attribution_message' => $data['attributionMessage'] ?? '',
                             'published' => $data['published'] ?? false,
                         ]);
+
+                        if (array_key_exists('contributors', $data)) {
+                            $currentDetail->contributors()->delete();
+
+                            foreach ($data['contributors'] as $contributor) {
+                                $contributor = new Contributor([
+                                    'name' => $contributor['name'],
+                                    'logo' => $contributor['logo'],
+                                ]);
+
+                                $contributor->validate($contributor->toArray());
+
+                                $currentDetail->contributors()->save($contributor);
+                            }
+                        }
                     }
                 });
             }

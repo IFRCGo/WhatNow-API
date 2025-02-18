@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Fractal\Manager;
 
+/**
+ * @OA\Tag(
+ *     name="Organisation",
+ *     description="Operations about Organisations"
+ * )
+ */
 class OrganisationController extends Controller
 {
     /**
@@ -101,6 +107,77 @@ class OrganisationController extends Controller
     /**
      * @param $code
      * @return \Symfony\Component\HttpFoundation\Response
+     */
+        /**
+     * @OA\Put(
+     *     path="/organisation/{code}",
+     *     summary="Update organisation by country code",
+     *     tags={"Organisation"},
+     *     @OA\Parameter(
+     *         name="code",
+     *         in="path",
+     *         description="Country code of the organisation",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="countryCode", type="string", example="USA"),
+     *             @OA\Property(property="name", type="string", example="American Red Cross"),
+     *             @OA\Property(property="url", type="string", nullable=true, example=null),
+     *             @OA\Property(
+     *                 property="translations",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="languageCode", type="string", example="en"),
+     *                     @OA\Property(property="name", type="string", example="Organization name"),
+     *                     @OA\Property(property="attributionMessage", type="string", example="Attribution Message"),
+     *                     @OA\Property(property="published", type="boolean", example=true),
+     *                     @OA\Property(
+     *                         property="contributors",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             type="object",
+     *                             @OA\Property(property="name", type="string", example="Contributor name"),
+     *                             @OA\Property(property="logo", type="string", example="logo.png")
+     *                         )
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Organisation not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="integer", example=404),
+     *             @OA\Property(property="error_message", type="string", example="Organisation does not exist"),
+     *             @OA\Property(property="errors", type="array", @OA\Items(type="string"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Organisation could not be updated",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="integer", example=500),
+     *             @OA\Property(property="error_message", type="string", example="Organisation could not be updated"),
+     *             @OA\Property(property="errors", type="array", @OA\Items(type="string"))
+     *         )
+     *     )
+     * )
      */
     public function putById($code)
     {
