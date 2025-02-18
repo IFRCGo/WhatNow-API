@@ -42,6 +42,11 @@ class ApplicationRepository implements ApplicationRepositoryInterface
         return $this->applicationModel->orderBy('id', 'desc')->get($columns);
     }
 
+    public function findIn($ids = [], $columns = ['*'])
+    {
+        return $this->applicationModel->whereIn('id', $ids)->get($columns);
+    }
+
     /**
      * @param array $attributes
      * @return Application
