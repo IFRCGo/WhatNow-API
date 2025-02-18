@@ -14,4 +14,6 @@ interface ApplicationRepositoryInterface extends RepositoryInterface
     public function findForUserId($tenantId, $userId);
 
     public function allDesc($columns);
+
+    public function findIn($ids = [], $columns = ['*']);
 }

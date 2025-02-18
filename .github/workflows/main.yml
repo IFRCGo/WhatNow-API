@@ -1,4 +1,10 @@
-on: [push]
+on: 
+ pull_request:
+        types:
+            - closed
+        branches:
+            - 'develop'
+            
 name: Linux_Container_Workflow
 jobs:
    build-and-deploy:

@@ -21,4 +21,9 @@ class CreateUsageLogsTable extends Migration
             $table->timestamp('timestamp');
         });
     }
+
+    public function down()
+    {
+        Schema::dropIfExists('usage_logs');
+    }
 }
