@@ -108,7 +108,11 @@ class OrganisationRepository implements OrganisationRepositoryInterface
                                     'logo' => $contributor['logo'],
                                 ]);
 
-                                $contributor->validate($contributor->toArray());
+                                $isValid = $contributor->validate($contributor->toArray());
+
+                                if (!$isValid) {
+                                    Log::error('Contributor validation failed', ['errors' => $contributor->errors()->toArray()]);
+                                }
 
                                 $currentDetail->contributors()->save($contributor);
                             }

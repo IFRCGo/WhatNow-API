@@ -16,8 +16,8 @@ class CreateContributorsTable extends Migration
         Schema::dropIfExists('contributors');
         Schema::create('contributors', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('name');
-            $table->text('logo');
+            $table->string('name', 100);
+            $table->string('logo', 2048)->nullable();
             $table->integer('org_detail_id')->unsigned();
             $table->foreign('org_detail_id')->references('id')->on('organisation_details')->onDelete('cascade');
         });

@@ -38,8 +38,7 @@ class Contributor extends Model
      */
     protected $rules = [
         'name' => 'required|string|between:2,100',
-        'logo' => 'string|between:2,100',
-        'org_detail_id' => 'required|integer',
+        'logo' => 'string|between:2,2048',
     ];
 
 
