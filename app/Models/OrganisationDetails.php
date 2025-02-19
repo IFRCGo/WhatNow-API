@@ -34,5 +34,10 @@ class OrganisationDetails extends Model
 	{
 		return $this->belongsTo('App\Models\Details', 'org_id', 'id');
 	}
+
+	public function contributors()
+	{
+		return $this->hasMany(Contributor::class, 'org_detail_id');
+	}
 }
 

@@ -37,7 +37,7 @@ class OrganisationTransformer extends TransformerAbstract
 			'name' => $model->org_name,
 			'url' => $model->attribution_url,
 			'imageUrl' => $model->attribution_file_name ? $model->getAttributionImageUrl() : null,
-			'translations' => null
+			'translations' => null,
 		];
 
 		if ($model->details->count()) {
@@ -45,12 +45,28 @@ class OrganisationTransformer extends TransformerAbstract
 
 			foreach ($model->details as $detail) {
 
+				$model->details->each(function ($detail) {
+					$detail->load('contributors');
+				});
+
 				if($this->unpublished || $detail->published) {
 					$response['translations'][$detail->language_code] = [
 						'languageCode' => $detail->language_code,
 						'name' => $detail->org_name,
 						'attributionMessage' => $detail->attribution_message,
 					];
+
+					$response['translations'][$detail->language_code]['contributors'] = [];
+					if ($detail->contributors->count()) {
+						
+						$response['translations'][$detail->language_code]['contributors'] = $detail->contributors->map(function ($contributor) {
+							return [
+								'id' => $contributor->id,
+								'name' => $contributor->name,
+								'logo' => $contributor->logo,
+							];
+						});
+					}
 
 					$response['translations'][$detail->language_code]['published'] = (bool) $detail->published;
 				}

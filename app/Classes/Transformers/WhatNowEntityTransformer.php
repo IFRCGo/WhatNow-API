@@ -70,7 +70,7 @@ class WhatNowEntityTransformer extends TransformerAbstract
 				'countryCode' => $model->organisation->country_code,
 				'url' => $model->organisation->attribution_url,
 				'imageUrl' => $model->organisation->attribution_file_name ? $model->organisation->getAttributionImageUrl() : null,
-				'translations' => null
+				'translations' => null,
 			],
 		];
 
@@ -78,11 +78,25 @@ class WhatNowEntityTransformer extends TransformerAbstract
 			$response['attribution']['translations'] = [];
 
 			foreach ($model->organisation->details as $detail) {
+				$model->organisation->details->each(function ($detail) {
+					$detail->load('contributors');
+				});
 				$response['attribution']['translations'][$detail->language_code] = [
 					'languageCode' => $detail->language_code,
 					'name' => $detail->org_name,
 					'attributionMessage' => $detail->attribution_message,
+					'contributors' => []
 				];
+
+				if ($detail->contributors->count()) {
+					$response['attribution']['translations'][$detail->language_code]['contributors'] = $detail->contributors->map(function ($contributor) {
+						return [
+							'id' => $contributor->id,
+							'name' => $contributor->name,
+							'logo' => $contributor->logo,
+						];
+					});
+				}
 
 				$response['attribution']['translations'][$detail->language_code]['published'] = (bool) $detail->published;
 			}
