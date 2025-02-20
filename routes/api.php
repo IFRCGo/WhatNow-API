@@ -80,6 +80,9 @@ Route::group([
     Route::post('whatnow/publish', 'WhatNowController@publishTranslationsByIds');
     Route::patch('whatnow/{id}/revisions/{translationId}',  'WhatNowController@patchTranslation');
     Route::delete('whatnow/{id}', 'WhatNowController@deleteById');
+
+    // File upload
+    Route::post('upload', 'FileUploadController@upload');
 });
 
 Route::get('/health', function () {
