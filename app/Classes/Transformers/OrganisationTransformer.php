@@ -63,7 +63,7 @@ class OrganisationTransformer extends TransformerAbstract
 							return [
 								'id' => $contributor->id,
 								'name' => $contributor->name,
-								'logo' => $contributor->logo,
+								'logo' => $contributor->logo ? $contributor->getLogoImageUrl() : null,
 							];
 						});
 					}

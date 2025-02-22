@@ -81,6 +81,7 @@ class OrganisationRepository implements OrganisationRepositoryInterface
         if (array_key_exists('url', $input)) {
             $org->update([
                 'attribution_url' => $input['url'],
+                'attribution_file_name' => $input['imageUrl'],
             ]);
         }
 

@@ -243,4 +243,10 @@ return [
 
     'cdn_host' => env('CDN_HOST', 'https://api.preparecenter.org'),
 
+    'bucket_name' => env('AZURE_STORAGE_ACCOUNT'),
+
+    'bucket_domain' => env('AZURE_STORAGE_DOMAIN'),
+
+    'bucket_container' => env('AZURE_STORAGE_CONTAINER'),
+
 ];

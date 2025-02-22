@@ -44,7 +44,7 @@ class Organisation extends Model
 
 	public function getAttributionFilePath()
 	{
-		return '/attribution_images/' . $this->attribution_file_name;
+		return '/' . $this->attribution_file_name;
 	}
 
 	public function getAttributionImageUrl()
@@ -54,10 +54,10 @@ class Organisation extends Model
 		if (app()->environment('production')) {
 
 			//return valid url
-			return url(config('app.cdn_host') . config('app.cdn_asset_path') . $filepath);
+			return url(('https://'). config('app.bucket_name') . '.' . config('app.bucket_domain') . '/' . config('app.bucket_container') . $filepath);
 		}
-
-		return url(config('app.url') . config('app.cdn_asset_path') . $filepath);
+		//TODO configure for QA environment
+		return url(('https://'). config('app.bucket_name') . '.' . config('app.bucket_domain') . '/' . config('app.bucket_container') . $filepath);
 	}
 }
 
