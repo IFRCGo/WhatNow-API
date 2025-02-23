@@ -164,6 +164,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        App\Providers\AzureStorageServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -231,6 +232,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+
     ],
 
     'cdn_alert_path' => '/v1/alerts/cap12',
@@ -240,5 +242,11 @@ return [
     'cdn_feed_path' => '/v1/feeds/static',
 
     'cdn_host' => env('CDN_HOST', 'https://api.preparecenter.org'),
+
+    'bucket_name' => env('AZURE_STORAGE_ACCOUNT'),
+
+    'bucket_domain' => env('AZURE_STORAGE_DOMAIN'),
+
+    'bucket_container' => env('AZURE_STORAGE_CONTAINER'),
 
 ];

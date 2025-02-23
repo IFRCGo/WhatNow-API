@@ -72,4 +72,22 @@ class Contributor extends Model
         return $this->belongsTo(OrganisationDetails::class, 'org_detail_id');
     }
 
+    public function getLogoPath()
+	{
+		return '/' . $this->logo;
+	}
+
+    public function getLogoImageUrl()
+	{
+		$filepath = $this->getLogoPath();
+
+		if (app()->environment('production')) {
+
+			//return valid url
+			return url(('https://'). config('app.bucket_name') . '.' . config('app.bucket_domain') . '/' . config('app.bucket_container') . $filepath);
+		}
+		//TODO configure for QA environment
+		return url(('https://'). config('app.bucket_name') . '.' . config('app.bucket_domain') . '/' . config('app.bucket_container') . $filepath);
+	}
+
 }
