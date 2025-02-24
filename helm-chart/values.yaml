@@ -18,7 +18,6 @@ env:
     APP_DEBUG: false
     APP_URL: http://localhost
     LOG_CHANNEL: stack
-    STATS_DB_PORT: 3306
     DB_PORT: 3306
     DB_CONNECTION: mysql
     BROADCAST_DRIVER: log
