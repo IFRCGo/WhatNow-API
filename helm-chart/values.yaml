@@ -46,6 +46,10 @@ env:
     MIX_PUSHER_APP_CLUSTER: "${PUSHER_APP_CLUSTER}"
     AZURE_STORAGE_ACCOUNT: whatnowimages
     AZURE_STORAGE_CONTAINER: images
+    AZURE_STORAGE_DOMAIN=blob:
+        core:
+            windows:
+                net:
 
 secrets:
     dbSecretName: admin-credentials
