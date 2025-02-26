@@ -8,7 +8,7 @@ replicaCount: 1
 
 # Kubernetes service configuration
 service:
-    type: LoadBalancer
+    type: ClusterIP
     port: 80
     targetPort: 80
 # Environment variables
@@ -64,10 +64,20 @@ secrets:
 # Ingress (if using)
 ingress:
     enabled: true
-    annotations: { }
+    annotations:
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     hosts:
         - host: "api.whatnow"
           paths:
               - path: /
                 pathType: ImplementationSpecific
-    tls: []
+        - host: "api.whatnow.jazusoft.com"
+          paths:
+              - path: /
+                pathType: Prefix
+    tls:
+        - hosts:
+              - "api.whatnow.jazusoft.com"
+          secretName: "your-tls-secret"
