@@ -21,6 +21,12 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 
+/**
+ * @OA\Tag(
+ *     name="Whatnow",
+ *     description="Operations about Regions"
+ * )
+ */
 class WhatNowController extends Controller
 {
     /**
@@ -83,6 +89,34 @@ class WhatNowController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    /**
+     * @OA\Get(
+     *     path="/whatnow/{id}",
+     *     tags={"Whatnow"},
+     *     summary="Obtiene un recurso publicado por ID",
+     *     description="Retorna los detalles de un recurso publicado basado en el ID proporcionado.",
+     *     operationId="getPublishedById",
+     *     security={{"ApiKeyAuth": {}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID del recurso publicado",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function getPublishedById($id)
     {
         try {
@@ -119,6 +153,29 @@ class WhatNowController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    /**
+     * @OA\Get(
+     *     path="/whatnow/{id}/revisions/latest",
+     *     tags={"Whatnow"},
+     *     summary="Get the latest revision of a WhatNow entity by ID",
+     *     operationId="getLatestById",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the WhatNow entity to fetch the latest revision for",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function getLatestById($id)
     {
         try {
@@ -151,6 +208,29 @@ class WhatNowController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    /**
+     * @OA\Delete(
+     *     path="/whatnow/{id}",
+     *     tags={"Whatnow"},
+     *     summary="Delete a WhatNow entity by ID",
+     *     operationId="deleteById",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the WhatNow entity to delete",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function deleteById($id)
     {
         try {
@@ -175,6 +255,51 @@ class WhatNowController extends Controller
      * @param WhatNowFeed $feed
      * @param $code
      * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    /**
+     * @OA\Get(
+     *     path="/org/{code}/whatnow",
+     *     tags={"Whatnow"},
+     *     summary="Get a feed of WhatNow entities for a specific organisation",
+     *     operationId="getFeed",
+     *     security={{"ApiKeyAuth": {}}},
+     *     @OA\Parameter(
+     *         name="code",
+     *         in="path",
+     *         required=true,
+     *         description="Country code of the organisation",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="region",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by region slug",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by language code",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="eventType",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by event type",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
      */
     public function getFeed(WhatNowFeed $feed, $code)
     {
@@ -233,6 +358,29 @@ class WhatNowController extends Controller
      * @param $code
      * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
+    /**
+     * @OA\Get(
+     *     path="/org/{code}/whatnow/revisions/latest",
+     *     tags={"Whatnow"},
+     *     summary="Get the latest revisions for a country code",
+     *     operationId="getLatestForCountryCode",
+     *     @OA\Parameter(
+     *         name="code",
+     *         in="path",
+     *         required=true,
+     *         description="Country code to fetch the latest revisions for",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function getLatestForCountryCode($code)
     {
         try {
@@ -261,6 +409,36 @@ class WhatNowController extends Controller
     /**
      * @param $code
      * @return \Laravel\Lumen\Http\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    /**
+     * @OA\Get(
+     *     path="/org/{code}/{region}/whatnow/revisions/latest",
+     *     tags={"Whatnow"},
+     *     summary="Get the latest revisions for a specific region",
+     *     operationId="getLatestForRegion",
+     *     @OA\Parameter(
+     *         name="code",
+     *         in="path",
+     *         required=true,
+     *         description="Country code to fetch the latest revisions for",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="region",
+     *         in="path",
+     *         required=true,
+     *         description="Region slug to fetch the latest revisions for",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
      */
     public function getLatestForRegion($code, $region)
     {
@@ -316,6 +494,42 @@ class WhatNowController extends Controller
 
     /**
      * Creates a new WhatNow Entity
+     */
+    /**
+     * @OA\Post(
+     *     path="/whatnow",
+     *     tags={"Whatnow"},
+     *     summary="Create a new WhatNow entity",
+     *     operationId="createWhatNowEntity",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"countryCode", "eventType", "translations"},
+     *             @OA\Property(property="countryCode", type="string", example="USA", description="Country code (3 characters)"),
+     *             @OA\Property(property="eventType", type="string", example="Flood", description="Type of event (max 50 characters)"),
+     *             @OA\Property(property="regionName", type="string", example="North Region", description="Name of the region (optional)"),
+     *             @OA\Property(
+     *                 property="translations",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="webUrl", type="string", format="url", example="https://example.com", description="Web URL for the translation (optional)"),
+     *                     @OA\Property(property="lang", type="string", example="en", description="Language code (2 characters)"),
+     *                     @OA\Property(property="title", type="string", example="Flood Alert", description="Title in the specified language"),
+     *                     @OA\Property(property="description", type="string", example="Description of the event", description="Description in the specified language")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
      */
     public function post()
     {
@@ -409,6 +623,49 @@ class WhatNowController extends Controller
         return response()->json(['data' => $response->toArray()], 201);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/whatnow/{id}",
+     *     tags={"Whatnow"},
+     *     summary="Update a WhatNow entity by ID",
+     *     operationId="putById",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the WhatNow entity to update",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"countryCode", "eventType", "translations"},
+     *             @OA\Property(property="countryCode", type="string", example="USA", description="Country code (3 characters)"),
+     *             @OA\Property(property="eventType", type="string", example="Flood", description="Type of event (max 50 characters)"),
+     *             @OA\Property(property="regionName", type="string", example="North Region", description="Name of the region (optional)"),
+     *             @OA\Property(
+     *                 property="translations",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="webUrl", type="string", example="https://example.com", description="Web URL for the translation (optional)"),
+     *                     @OA\Property(property="lang", type="string", example="en", description="Language code (2 characters)"),
+     *                     @OA\Property(property="title", type="string", example="Flood Alert", description="Title in the specified language"),
+     *                     @OA\Property(property="description", type="string", example="Description of the event", description="Description in the specified language")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function putById($id)
     {
         try {
@@ -493,6 +750,40 @@ class WhatNowController extends Controller
         return response()->json(['data' => $response->toArray()], 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/whatnow/{id}/revisions",
+     *     tags={"Whatnow"},
+     *     summary="Create a new translation for a WhatNow entity",
+     *     operationId="createNewTranslation",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the WhatNow entity to add a translation to",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"webUrl", "lang", "title", "stages"},
+     *             @OA\Property(property="webUrl", type="string", format="url", example="https://example.com", description="Web URL for the translation"),
+     *             @OA\Property(property="lang", type="string", example="en", description="Language code (2 characters)"),
+     *             @OA\Property(property="title", type="string", example="Flood Alert", description="Title in the specified language"),
+     *             @OA\Property(property="description", type="string", example="Description of the event", description="Description in the specified language (optional)"),
+     *             @OA\Property(property="stages", type="array", @OA\Items(type="object"), description="Stages associated with the translation")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function createNewTranslation($id)
     {
         try {
@@ -548,6 +839,43 @@ class WhatNowController extends Controller
      * @param int $translationId
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    /**
+     * @OA\Patch(
+     *     path="/whatnow/{id}/revisions/{translationId}",
+     *     tags={"Whatnow"},
+     *     summary="Update the published status of a translation",
+     *     operationId="patchTranslation",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the WhatNow entity",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Parameter(
+     *         name="translationId",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the translation to update",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"published"},
+     *             @OA\Property(property="published", type="boolean", example=true, description="Publish status of the translation")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function patchTranslation($id, $translationId)
     {
         $this->validate($this->request, [
@@ -594,6 +922,34 @@ class WhatNowController extends Controller
         return response()->json(['data' => $response->toArray()], 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/whatnow/publish",
+     *     tags={"Whatnow"},
+     *     summary="Publish translations by IDs",
+     *     operationId="publishTranslationsByIds",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"translationIds"},
+     *             @OA\Property(
+     *                 property="translationIds",
+     *                 type="array",
+     *                 @OA\Items(type="integer", format="int64"),
+     *                 description="Array of translation IDs to publish"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function publishTranslationsByIds()
     {
         $this->validate($this->request, [

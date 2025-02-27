@@ -10,7 +10,12 @@ use App\Models\RegionTranslation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-
+/**
+ * @OA\Tag(
+ *     name="Regions",
+ *     description="Operations about Regions"
+ * )
+ */
 class RegionController extends Controller
 {
     /**
@@ -32,6 +37,42 @@ class RegionController extends Controller
         $this->regRepo = $regRepo;
     }
 
+    /**
+     * @OA\Post(
+     *     path="/regions",
+     *     tags={"Regions"},
+     *     summary="Create a new region",
+     *     operationId="createRegion",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"countryCode", "title"},
+     *             @OA\Property(property="countryCode", type="string", example="USA", description="Country code (3 characters)"),
+     *             @OA\Property(property="title", type="string", example="North America", description="Title of the region"),
+     *             @OA\Property(property="slug", type="string", example="north-america", description="Slug for the region (optional)"),
+     *             @OA\Property(
+     *                 property="translations",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="webUrl", type="string", format="url", example="https://example.com", description="Web URL for the translation"),
+     *                     @OA\Property(property="lang", type="string", example="en", description="Language code (2 characters)"),
+     *                     @OA\Property(property="title", type="string", example="North America", description="Title in the specified language"),
+     *                     @OA\Property(property="description", type="string", example="Description of the region", description="Description in the specified language")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function createRegion(Request $request)
     {
         try {
@@ -85,6 +126,47 @@ class RegionController extends Controller
         return response()->json($region->fresh('translations'), 201);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/regions/region/{regionId}",
+     *     tags={"Regions"},
+     *     summary="Update an existing region",
+     *     operationId="updateRegion",
+     *     @OA\Parameter(
+     *         name="regionId",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the region to update",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="title", type="string", example="Updated Region Title", description="Updated title of the region (optional)"),
+     *             @OA\Property(property="slug", type="string", example="updated-region-slug", description="Updated slug for the region (optional)"),
+     *             @OA\Property(
+     *                 property="translations",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="webUrl", type="string", format="url", example="https://example.com", description="Web URL for the translation"),
+     *                     @OA\Property(property="lang", type="string", example="en", description="Language code (2 characters)"),
+     *                     @OA\Property(property="title", type="string", example="Updated Title in Language", description="Title in the specified language"),
+     *                     @OA\Property(property="description", type="string", example="Updated description in language", description="Description in the specified language")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function updateRegion(Request $request, $regionId)
     {
         $region = Region::find($regionId);
@@ -132,6 +214,27 @@ class RegionController extends Controller
         return response()->json($region->fresh('translations'), 201);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/regions/{country_code}",
+     *     summary="Get all regions for a specific organisation by country code",
+     *     tags={"Regions"},
+     *     @OA\Parameter(
+     *         name="country_code",
+     *         in="path",
+     *         description="Country code of the organisation",
+     *         required=true
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     * )
+     */
     public function getAllForOrganisation($country_code)
     {
         if (empty($country_code)) {
@@ -165,6 +268,35 @@ class RegionController extends Controller
         return response()->json($list, 200);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/regions/{country_code}/{code}",
+     *     summary="Get regions for a specific organisation by country code and language code",
+     *     tags={"Regions"},
+     *     @OA\Parameter(
+     *         name="country_code",
+     *         in="path",
+     *         description="Country code of the organisation",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="code",
+     *         in="path",
+     *         description="Language code for translations",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     * )
+     */
     public function getForCountryCode($country_code, $code)
     {
         if (empty($country_code) || empty($code)) {
@@ -195,6 +327,29 @@ class RegionController extends Controller
         return response()->json($list, 200);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/regions/region/{regionId}",
+     *     tags={"Regions"},
+     *     summary="Delete a region",
+     *     operationId="deleteRegion",
+     *     @OA\Parameter(
+     *         name="regionId",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the region to delete",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function deleteRegion($regionId)
     {
         $region = Region::find($regionId);
@@ -211,6 +366,29 @@ class RegionController extends Controller
         return response()->json([ 'message' => 'Region deleted'], 202);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/regions/region/translation/{translationId}",
+     *     tags={"Regions"},
+     *     summary="Delete a region translation",
+     *     operationId="deleteTranslation",
+     *     @OA\Parameter(
+     *         name="translationId",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the translation to delete",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function deleteTranslation($translationId)
     {
         $translation = RegionTranslation::find($translationId);

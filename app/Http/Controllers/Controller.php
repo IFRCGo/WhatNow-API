@@ -8,10 +8,16 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 /**
- * @OA\Info(
- *    title="Whatnow API",
- *    description="Whatnow API documentation",
- *    version="1.0.0",
+ * @OA\OpenApi(
+ *    @OA\Info(
+ *        title="Whatnow API",
+ *        description="Whatnow API documentation",
+ *        version="1.0.0",
+ *    ),
+ *    @OA\Server(
+ *        url=L5_SWAGGER_CONST_HOST,
+ *        description="API Base URL"
+ *    )
  * )
  */
 class Controller extends BaseController

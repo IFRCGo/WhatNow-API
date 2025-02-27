@@ -75,6 +75,7 @@ return [
              * Route Group options
              */
             'group_options' => [],
+            'security' => [['BasicAuth' => []]],
         ],
 
         'paths' => [
@@ -215,6 +216,15 @@ return [
                     'in' => 'header', // The location of the API key. Valid values are "query" or "header".
                 ],
                 */
+                'BasicAuth' => [
+                    'type' => 'http',
+                    'scheme' => 'basic'
+                ],
+                'ApiKeyAuth' => [
+                    'type' => 'apiKey',
+                    'in' => 'header',
+                    'name' => 'x-api-key',
+                ],
             ],
             'security' => [
                 /*
@@ -229,6 +239,7 @@ return [
 
                     'passport' => []
                     */
+                    'BasicAuth' => []
                 ],
             ],
         ],
@@ -312,7 +323,7 @@ return [
          * Constants which can be used in annotations
          */
         'constants' => [
-            'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
+            'L5_SWAGGER_CONST_HOST' => env('APP_URL', 'http://localhost') . '/v1',
         ],
     ],
 ];
