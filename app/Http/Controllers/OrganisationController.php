@@ -195,7 +195,7 @@ class OrganisationController extends Controller
      *                         property="attributionMessage",
      *                         type="string",
      *                         maxLength=2048,
-     *                         example="PRUEBA 2"
+     *                         example="attributionMessage example"
      *                     ),
      *                     @OA\Property(
      *                         property="contributors",
