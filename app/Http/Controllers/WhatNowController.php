@@ -24,7 +24,7 @@ use League\Fractal\Resource\Item;
 /**
  * @OA\Tag(
  *     name="Whatnow",
- *     description="Operations about Regions"
+ *     description="Operations about Whatnow messages"
  * )
  */
 class WhatNowController extends Controller

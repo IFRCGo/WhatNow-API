@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 /**
  * @OA\Tag(
  *     name="Files",
- *     description="Operations about Regions"
+ *     description="Operations about Files"
  * )
  */
 class FileUploadController extends Controller
