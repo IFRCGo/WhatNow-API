@@ -48,6 +48,22 @@ class OrganisationController extends Controller
         $this->manager = $manager;
     }
 
+    /**
+     * @OA\Get(
+     *     path="/org",
+     *     summary="Get all organisations",
+     *     security={{"ApiKeyAuth": {}}},
+     *     tags={"Organisation"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     * )
+     */
     public function getAll(Request $request)
     {
         try {
@@ -80,6 +96,29 @@ class OrganisationController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
+        /**
+     * @OA\Get(
+     *     path="/org/{code}",
+     *     summary="Get organisation by country code",
+     *     tags={"Organisation"},
+     *     security={{"ApiKeyAuth": {}}},
+     *     @OA\Parameter(
+     *         name="code",
+     *         in="path",
+     *         description="Country code of the organisation",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     * )
+     */
     public function getById($code, Request $request)
     {
         try {
@@ -108,42 +147,82 @@ class OrganisationController extends Controller
      * @param $code
      * @return \Symfony\Component\HttpFoundation\Response
      */
-        /**
+    /**
      * @OA\Put(
-     *     path="/organisation/{code}",
-     *     summary="Update organisation by country code",
+     *     path="/org/{code}",
      *     tags={"Organisation"},
+     *     summary="Update an organisation by its country code",
+     *     description="Updates the details of an organisation based on the provided country code.",
+     *     operationId="OrganisationController@putById",
      *     @OA\Parameter(
      *         name="code",
      *         in="path",
      *         description="Country code of the organisation",
      *         required=true,
-     *         @OA\Schema(type="string")
+     *         @OA\Schema(
+     *             type="string"
+     *         )
      *     ),
      *     @OA\RequestBody(
      *         required=true,
+     *         description="Data to update the organisation",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="countryCode", type="string", example="USA"),
-     *             @OA\Property(property="name", type="string", example="American Red Cross"),
-     *             @OA\Property(property="url", type="string", nullable=true, example=null),
+     *             @OA\Property(
+     *                 property="url",
+     *                 type="string",
+     *                 maxLength=255,
+     *                 nullable=true,
+     *                 example="https://example.com"
+     *             ),
      *             @OA\Property(
      *                 property="translations",
-     *                 type="array",
-     *                 @OA\Items(
+     *                 type="object",
+     *                 @OA\AdditionalProperties(
      *                     type="object",
-     *                     @OA\Property(property="languageCode", type="string", example="en"),
-     *                     @OA\Property(property="name", type="string", example="Organization name"),
-     *                     @OA\Property(property="attributionMessage", type="string", example="Attribution Message"),
-     *                     @OA\Property(property="published", type="boolean", example=true),
+     *                     @OA\Property(
+     *                         property="languageCode",
+     *                         type="string",
+     *                         example="en"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="name",
+     *                         type="string",
+     *                         maxLength=255,
+     *                         example="International Federation of Red Cross and Red Crescent Societies"
+     *                     ),
+     *                     @OA\Property(
+     *                         property="attributionMessage",
+     *                         type="string",
+     *                         maxLength=2048,
+     *                         example="attributionMessage example"
+     *                     ),
      *                     @OA\Property(
      *                         property="contributors",
      *                         type="array",
      *                         @OA\Items(
      *                             type="object",
-     *                             @OA\Property(property="name", type="string", example="Contributor name"),
-     *                             @OA\Property(property="logo", type="string", example="logo.png")
+     *                             @OA\Property(
+     *                                 property="id",
+     *                                 type="integer",
+     *                                 example=111
+     *                             ),
+     *                             @OA\Property(
+     *                                 property="name",
+     *                                 type="string",
+     *                                 example="This is an example string with exactly one hundred characters, including spaces and symbols"
+     *                             ),
+     *                             @OA\Property(
+     *                                 property="logo",
+     *                                 type="string",
+     *                                 example="https://whatnowimages.blob.core.windows.net/images/LOGO"
+     *                             )
      *                         )
+     *                     ),
+     *                     @OA\Property(
+     *                         property="published",
+     *                         type="boolean",
+     *                         example=true
      *                     )
      *                 )
      *             )
@@ -154,27 +233,7 @@ class OrganisationController extends Controller
      *         description="Successful response",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="data", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Organisation not found",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="integer", example=404),
-     *             @OA\Property(property="error_message", type="string", example="Organisation does not exist"),
-     *             @OA\Property(property="errors", type="array", @OA\Items(type="string"))
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Organisation could not be updated",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="status", type="integer", example=500),
-     *             @OA\Property(property="error_message", type="string", example="Organisation could not be updated"),
-     *             @OA\Property(property="errors", type="array", @OA\Items(type="string"))
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
      *         )
      *     )
      * )

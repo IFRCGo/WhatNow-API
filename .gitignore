@@ -1,3 +1,6 @@
+# Except swagger file
+!storage/api-docs/api-docs.json
+
 /node_modules
 /public/hot
 /public/storage
@@ -5,7 +8,9 @@
 /storage/*.key
 /vendor
 .vapor/
-storage/
+storage/**/*
+!storage/api-docs/
+!storage/api-docs/api-docs.json
 .env
 .env.backup
 .phpunit.result.cache

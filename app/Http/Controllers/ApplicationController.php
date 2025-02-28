@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use League\Fractal\Manager;
 
+/**
+ * @OA\Tag(
+ *     name="Aplications",
+ *     description="Operations about Aplications"
+ * )
+ */
 class ApplicationController extends Controller
 {
     /**
@@ -54,6 +60,29 @@ class ApplicationController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    /**
+     * @OA\Get(
+     *     path="/apps",
+     *     tags={"Applications"},
+     *     summary="Get all applications for a user",
+     *     operationId="getAllForUser",
+     *     @OA\Parameter(
+     *         name="userId",
+     *         in="query",
+     *         required=true,
+     *         description="ID of the user to fetch applications for",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function getAllForUser(Request $request)
     {
         $this->validate($this->request, [
@@ -85,6 +114,29 @@ class ApplicationController extends Controller
     /**
      * @param int $id
      * @return \Symfony\Component\HttpFoundation\Response
+     */
+    /**
+     * @OA\Get(
+     *     path="/apps/{id}",
+     *     tags={"Applications"},
+     *     summary="Get an application by ID",
+     *     operationId="getApplicationById",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the application to retrieve",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
      */
     public function getById($id)
     {
@@ -119,6 +171,32 @@ class ApplicationController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    /**
+     * @OA\Post(
+     *     path="/apps",
+     *     tags={"Applications"},
+     *     summary="Create a new application",
+     *     operationId="createApplication",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "userId"},
+     *             @OA\Property(property="name", type="string", example="My Application", description="Name of the application"),
+     *             @OA\Property(property="description", type="string", example="A description of the application", description="Description of the application (optional)"),
+     *             @OA\Property(property="userId", type="string", example="user123", description="ID of the user creating the application"),
+     *             @OA\Property(property="estimatedUsers", type="integer", example=100, description="Estimated number of users (optional)")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function create(Request $request)
     {
         $this->validate($this->request, [
@@ -152,6 +230,35 @@ class ApplicationController extends Controller
         return response()->json($response->toArray(), 201);
     }
 
+    /**
+     * @OA\Patch(
+     *     path="/apps/{id}",
+     *     tags={"Applications"},
+     *     summary="Update an application by ID",
+     *     operationId="updateApplication",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the application to update",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="estimatedUsers", type="integer", example=100, description="Estimated number of users (optional)")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $this->validate($this->request, [
@@ -182,8 +289,27 @@ class ApplicationController extends Controller
     }
 
     /**
-     * @param int $id
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @OA\Delete(
+     *     path="/apps/{id}",
+     *     tags={"Applications"},
+     *     summary="Delete an application by ID",
+     *     operationId="deleteApplication",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the application to delete",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
      */
     public function delete($id)
     {

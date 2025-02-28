@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Log;
 use League\Fractal\Manager;
 use App\Models\UsageLog;
 
+/**
+ * @OA\Tag(
+ *     name="UsageLogs",
+ *     description="Operations about UsageLog"
+ * )
+ */
 class UsageLogController extends Controller
 {
     /**
@@ -40,6 +46,36 @@ class UsageLogController extends Controller
         $this->usageLogRepo = $usageLogRepo;
     }
 
+    /**
+     * @OA\Get(
+     *     path="/usage/applications",
+     *     tags={"UsageLogs"},
+     *     summary="Get application usage logs",
+     *     operationId="getApplicationLogs",
+     *     @OA\Parameter(
+     *         name="fromDate",
+     *         in="query",
+     *         required=false,
+     *         description="Start date for filtering logs (format: YYYY-MM-DD)",
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="toDate",
+     *         in="query",
+     *         required=false,
+     *         description="End date for filtering logs (format: YYYY-MM-DD)",
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function getApplicationLogs(Request $request)
     {
         $this->validate($request, [
@@ -84,6 +120,36 @@ class UsageLogController extends Controller
         ], 200);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/usage/endpoints",
+     *     tags={"UsageLogs"},
+     *     summary="Get endpoint usage logs",
+     *     operationId="getEndpointLogs",
+     *     @OA\Parameter(
+     *         name="fromDate",
+     *         in="query",
+     *         required=false,
+     *         description="Start date for filtering logs (format: YYYY-MM-DD)",
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="toDate",
+     *         in="query",
+     *         required=false,
+     *         description="End date for filtering logs (format: YYYY-MM-DD)",
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function getEndpointLogs(Request $request)
     {
         $this->validate($request, [
@@ -126,6 +192,36 @@ class UsageLogController extends Controller
         ], 200);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/usage/export",
+     *     tags={"UsageLogs"},
+     *     summary="Export usage logs as CSV",
+     *     operationId="exportUsageLogs",
+     *     @OA\Parameter(
+     *         name="fromDate",
+     *         in="query",
+     *         required=false,
+     *         description="Start date for filtering logs (format: YYYY-MM-DD)",
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="toDate",
+     *         in="query",
+     *         required=false,
+     *         description="End date for filtering logs (format: YYYY-MM-DD)",
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
     public function export(Request $request)
     {
         $this->validate($request, [
@@ -203,6 +299,57 @@ class UsageLogController extends Controller
 
     /**
      * @return \Symfony\Component\HttpFoundation\Response
+     */
+    /**
+     * @OA\Get(
+     *     path="/usage/totals",
+     *     tags={"UsageLogs"},
+     *     summary="Get usage log totals",
+     *     operationId="getTotals",
+     *     @OA\Parameter(
+     *         name="society",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by society",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="region",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by region ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="hazard",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by hazard type",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="date",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by specific date (format: YYYY-MM-DD)",
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="language",
+     *         in="query",
+     *         required=false,
+     *         description="Filter by language",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
      */
     public function getTotals(Request $request)
     {

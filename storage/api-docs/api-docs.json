@@ -1,0 +1,1788 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Whatnow API",
+        "description": "Whatnow API documentation",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8085/v1",
+            "description": "API Base URL"
+        }
+    ],
+    "paths": {
+        "/apps": {
+            "get": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Get all applications for a user",
+                "operationId": "getAllForUser",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "ID of the user to fetch applications for",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Create a new application",
+                "operationId": "createApplication",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "userId"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Name of the application",
+                                        "type": "string",
+                                        "example": "My Application"
+                                    },
+                                    "description": {
+                                        "description": "Description of the application (optional)",
+                                        "type": "string",
+                                        "example": "A description of the application"
+                                    },
+                                    "userId": {
+                                        "description": "ID of the user creating the application",
+                                        "type": "string",
+                                        "example": "user123"
+                                    },
+                                    "estimatedUsers": {
+                                        "description": "Estimated number of users (optional)",
+                                        "type": "integer",
+                                        "example": 100
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/apps/{id}": {
+            "get": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Get an application by ID",
+                "operationId": "getApplicationById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the application to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Delete an application by ID",
+                "operationId": "deleteApplication",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the application to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Update an application by ID",
+                "operationId": "updateApplication",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the application to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "estimatedUsers": {
+                                        "description": "Estimated number of users (optional)",
+                                        "type": "integer",
+                                        "example": 100
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/upload": {
+            "post": {
+                "tags": [
+                    "Whatnow"
+                ],
+                "summary": "Upload a file",
+                "operationId": "uploadFile",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "description": "File to upload (allowed types: jpg, png; max size: 10MB)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/org": {
+            "get": {
+                "tags": [
+                    "Organisation"
+                ],
+                "summary": "Get all organisations",
+                "operationId": "04f86edf4b63c5b0f297e462633924b4",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/org/{code}": {
+            "get": {
+                "tags": [
+                    "Organisation"
+                ],
+                "summary": "Get organisation by country code",
+                "operationId": "b4a9c9d91b102ab0d0709eae9104db61",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "Country code of the organisation",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Organisation"
+                ],
+                "summary": "Update an organisation by its country code",
+                "description": "Updates the details of an organisation based on the provided country code.",
+                "operationId": "OrganisationController@putById",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "Country code of the organisation",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Data to update the organisation",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "url": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "https://example.com",
+                                        "nullable": true
+                                    },
+                                    "translations": {
+                                        "type": "object",
+                                        "additionalProperties": {
+                                            "properties": {
+                                                "languageCode": {
+                                                    "type": "string",
+                                                    "example": "en"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "maxLength": 255,
+                                                    "example": "International Federation of Red Cross and Red Crescent Societies"
+                                                },
+                                                "attributionMessage": {
+                                                    "type": "string",
+                                                    "maxLength": 2048,
+                                                    "example": "PRUEBA 2"
+                                                },
+                                                "contributors": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 111
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "This is an example string with exactly one hundred characters, including spaces and symbols"
+                                                            },
+                                                            "logo": {
+                                                                "type": "string",
+                                                                "example": "https://whatnowimages.blob.core.windows.net/images/LOGO"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "published": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/regions": {
+            "post": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Create a new region",
+                "operationId": "createRegion",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "countryCode",
+                                    "title"
+                                ],
+                                "properties": {
+                                    "countryCode": {
+                                        "description": "Country code (3 characters)",
+                                        "type": "string",
+                                        "example": "USA"
+                                    },
+                                    "title": {
+                                        "description": "Title of the region",
+                                        "type": "string",
+                                        "example": "North America"
+                                    },
+                                    "slug": {
+                                        "description": "Slug for the region (optional)",
+                                        "type": "string",
+                                        "example": "north-america"
+                                    },
+                                    "translations": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "webUrl": {
+                                                    "description": "Web URL for the translation",
+                                                    "type": "string",
+                                                    "format": "url",
+                                                    "example": "https://example.com"
+                                                },
+                                                "lang": {
+                                                    "description": "Language code (2 characters)",
+                                                    "type": "string",
+                                                    "example": "en"
+                                                },
+                                                "title": {
+                                                    "description": "Title in the specified language",
+                                                    "type": "string",
+                                                    "example": "North America"
+                                                },
+                                                "description": {
+                                                    "description": "Description in the specified language",
+                                                    "type": "string",
+                                                    "example": "Description of the region"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/regions/region/{regionId}": {
+            "put": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Update an existing region",
+                "operationId": "updateRegion",
+                "parameters": [
+                    {
+                        "name": "regionId",
+                        "in": "path",
+                        "description": "ID of the region to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "description": "Updated title of the region (optional)",
+                                        "type": "string",
+                                        "example": "Updated Region Title"
+                                    },
+                                    "slug": {
+                                        "description": "Updated slug for the region (optional)",
+                                        "type": "string",
+                                        "example": "updated-region-slug"
+                                    },
+                                    "translations": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "webUrl": {
+                                                    "description": "Web URL for the translation",
+                                                    "type": "string",
+                                                    "format": "url",
+                                                    "example": "https://example.com"
+                                                },
+                                                "lang": {
+                                                    "description": "Language code (2 characters)",
+                                                    "type": "string",
+                                                    "example": "en"
+                                                },
+                                                "title": {
+                                                    "description": "Title in the specified language",
+                                                    "type": "string",
+                                                    "example": "Updated Title in Language"
+                                                },
+                                                "description": {
+                                                    "description": "Description in the specified language",
+                                                    "type": "string",
+                                                    "example": "Updated description in language"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Delete a region",
+                "operationId": "deleteRegion",
+                "parameters": [
+                    {
+                        "name": "regionId",
+                        "in": "path",
+                        "description": "ID of the region to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/regions/{country_code}": {
+            "get": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Get all regions for a specific organisation by country code",
+                "operationId": "d2296fe4eb4c2d71309b7bd2370494bd",
+                "parameters": [
+                    {
+                        "name": "country_code",
+                        "in": "path",
+                        "description": "Country code of the organisation",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/regions/{country_code}/{code}": {
+            "get": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Get regions for a specific organisation by country code and language code",
+                "operationId": "e80be67aaefaf2057958c0e54908fbc9",
+                "parameters": [
+                    {
+                        "name": "country_code",
+                        "in": "path",
+                        "description": "Country code of the organisation",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "Language code for translations",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/regions/region/translation/{translationId}": {
+            "delete": {
+                "tags": [
+                    "Regions"
+                ],
+                "summary": "Delete a region translation",
+                "operationId": "deleteTranslation",
+                "parameters": [
+                    {
+                        "name": "translationId",
+                        "in": "path",
+                        "description": "ID of the translation to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usage/applications": {
+            "get": {
+                "tags": [
+                    "UsageLogs"
+                ],
+                "summary": "Get application usage logs",
+                "operationId": "getApplicationLogs",
+                "parameters": [
+                    {
+                        "name": "fromDate",
+                        "in": "query",
+                        "description": "Start date for filtering logs (format: YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "toDate",
+                        "in": "query",
+                        "description": "End date for filtering logs (format: YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usage/endpoints": {
+            "get": {
+                "tags": [
+                    "UsageLogs"
+                ],
+                "summary": "Get endpoint usage logs",
+                "operationId": "getEndpointLogs",
+                "parameters": [
+                    {
+                        "name": "fromDate",
+                        "in": "query",
+                        "description": "Start date for filtering logs (format: YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "toDate",
+                        "in": "query",
+                        "description": "End date for filtering logs (format: YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usage/export": {
+            "get": {
+                "tags": [
+                    "UsageLogs"
+                ],
+                "summary": "Export usage logs as CSV",
+                "operationId": "exportUsageLogs",
+                "parameters": [
+                    {
+                        "name": "fromDate",
+                        "in": "query",
+                        "description": "Start date for filtering logs (format: YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "toDate",
+                        "in": "query",
+                        "description": "End date for filtering logs (format: YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/usage/totals": {
+            "get": {
+                "tags": [
+                    "UsageLogs"
+                ],
+                "summary": "Get usage log totals",
+                "operationId": "getTotals",
+                "parameters": [
+                    {
+                        "name": "society",
+                        "in": "query",
+                        "description": "Filter by society",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "region",
+                        "in": "query",
+                        "description": "Filter by region ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "hazard",
+                        "in": "query",
+                        "description": "Filter by hazard type",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "description": "Filter by specific date (format: YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Filter by language",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/whatnow/{id}": {
+            "get": {
+                "tags": [
+                    "Whatnow"
+                ],
+                "summary": "Obtiene un recurso publicado por ID",
+                "description": "Retorna los detalles de un recurso publicado basado en el ID proporcionado.",
+                "operationId": "getPublishedById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del recurso publicado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Whatnow"
+                ],
+                "summary": "Update a WhatNow entity by ID",
+                "operationId": "putById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the WhatNow entity to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "countryCode",
+                                    "eventType",
+                                    "translations"
+                                ],
+                                "properties": {
+                                    "countryCode": {
+                                        "description": "Country code (3 characters)",
+                                        "type": "string",
+                                        "example": "USA"
+                                    },
+                                    "eventType": {
+                                        "description": "Type of event (max 50 characters)",
+                                        "type": "string",
+                                        "example": "Flood"
+                                    },
+                                    "regionName": {
+                                        "description": "Name of the region (optional)",
+                                        "type": "string",
+                                        "example": "North Region"
+                                    },
+                                    "translations": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "webUrl": {
+                                                    "description": "Web URL for the translation (optional)",
+                                                    "type": "string",
+                                                    "example": "https://example.com"
+                                                },
+                                                "lang": {
+                                                    "description": "Language code (2 characters)",
+                                                    "type": "string",
+                                                    "example": "en"
+                                                },
+                                                "title": {
+                                                    "description": "Title in the specified language",
+                                                    "type": "string",
+                                                    "example": "Flood Alert"
+                                                },
+                                                "description": {
+                                                    "description": "Description in the specified language",
+                                                    "type": "string",
+                                                    "example": "Description of the event"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Whatnow"
+                ],
+                "summary": "Delete a WhatNow entity by ID",
+                "operationId": "deleteById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the WhatNow entity to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/whatnow/{id}/revisions/latest": {
+            "get": {
+                "tags": [
+                    "Whatnow"
+                ],
+                "summary": "Get the latest revision of a WhatNow entity by ID",
+                "operationId": "getLatestById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the WhatNow entity to fetch the latest revision for",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/org/{code}/whatnow": {
+            "get": {
+                "tags": [
+                    "Whatnow"
+                ],
+                "summary": "Get a feed of WhatNow entities for a specific organisation",
+                "operationId": "getFeed",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "Country code of the organisation",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "region",
+                        "in": "query",
+                        "description": "Filter by region slug",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "query",
+                        "description": "Filter by language code",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "eventType",
+                        "in": "query",
+                        "description": "Filter by event type",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/org/{code}/whatnow/revisions/latest": {
+            "get": {
+                "tags": [
+                    "Whatnow"
+                ],
+                "summary": "Get the latest revisions for a country code",
+                "operationId": "getLatestForCountryCode",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "Country code to fetch the latest revisions for",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/org/{code}/{region}/whatnow/revisions/latest": {
+            "get": {
+                "tags": [
+                    "Whatnow"
+                ],
+                "summary": "Get the latest revisions for a specific region",
+                "operationId": "getLatestForRegion",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "Country code to fetch the latest revisions for",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "region",
+                        "in": "path",
+                        "description": "Region slug to fetch the latest revisions for",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/whatnow": {
+            "post": {
+                "tags": [
+                    "Whatnow"
+                ],
+                "summary": "Create a new WhatNow entity",
+                "operationId": "createWhatNowEntity",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "countryCode",
+                                    "eventType",
+                                    "translations"
+                                ],
+                                "properties": {
+                                    "countryCode": {
+                                        "description": "Country code (3 characters)",
+                                        "type": "string",
+                                        "example": "USA"
+                                    },
+                                    "eventType": {
+                                        "description": "Type of event (max 50 characters)",
+                                        "type": "string",
+                                        "example": "Flood"
+                                    },
+                                    "regionName": {
+                                        "description": "Name of the region (optional)",
+                                        "type": "string",
+                                        "example": "North Region"
+                                    },
+                                    "translations": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "webUrl": {
+                                                    "description": "Web URL for the translation (optional)",
+                                                    "type": "string",
+                                                    "format": "url",
+                                                    "example": "https://example.com"
+                                                },
+                                                "lang": {
+                                                    "description": "Language code (2 characters)",
+                                                    "type": "string",
+                                                    "example": "en"
+                                                },
+                                                "title": {
+                                                    "description": "Title in the specified language",
+                                                    "type": "string",
+                                                    "example": "Flood Alert"
+                                                },
+                                                "description": {
+                                                    "description": "Description in the specified language",
+                                                    "type": "string",
+                                                    "example": "Description of the event"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/whatnow/{id}/revisions": {
+            "post": {
+                "tags": [
+                    "Whatnow"
+                ],
+                "summary": "Create a new translation for a WhatNow entity",
+                "operationId": "createNewTranslation",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the WhatNow entity to add a translation to",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "webUrl",
+                                    "lang",
+                                    "title",
+                                    "stages"
+                                ],
+                                "properties": {
+                                    "webUrl": {
+                                        "description": "Web URL for the translation",
+                                        "type": "string",
+                                        "format": "url",
+                                        "example": "https://example.com"
+                                    },
+                                    "lang": {
+                                        "description": "Language code (2 characters)",
+                                        "type": "string",
+                                        "example": "en"
+                                    },
+                                    "title": {
+                                        "description": "Title in the specified language",
+                                        "type": "string",
+                                        "example": "Flood Alert"
+                                    },
+                                    "description": {
+                                        "description": "Description in the specified language (optional)",
+                                        "type": "string",
+                                        "example": "Description of the event"
+                                    },
+                                    "stages": {
+                                        "description": "Stages associated with the translation",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/whatnow/{id}/revisions/{translationId}": {
+            "patch": {
+                "tags": [
+                    "Whatnow"
+                ],
+                "summary": "Update the published status of a translation",
+                "operationId": "patchTranslation",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the WhatNow entity",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "translationId",
+                        "in": "path",
+                        "description": "ID of the translation to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "published"
+                                ],
+                                "properties": {
+                                    "published": {
+                                        "description": "Publish status of the translation",
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/whatnow/publish": {
+            "post": {
+                "tags": [
+                    "Whatnow"
+                ],
+                "summary": "Publish translations by IDs",
+                "operationId": "publishTranslationsByIds",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "translationIds"
+                                ],
+                                "properties": {
+                                    "translationIds": {
+                                        "description": "Array of translation IDs to publish",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "format": "int64"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Organisation",
+            "description": "Operations about Organisations"
+        },
+        {
+            "name": "Regions",
+            "description": "Operations about Regions"
+        },
+        {
+            "name": "UsageLogs",
+            "description": "Operations about UsageLog"
+        },
+        {
+            "name": "Whatnow",
+            "description": "Operations about Regions"
+        },
+        {
+            "name": "Applications",
+            "description": "Applications"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "BasicAuth": {
+                "type": "http",
+                "scheme": "basic"
+            },
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "x-api-key"
+            }
+        }
+    },
+    "security": [
+        {
+            "BasicAuth": []
+        }
+    ]
+}
