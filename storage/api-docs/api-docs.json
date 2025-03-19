@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8085/v1",
+            "url": "https://api.whatnow.jazusoft.com/v1",
             "description": "API Base URL"
         }
     ],
@@ -422,7 +422,7 @@
                                                 "attributionMessage": {
                                                     "type": "string",
                                                     "maxLength": 2048,
-                                                    "example": "PRUEBA 2"
+                                                    "example": "attributionMessage example"
                                                 },
                                                 "contributors": {
                                                     "type": "array",
@@ -1760,7 +1760,7 @@
         },
         {
             "name": "Whatnow",
-            "description": "Operations about Regions"
+            "description": "Operations about Whatnow messages"
         },
         {
             "name": "Applications",
