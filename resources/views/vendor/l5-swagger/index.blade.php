@@ -134,6 +134,7 @@
 
             requestInterceptor: function(request) {
                 request.headers['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
+                request.headers['Accept-Language'] = 'en';
                 return request;
             },
 
