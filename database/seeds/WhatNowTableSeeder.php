@@ -63,14 +63,14 @@ class WhatNowTableSeeder extends Seeder
 
 		}
 
-        $path = dirname(__FILE__) . '/regions.csv';
+        $path = dirname(__FILE__) . '/subnationals.csv';
 
         $file = new SplFileObject($path);;
         $file->setFlags(SplFileObject::SKIP_EMPTY | SplFileObject::READ_AHEAD | SplFileObject::DROP_NEW_LINE | SplFileObject::READ_CSV);
         $timestamp = \Carbon\Carbon::now();
 
         foreach ($file as $row) {
-            DB::table('regions')->insert([
+            DB::table('subnationals')->insert([
                 'id' => $row[0],
                 'organisation_id' => $row[1],
                 'title' => $row[2],

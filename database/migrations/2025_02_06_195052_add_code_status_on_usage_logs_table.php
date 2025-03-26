@@ -16,7 +16,7 @@ class AddCodeStatusOnUsageLogsTable extends Migration
         Schema::table('usage_logs', function (Blueprint $table) {
             $table->integer('code_status')->nullable();
             $table->string('language',10)->nullable();
-            $table->string('region',45)->nullable();
+            $table->string('subnational',45)->nullable();
             $table->string('event_type',45)->nullable();
         });
     }
@@ -31,7 +31,7 @@ class AddCodeStatusOnUsageLogsTable extends Migration
         Schema::table('usage_logs', function (Blueprint $table) {
             $table->dropColumn('code_status');
             $table->dropColumn('language');
-            $table->dropColumn('region');
+            $table->dropColumn('subnational');
             $table->dropColumn('event_type');
         });
     }

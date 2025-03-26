@@ -12,7 +12,7 @@ class CreateRegionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('regions', function (Blueprint $table) {
+        Schema::create('subnationals', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('organisation_id')->unsigned()->index();
             $table->string('title');
@@ -40,7 +40,7 @@ class CreateRegionsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('regions');
+        Schema::drop('subnationals');
         Schema::drop('region_translations');
     }
 }

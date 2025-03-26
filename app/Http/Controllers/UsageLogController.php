@@ -314,10 +314,10 @@ class UsageLogController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="region",
+     *         name="subnational",
      *         in="query",
      *         required=false,
-     *         description="Filter by region ID",
+     *         description="Filter by subnational ID",
      *         @OA\Schema(type="integer")
      *     ),
      *     @OA\Parameter(
@@ -355,7 +355,7 @@ class UsageLogController extends Controller
     {
         $this->validate($request, [
             'society' => 'sometimes|string',
-            'region' => 'sometimes|int',
+            'subnational' => 'sometimes|int',
             'hazard' => 'sometimes|string',
             'date' => 'sometimes|date',
             'language' => 'sometimes|string',
@@ -368,8 +368,8 @@ class UsageLogController extends Controller
             if (isset($request->society)) {
                 $query->where('endpoint', 'v1/org/'.$request->society.'/whatnow');
             }
-            if (isset($request->region)) {
-                $query->where('region', $request->region);
+            if (isset($request->subnational)) {
+                $query->where('subnational', $request->subnational);
             }
             if (isset($request->hazard)) {
                 $query->where('event_type', 'like', '%' . $request->hazard . '%');

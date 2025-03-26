@@ -99,11 +99,11 @@ class WhatNowEntityTranslation extends Model
 
 //    public function getRegionNameAttribute()
 //    {
-//        if(empty($this->entity->region)){
+//        if(empty($this->entity->subnational)){
 //            return '';
 //        }
 //
-//        return $this->entity->region->title;
+//        return $this->entity->subnational->title;
 //    }
 
 	/**

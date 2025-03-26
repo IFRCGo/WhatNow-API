@@ -42,12 +42,12 @@ Route::group([
     'middleware' => 'BasicAuth',
     'prefix' => 'v1',
 ], function () {
-    Route::get('/regions/{country_code}', 'RegionController@getAllForOrganisation');
-    Route::get('/regions/{country_code}/{code}', 'RegionController@getForCountryCode');
-    Route::post('/regions', 'RegionController@createRegion');
-    Route::put('/regions/region/{regionId}', 'RegionController@updateRegion');
-    Route::delete('/regions/region/{regionId}', 'RegionController@deleteRegion');
-    Route::delete('/regions/region/translation/{translationId}', 'RegionController@deleteTranslation');
+    Route::get('/subnationals/{country_code}', 'RegionController@getAllForOrganisation');
+    Route::get('/subnationals/{country_code}/{code}', 'RegionController@getForCountryCode');
+    Route::post('/subnationals', 'RegionController@createRegion');
+    Route::put('/subnationals/subnational/{regionId}', 'RegionController@updateRegion');
+    Route::delete('/subnationals/subnational/{regionId}', 'RegionController@deleteRegion');
+    Route::delete('/subnationals/subnational/translation/{translationId}', 'RegionController@deleteTranslation');
 
     // Alert management
     Route::post('alerts', 'AlertController@post');
@@ -72,7 +72,7 @@ Route::group([
 
     // "What Now" API endpoints
     Route::get('org/{code}/whatnow/revisions/latest', 'WhatNowController@getLatestForCountryCode');
-    Route::get('org/{code}/{region}/whatnow/revisions/latest', 'WhatNowController@getLatestForRegion');
+    Route::get('org/{code}/{subnational}/whatnow/revisions/latest', 'WhatNowController@getLatestForRegion');
     Route::get('whatnow/{id}/revisions/latest', 'WhatNowController@getLatestById');
     Route::put('whatnow/{id}', 'WhatNowController@putById');
     Route::post('whatnow', 'WhatNowController@post');

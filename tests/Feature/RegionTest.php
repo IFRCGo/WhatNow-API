@@ -23,7 +23,7 @@ class RegionTest extends TestCase
             'org_id' => $this->organisation->id,
         ]);
 
-        $this->delete('DELETE FROM regions');
+        $this->delete('DELETE FROM subnationals');
 
         $this->delete('DELETE FROM region_translations');
     }
@@ -33,7 +33,7 @@ class RegionTest extends TestCase
         $data = [
             'countryCode' => $this->organisation->country_code,
             'title' => 'Test Region 1',
-            'slug' => 'test-region-1',
+            'slug' => 'test-subnational-1',
             'translations' => [
                 'en' => [
                     'title' => 'Testing 1',
@@ -46,7 +46,7 @@ class RegionTest extends TestCase
             ],
         ];
 
-        $response = $this->json('POST', '/v1/regions', $data);
+        $response = $this->json('POST', '/v1/subnationals', $data);
 
         //dd($response);
 
@@ -55,10 +55,10 @@ class RegionTest extends TestCase
 
     public function testUpdateRegion()
     {
-        $region = $this->organisation->regions()->create([
+        $region = $this->organisation->subnationals()->create([
             'countryCode' => $this->organisation->country_code,
             'title' => 'Test Region',
-            'slug' => 'test-region',
+            'slug' => 'test-subnational',
             'translations' => [
                 'en' => [
                     'title' => 'Testing 1',
@@ -74,7 +74,7 @@ class RegionTest extends TestCase
         $data = [
             'countryCode' => $this->organisation->country_code,
             'title' => 'Test Region 1',
-            'slug' => 'test-region-1',
+            'slug' => 'test-subnational-1',
             'translations' => [
                 'en' => [
                     'title' => 'Testing 2',
@@ -98,7 +98,7 @@ class RegionTest extends TestCase
 
         $this->assertEquals(0, $matched);
 
-        $this->json('PUT', "/v1/regions/region/{$region->id}", $data)
+        $this->json('PUT', "/v1/subnationals/subnational/{$region->id}", $data)
             ->assertStatus(201);
 
         $matched = RegionTranslation::where('region_id', '=', $region->id)
@@ -111,22 +111,22 @@ class RegionTest extends TestCase
 
     public function testGetRegionsForOrganisation()
     {
-        $this->json('GET', '/v1/regions/USA')
+        $this->json('GET', '/v1/subnationals/USA')
             ->assertStatus(200);
     }
 
     public function testGetLaguageSpecificRegionsForOrganisation()
     {
-        $this->json('GET', '/v1/regions/USA/es')
+        $this->json('GET', '/v1/subnationals/USA/es')
             ->assertStatus(200);
     }
 
     public function testDeleteRegionForOrganisation()
     {
-        $region = $this->organisation->regions()->create([
+        $region = $this->organisation->subnationals()->create([
             'countryCode' => $this->organisation->country_code,
             'title' => 'Test Region',
-            'slug' => 'test-region',
+            'slug' => 'test-subnational',
             'translations' => [
                 'en' => [
                     'title' => 'Testing 1',
@@ -139,7 +139,7 @@ class RegionTest extends TestCase
             ],
         ]);
 
-        $this->json('DELETE', "/v1/regions/region/{$region->id}")
+        $this->json('DELETE', "/v1/subnationals/subnational/{$region->id}")
             ->assertStatus(202);
     }
 }
