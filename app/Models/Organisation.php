@@ -37,7 +37,7 @@ class Organisation extends Model
 		return $this->hasMany('App\Models\OrganisationDetails', 'org_id');
 	}
 
-    public function regions()
+    public function subnationals()
     {
         return $this->hasMany(Region::class);
     }

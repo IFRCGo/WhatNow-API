@@ -12,7 +12,7 @@ class Region extends Model
      *
      * @var string
      */
-    protected $table = 'regions';
+    protected $table = 'subnationals';
 
     /**
      * The attributes that are mass assignable.

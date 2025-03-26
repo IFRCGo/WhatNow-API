@@ -39,17 +39,17 @@ class RegionController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/regions",
+     *     path="/subnationals",
      *     tags={"Regions"},
-     *     summary="Create a new region",
+     *     summary="Create a new subnational",
      *     operationId="createRegion",
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
      *             required={"countryCode", "title"},
      *             @OA\Property(property="countryCode", type="string", example="USA", description="Country code (3 characters)"),
-     *             @OA\Property(property="title", type="string", example="North America", description="Title of the region"),
-     *             @OA\Property(property="slug", type="string", example="north-america", description="Slug for the region (optional)"),
+     *             @OA\Property(property="title", type="string", example="North America", description="Title of the subnational"),
+     *             @OA\Property(property="slug", type="string", example="north-america", description="Slug for the subnational (optional)"),
      *             @OA\Property(
      *                 property="translations",
      *                 type="array",
@@ -58,7 +58,7 @@ class RegionController extends Controller
      *                     @OA\Property(property="webUrl", type="string", format="url", example="https://example.com", description="Web URL for the translation"),
      *                     @OA\Property(property="lang", type="string", example="en", description="Language code (2 characters)"),
      *                     @OA\Property(property="title", type="string", example="North America", description="Title in the specified language"),
-     *                     @OA\Property(property="description", type="string", example="Description of the region", description="Description in the specified language")
+     *                     @OA\Property(property="description", type="string", example="Description of the subnational", description="Description in the specified language")
      *                 )
      *             )
      *         )
@@ -103,10 +103,10 @@ class RegionController extends Controller
         }
 
         $slug = empty($request->input('slug')) ? str_slug($request->input('title')) : $request->input('slug');
-        $existing = $org->regions()->where('slug', '=', $request->input('slug'))->count();
+        $existing = $org->subnationals()->where('slug', '=', $request->input('slug'))->count();
 
         if ($existing > 0) {
-            return response()->json([ 'error_message' => 'This region already exists', 'errors' => []], 409);
+            return response()->json([ 'error_message' => 'This subnational already exists', 'errors' => []], 409);
         }
 
         $region = Region::create([
@@ -128,22 +128,22 @@ class RegionController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/regions/region/{regionId}",
+     *     path="/subnationals/subnational/{regionId}",
      *     tags={"Regions"},
-     *     summary="Update an existing region",
+     *     summary="Update an existing subnational",
      *     operationId="updateRegion",
      *     @OA\Parameter(
      *         name="regionId",
      *         in="path",
      *         required=true,
-     *         description="ID of the region to update",
+     *         description="ID of the subnational to update",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             @OA\Property(property="title", type="string", example="Updated Region Title", description="Updated title of the region (optional)"),
-     *             @OA\Property(property="slug", type="string", example="updated-region-slug", description="Updated slug for the region (optional)"),
+     *             @OA\Property(property="title", type="string", example="Updated Region Title", description="Updated title of the subnational (optional)"),
+     *             @OA\Property(property="slug", type="string", example="updated-subnational-slug", description="Updated slug for the subnational (optional)"),
      *             @OA\Property(
      *                 property="translations",
      *                 type="array",
@@ -172,7 +172,7 @@ class RegionController extends Controller
         $region = Region::find($regionId);
 
         if (empty($region)) {
-            return response()->json([ 'error_message' => 'No region found', 'errors' => []], 404);
+            return response()->json([ 'error_message' => 'No subnational found', 'errors' => []], 404);
         }
 
         $this->validate($request, [
@@ -216,8 +216,8 @@ class RegionController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/regions/{country_code}",
-     *     summary="Get all regions for a specific organisation by country code",
+     *     path="/subnationals/{country_code}",
+     *     summary="Get all subnationals for a specific organisation by country code",
      *     tags={"Regions"},
      *     @OA\Parameter(
      *         name="country_code",
@@ -248,7 +248,7 @@ class RegionController extends Controller
         }
 
         $list = [];
-        foreach ($organisation->regions as $region) {
+        foreach ($organisation->subnationals as $region) {
             $data = [
                 'id' => $region->id,
                 'title' => $region->title,
@@ -270,8 +270,8 @@ class RegionController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/regions/{country_code}/{code}",
-     *     summary="Get regions for a specific organisation by country code and language code",
+     *     path="/subnationals/{country_code}/{code}",
+     *     summary="Get subnationals for a specific organisation by country code and language code",
      *     tags={"Regions"},
      *     @OA\Parameter(
      *         name="country_code",
@@ -309,7 +309,7 @@ class RegionController extends Controller
         }
 
         $list = [];
-        foreach ($organisation->regions as $region) {
+        foreach ($organisation->subnationals as $region) {
             $translation = $region->translations()
                 ->where('language_code', '=', $code)
                 ->first();
@@ -329,15 +329,15 @@ class RegionController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/regions/region/{regionId}",
+     *     path="/subnationals/subnational/{regionId}",
      *     tags={"Regions"},
-     *     summary="Delete a region",
+     *     summary="Delete a subnational",
      *     operationId="deleteRegion",
      *     @OA\Parameter(
      *         name="regionId",
      *         in="path",
      *         required=true,
-     *         description="ID of the region to delete",
+     *         description="ID of the subnational to delete",
      *         @OA\Schema(type="integer", format="int64")
      *     ),
      *     @OA\Response(
@@ -355,7 +355,7 @@ class RegionController extends Controller
         $region = Region::find($regionId);
 
         if (empty($region)) {
-            return response()->json([ 'error_message' => 'No region found', 'errors' => []], 404);
+            return response()->json([ 'error_message' => 'No subnational found', 'errors' => []], 404);
         }
 
         $keys = $region->translations()->pluck('id')->toArray();
@@ -368,9 +368,9 @@ class RegionController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/regions/region/translation/{translationId}",
+     *     path="/subnationals/subnational/translation/{translationId}",
      *     tags={"Regions"},
-     *     summary="Delete a region translation",
+     *     summary="Delete a subnational translation",
      *     operationId="deleteTranslation",
      *     @OA\Parameter(
      *         name="translationId",

@@ -480,12 +480,12 @@
                 }
             }
         },
-        "/regions": {
+        "/subnationals": {
             "post": {
                 "tags": [
                     "Regions"
                 ],
-                "summary": "Create a new region",
+                "summary": "Create a new subnational",
                 "operationId": "createRegion",
                 "requestBody": {
                     "required": true,
@@ -503,12 +503,12 @@
                                         "example": "USA"
                                     },
                                     "title": {
-                                        "description": "Title of the region",
+                                        "description": "Title of the subnational",
                                         "type": "string",
                                         "example": "North America"
                                     },
                                     "slug": {
-                                        "description": "Slug for the region (optional)",
+                                        "description": "Slug for the subnational (optional)",
                                         "type": "string",
                                         "example": "north-america"
                                     },
@@ -535,7 +535,7 @@
                                                 "description": {
                                                     "description": "Description in the specified language",
                                                     "type": "string",
-                                                    "example": "Description of the region"
+                                                    "example": "Description of the subnational"
                                                 }
                                             },
                                             "type": "object"
@@ -569,18 +569,18 @@
                 }
             }
         },
-        "/regions/region/{regionId}": {
+        "/subnationals/subnational/{regionId}": {
             "put": {
                 "tags": [
                     "Regions"
                 ],
-                "summary": "Update an existing region",
+                "summary": "Update an existing subnational",
                 "operationId": "updateRegion",
                 "parameters": [
                     {
                         "name": "regionId",
                         "in": "path",
-                        "description": "ID of the region to update",
+                        "description": "ID of the subnational to update",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -595,14 +595,14 @@
                             "schema": {
                                 "properties": {
                                     "title": {
-                                        "description": "Updated title of the region (optional)",
+                                        "description": "Updated title of the subnational (optional)",
                                         "type": "string",
                                         "example": "Updated Region Title"
                                     },
                                     "slug": {
-                                        "description": "Updated slug for the region (optional)",
+                                        "description": "Updated slug for the subnational (optional)",
                                         "type": "string",
-                                        "example": "updated-region-slug"
+                                        "example": "updated-subnational-slug"
                                     },
                                     "translations": {
                                         "type": "array",
@@ -664,13 +664,13 @@
                 "tags": [
                     "Regions"
                 ],
-                "summary": "Delete a region",
+                "summary": "Delete a subnational",
                 "operationId": "deleteRegion",
                 "parameters": [
                     {
                         "name": "regionId",
                         "in": "path",
-                        "description": "ID of the region to delete",
+                        "description": "ID of the subnational to delete",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -700,12 +700,12 @@
                 }
             }
         },
-        "/regions/{country_code}": {
+        "/subnationals/{country_code}": {
             "get": {
                 "tags": [
                     "Regions"
                 ],
-                "summary": "Get all regions for a specific organisation by country code",
+                "summary": "Get all subnationals for a specific organisation by country code",
                 "operationId": "d2296fe4eb4c2d71309b7bd2370494bd",
                 "parameters": [
                     {
@@ -737,12 +737,12 @@
                 }
             }
         },
-        "/regions/{country_code}/{code}": {
+        "/subnationals/{country_code}/{code}": {
             "get": {
                 "tags": [
                     "Regions"
                 ],
-                "summary": "Get regions for a specific organisation by country code and language code",
+                "summary": "Get subnationals for a specific organisation by country code and language code",
                 "operationId": "e80be67aaefaf2057958c0e54908fbc9",
                 "parameters": [
                     {
@@ -786,12 +786,12 @@
                 }
             }
         },
-        "/regions/region/translation/{translationId}": {
+        "/subnationals/subnational/translation/{translationId}": {
             "delete": {
                 "tags": [
                     "Regions"
                 ],
-                "summary": "Delete a region translation",
+                "summary": "Delete a subnational translation",
                 "operationId": "deleteTranslation",
                 "parameters": [
                     {
@@ -998,9 +998,9 @@
                         }
                     },
                     {
-                        "name": "region",
+                        "name": "subnational",
                         "in": "query",
-                        "description": "Filter by region ID",
+                        "description": "Filter by subnational ID",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -1143,7 +1143,7 @@
                                         "example": "Flood"
                                     },
                                     "regionName": {
-                                        "description": "Name of the region (optional)",
+                                        "description": "Name of the subnational (optional)",
                                         "type": "string",
                                         "example": "North Region"
                                     },
@@ -1301,9 +1301,9 @@
                         }
                     },
                     {
-                        "name": "region",
+                        "name": "subnational",
                         "in": "query",
-                        "description": "Filter by region slug",
+                        "description": "Filter by subnational slug",
                         "required": false,
                         "schema": {
                             "type": "string"
@@ -1395,12 +1395,12 @@
                 }
             }
         },
-        "/org/{code}/{region}/whatnow/revisions/latest": {
+        "/org/{code}/{subnational}/whatnow/revisions/latest": {
             "get": {
                 "tags": [
                     "Whatnow"
                 ],
-                "summary": "Get the latest revisions for a specific region",
+                "summary": "Get the latest revisions for a specific subnational",
                 "operationId": "getLatestForRegion",
                 "parameters": [
                     {
@@ -1413,7 +1413,7 @@
                         }
                     },
                     {
-                        "name": "region",
+                        "name": "subnational",
                         "in": "path",
                         "description": "Region slug to fetch the latest revisions for",
                         "required": true,
@@ -1473,7 +1473,7 @@
                                         "example": "Flood"
                                     },
                                     "regionName": {
-                                        "description": "Name of the region (optional)",
+                                        "description": "Name of the subnational (optional)",
                                         "type": "string",
                                         "example": "North Region"
                                     },

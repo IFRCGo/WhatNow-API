@@ -38,7 +38,7 @@ class RegionTranslation extends Model
     ];
 
 
-    public function region()
+    public function subnational()
     {
         return $this->belongsTo(Region::class);
     }

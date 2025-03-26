@@ -69,7 +69,7 @@ return [
             'stream_name' => env('CW_STREAM', 'access-log'),
             'group_name' => env('CW_LOG_GROUP', 'whatnow-log'),
             'sdk' => [
-                'region' => 'eu-west-1',
+                'subnational' => 'eu-west-1',
                 'version' => 'latest',
                 'credentials' => [
                     'key' => env('AWS_CW_ACCESS'),

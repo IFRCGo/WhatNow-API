@@ -100,7 +100,7 @@ class WhatNowEntity extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function region()
+    public function subnational()
     {
         return $this->belongsTo('App\Models\Region', 'region_id', 'id');
     }
@@ -111,11 +111,11 @@ class WhatNowEntity extends Model
      */
     public function getRegionNameAttribute()
     {
-        if(empty($this->region)){
+        if(empty($this->subnational)){
             return 'National';
         }
 
-        return $this->region->title;
+        return $this->subnational->title;
     }
 
 	/**

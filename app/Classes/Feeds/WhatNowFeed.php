@@ -96,7 +96,7 @@ class WhatNowFeed implements JsonFeedInterface
 	 */
 	public function setRegion(Region $region = null)
 	{
-		$this->region = $region;
+		$this->subnational = $region;
 		return $this;
 	}
 
@@ -134,7 +134,7 @@ class WhatNowFeed implements JsonFeedInterface
 			$this->organisation->id,
 			$this->language,
 			$this->filterEventTypes,
-			$this->region->id ?? null
+			$this->subnational->id ?? null
 		);
 
 		if ($data instanceof Collection) {

@@ -31,7 +31,7 @@ class ApiAuthMiddleware extends BasicAuthMiddleware
         $usageLog->timestamp = Carbon::now()->toDateTimeString();
         $usageLog->code_status = 200;
         $usageLog->language = $request->input('language', false) ? $request->input('language', null) : $request->header('Accept-Language', null);
-        $usageLog->region = $request->input('region', null);
+        $usageLog->subnational = $request->input('subnational', null);
         $usageLog->event_type = $request->input('eventType', null);
         $usageLog->save();
         $request->usageLog=$usageLog;

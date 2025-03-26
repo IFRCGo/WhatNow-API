@@ -64,7 +64,7 @@ class WhatNowEntityTransformer extends TransformerAbstract
 			'countryCode' => $model->organisation->country_code,
 			'eventType' => $model->event_type,
             'regionName' => $model->region_name,
-            'region' => $model->region,
+            'subnational' => $model->subnational,
 			'attribution' => [
 				'name' => $model->organisation->org_name,
 				'countryCode' => $model->organisation->country_code,

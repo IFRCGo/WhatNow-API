@@ -271,10 +271,10 @@ class WhatNowController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="region",
+     *         name="subnational",
      *         in="query",
      *         required=false,
-     *         description="Filter by region slug",
+     *         description="Filter by subnational slug",
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
@@ -313,7 +313,7 @@ class WhatNowController extends Controller
             }
             $feed->setOrganisation($org);
 
-            $regName = $this->request->query('region', null);
+            $regName = $this->request->query('subnational', null);
             if ($regName) {
                 try {
                     $reg = $this->regionRepo->findBySlug($org->id, $regName);
@@ -412,9 +412,9 @@ class WhatNowController extends Controller
      */
     /**
      * @OA\Get(
-     *     path="/org/{code}/{region}/whatnow/revisions/latest",
+     *     path="/org/{code}/{subnational}/whatnow/revisions/latest",
      *     tags={"Whatnow"},
-     *     summary="Get the latest revisions for a specific region",
+     *     summary="Get the latest revisions for a specific subnational",
      *     operationId="getLatestForRegion",
      *     @OA\Parameter(
      *         name="code",
@@ -424,7 +424,7 @@ class WhatNowController extends Controller
      *         @OA\Schema(type="string")
      *     ),
      *     @OA\Parameter(
-     *         name="region",
+     *         name="subnational",
      *         in="path",
      *         required=true,
      *         description="Region slug to fetch the latest revisions for",
@@ -451,7 +451,7 @@ class WhatNowController extends Controller
         }
 
         try {
-            $region = $org->regions()->where('slug', str_slug($region))->firstOrFail();
+            $region = $org->subnationals()->where('slug', str_slug($region))->firstOrFail();
         } catch (\Exception $e) {
             Log::error('Organisation not found', ['message' => $e->getMessage()]);
 
@@ -507,7 +507,7 @@ class WhatNowController extends Controller
      *             required={"countryCode", "eventType", "translations"},
      *             @OA\Property(property="countryCode", type="string", example="USA", description="Country code (3 characters)"),
      *             @OA\Property(property="eventType", type="string", example="Flood", description="Type of event (max 50 characters)"),
-     *             @OA\Property(property="regionName", type="string", example="North Region", description="Name of the region (optional)"),
+     *             @OA\Property(property="regionName", type="string", example="North Region", description="Name of the subnational (optional)"),
      *             @OA\Property(
      *                 property="translations",
      *                 type="array",
@@ -574,7 +574,7 @@ class WhatNowController extends Controller
                 return response()->json([
                     'status' => 500,
                     'error_message' => 'Unable to create item',
-                    'errors' => ['No matching region for country code'],
+                    'errors' => ['No matching subnational for country code'],
                 ], 500);
             }
         }
@@ -642,7 +642,7 @@ class WhatNowController extends Controller
      *             required={"countryCode", "eventType", "translations"},
      *             @OA\Property(property="countryCode", type="string", example="USA", description="Country code (3 characters)"),
      *             @OA\Property(property="eventType", type="string", example="Flood", description="Type of event (max 50 characters)"),
-     *             @OA\Property(property="regionName", type="string", example="North Region", description="Name of the region (optional)"),
+     *             @OA\Property(property="regionName", type="string", example="North Region", description="Name of the subnational (optional)"),
      *             @OA\Property(
      *                 property="translations",
      *                 type="array",
@@ -718,7 +718,7 @@ class WhatNowController extends Controller
                 return response()->json([
                     'status' => 500,
                     'error_message' => 'Unable to create item',
-                    'errors' => ['No matching region for country code'],
+                    'errors' => ['No matching subnational for country code'],
                 ], 500);
             }
         }
