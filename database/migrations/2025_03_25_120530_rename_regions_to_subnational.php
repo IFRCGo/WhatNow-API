@@ -13,7 +13,7 @@ class RenameRegionsToSubnational extends Migration
      */
     public function up()
     {
-        Schema::rename('regions', 'subnational');
+        Schema::rename('regions', 'subnationals');
     }
 
     /**
@@ -24,7 +24,7 @@ class RenameRegionsToSubnational extends Migration
     public function down()
     {
 
-        Schema::rename('subnational', 'regions');
+        Schema::rename('subnationals', 'regions');
 
     }
 }

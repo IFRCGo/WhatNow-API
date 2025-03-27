@@ -13,9 +13,9 @@ class ChangeRegionToSubnational extends Migration
      */
     public function up()
     {
-        Schema::table('usage_logs', function (Blueprint $table) {
-            $table->string('subnational', 45)->nullable()->change();
-        });
+        DB::table('usage_logs')->update([
+            'subnational' => DB::raw('region')
+        ]);
     }
 
     /**
@@ -25,8 +25,9 @@ class ChangeRegionToSubnational extends Migration
      */
     public function down()
     {
-        Schema::table('usage_logs', function (Blueprint $table) {
-            $table->string('region', 45)->nullable()->change();
-        });
+
+        DB::table('usage_logs')->update([
+            'region' => DB::raw('subnational')
+        ]);
     }
 }
