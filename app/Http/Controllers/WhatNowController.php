@@ -93,7 +93,7 @@ class WhatNowController extends Controller
      * @OA\Get(
      *     path="/whatnow/{id}",
      *     tags={"Whatnow"},
-     *     summary="Obtiene un recurso publicado por ID",
+     *     summary="Obtiene un recurso publicado por ID (public)",
      *     description="Retorna los detalles de un recurso publicado basado en el ID proporcionado.",
      *     operationId="getPublishedById",
      *     security={{"ApiKeyAuth": {}}},
@@ -159,6 +159,8 @@ class WhatNowController extends Controller
      *     tags={"Whatnow"},
      *     summary="Get the latest revision of a WhatNow entity by ID",
      *     operationId="getLatestById",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -214,6 +216,8 @@ class WhatNowController extends Controller
      *     tags={"Whatnow"},
      *     summary="Delete a WhatNow entity by ID",
      *     operationId="deleteById",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -260,7 +264,7 @@ class WhatNowController extends Controller
      * @OA\Get(
      *     path="/org/{code}/whatnow",
      *     tags={"Whatnow"},
-     *     summary="Get a feed of WhatNow entities for a specific organisation",
+     *     summary="Get a feed of WhatNow entities for a specific organisation (public)",
      *     operationId="getFeed",
      *     security={{"ApiKeyAuth": {}}},
      *     @OA\Parameter(
@@ -364,6 +368,8 @@ class WhatNowController extends Controller
      *     tags={"Whatnow"},
      *     summary="Get the latest revisions for a country code",
      *     operationId="getLatestForCountryCode",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="code",
      *         in="path",
@@ -416,6 +422,8 @@ class WhatNowController extends Controller
      *     tags={"Whatnow"},
      *     summary="Get the latest revisions for a specific subnational",
      *     operationId="getLatestForRegion",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="code",
      *         in="path",
@@ -501,6 +509,8 @@ class WhatNowController extends Controller
      *     tags={"Whatnow"},
      *     summary="Create a new WhatNow entity",
      *     operationId="createWhatNowEntity",
+     *     security={},
+     *     deprecated=true,
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -629,6 +639,8 @@ class WhatNowController extends Controller
      *     tags={"Whatnow"},
      *     summary="Update a WhatNow entity by ID",
      *     operationId="putById",
+     *     deprecated=true,
+     *     security={},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -678,22 +690,22 @@ class WhatNowController extends Controller
             ]);
         }
 
-         try {
-             $this->validate($this->request, [
-                 'countryCode' => 'alpha|size:3',
-                 'eventType' => 'string|max:50',
-                 'regionName' => 'nullable|string',
-                 'translations' => 'array',
-                 'translations.*.webUrl' => 'nullable|string',
-                 'translations.*.lang' => 'alpha|size:2',
-                 'translations.*.title' => 'string',
-                 'translations.*.description' => 'string',
-             ]);
-         } catch (ValidationException $e) {
-             Log::info($e->getMessage());
+        try {
+            $this->validate($this->request, [
+                'countryCode' => 'alpha|size:3',
+                'eventType' => 'string|max:50',
+                'regionName' => 'nullable|string',
+                'translations' => 'array',
+                'translations.*.webUrl' => 'nullable|string',
+                'translations.*.lang' => 'alpha|size:2',
+                'translations.*.title' => 'string',
+                'translations.*.description' => 'string',
+            ]);
+        } catch (ValidationException $e) {
+            Log::info($e->getMessage());
 
-             return $e->getResponse();
-         }
+            return $e->getResponse();
+        }
 
         try {
             $org = $this->orgRepo->findByCountryCode($this->request->input('countryCode'));
@@ -755,6 +767,8 @@ class WhatNowController extends Controller
      *     tags={"Whatnow"},
      *     summary="Create a new translation for a WhatNow entity",
      *     operationId="createNewTranslation",
+     *     deprecated=true,
+     *     security={},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -844,6 +858,8 @@ class WhatNowController extends Controller
      *     tags={"Whatnow"},
      *     summary="Update the published status of a translation",
      *     operationId="patchTranslation",
+     *     deprecated=true,
+     *     security={},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -927,6 +943,8 @@ class WhatNowController extends Controller
      *     tags={"Whatnow"},
      *     summary="Publish translations by IDs",
      *     operationId="publishTranslationsByIds",
+     *     deprecated=true,
+     *     security={},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(

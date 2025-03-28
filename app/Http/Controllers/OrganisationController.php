@@ -51,7 +51,7 @@ class OrganisationController extends Controller
     /**
      * @OA\Get(
      *     path="/org",
-     *     summary="Get all organisations",
+     *     summary="Get all organisations (public)",
      *     security={{"ApiKeyAuth": {}}},
      *     tags={"Organisation"},
      *     @OA\Response(
@@ -99,7 +99,7 @@ class OrganisationController extends Controller
         /**
      * @OA\Get(
      *     path="/org/{code}",
-     *     summary="Get organisation by country code",
+     *     summary="Get organisation by country code (public)",
      *     tags={"Organisation"},
      *     security={{"ApiKeyAuth": {}}},
      *     @OA\Parameter(
@@ -152,6 +152,8 @@ class OrganisationController extends Controller
      *     path="/org/{code}",
      *     tags={"Organisation"},
      *     summary="Update an organisation by its country code",
+     *     security={},
+     *     deprecated=true,
      *     description="Updates the details of an organisation based on the provided country code.",
      *     operationId="OrganisationController@putById",
      *     @OA\Parameter(

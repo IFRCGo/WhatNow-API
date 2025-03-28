@@ -49,7 +49,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             },
             "post": {
                 "tags": [
@@ -112,7 +114,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/apps/{id}": {
@@ -153,7 +157,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             },
             "delete": {
                 "tags": [
@@ -192,7 +198,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             },
             "patch": {
                 "tags": [
@@ -248,7 +256,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/upload": {
@@ -297,7 +307,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/org": {
@@ -305,7 +317,7 @@
                 "tags": [
                     "Organisation"
                 ],
-                "summary": "Get all organisations",
+                "summary": "Get all organisations (public)",
                 "operationId": "04f86edf4b63c5b0f297e462633924b4",
                 "responses": {
                     "200": {
@@ -339,7 +351,7 @@
                 "tags": [
                     "Organisation"
                 ],
-                "summary": "Get organisation by country code",
+                "summary": "Get organisation by country code (public)",
                 "operationId": "b4a9c9d91b102ab0d0709eae9104db61",
                 "parameters": [
                     {
@@ -477,7 +489,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/subnationals": {
@@ -566,7 +580,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/subnationals/subnational/{regionId}": {
@@ -658,7 +674,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             },
             "delete": {
                 "tags": [
@@ -697,7 +715,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/subnationals/{country_code}": {
@@ -734,7 +754,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/subnationals/{country_code}/{code}": {
@@ -783,7 +805,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/subnationals/subnational/translation/{translationId}": {
@@ -824,7 +848,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/usage/applications": {
@@ -875,7 +901,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/usage/endpoints": {
@@ -926,7 +954,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/usage/export": {
@@ -977,7 +1007,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/usage/totals": {
@@ -1054,7 +1086,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/whatnow/{id}": {
@@ -1062,7 +1096,7 @@
                 "tags": [
                     "Whatnow"
                 ],
-                "summary": "Obtiene un recurso publicado por ID",
+                "summary": "Obtiene un recurso publicado por ID (public)",
                 "description": "Retorna los detalles de un recurso publicado basado en el ID proporcionado.",
                 "operationId": "getPublishedById",
                 "parameters": [
@@ -1200,7 +1234,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             },
             "delete": {
                 "tags": [
@@ -1239,7 +1275,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/whatnow/{id}/revisions/latest": {
@@ -1280,7 +1318,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/org/{code}/whatnow": {
@@ -1288,7 +1328,7 @@
                 "tags": [
                     "Whatnow"
                 ],
-                "summary": "Get a feed of WhatNow entities for a specific organisation",
+                "summary": "Get a feed of WhatNow entities for a specific organisation (public)",
                 "operationId": "getFeed",
                 "parameters": [
                     {
@@ -1392,7 +1432,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/org/{code}/{subnational}/whatnow/revisions/latest": {
@@ -1441,7 +1483,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/whatnow": {
@@ -1531,7 +1575,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/whatnow/{id}/revisions": {
@@ -1618,7 +1664,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/whatnow/{id}/revisions/{translationId}": {
@@ -1689,7 +1737,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         },
         "/whatnow/publish": {
@@ -1741,7 +1791,9 @@
                             }
                         }
                     }
-                }
+                },
+                "deprecated": true,
+                "security": []
             }
         }
     },
@@ -1769,10 +1821,6 @@
     ],
     "components": {
         "securitySchemes": {
-            "BasicAuth": {
-                "type": "http",
-                "scheme": "basic"
-            },
             "ApiKeyAuth": {
                 "type": "apiKey",
                 "in": "header",

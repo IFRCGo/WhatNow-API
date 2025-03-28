@@ -43,6 +43,8 @@ class RegionController extends Controller
      *     tags={"Regions"},
      *     summary="Create a new subnational",
      *     operationId="createRegion",
+     *     security={},
+     *     deprecated=true,
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -132,6 +134,8 @@ class RegionController extends Controller
      *     tags={"Regions"},
      *     summary="Update an existing subnational",
      *     operationId="updateRegion",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="regionId",
      *         in="path",
@@ -219,6 +223,8 @@ class RegionController extends Controller
      *     path="/subnationals/{country_code}",
      *     summary="Get all subnationals for a specific organisation by country code",
      *     tags={"Regions"},
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="country_code",
      *         in="path",
@@ -273,6 +279,8 @@ class RegionController extends Controller
      *     path="/subnationals/{country_code}/{code}",
      *     summary="Get subnationals for a specific organisation by country code and language code",
      *     tags={"Regions"},
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="country_code",
      *         in="path",
@@ -333,6 +341,8 @@ class RegionController extends Controller
      *     tags={"Regions"},
      *     summary="Delete a subnational",
      *     operationId="deleteRegion",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="regionId",
      *         in="path",
@@ -372,6 +382,8 @@ class RegionController extends Controller
      *     tags={"Regions"},
      *     summary="Delete a subnational translation",
      *     operationId="deleteTranslation",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="translationId",
      *         in="path",
