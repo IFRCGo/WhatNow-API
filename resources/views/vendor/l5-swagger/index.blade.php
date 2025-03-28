@@ -114,6 +114,42 @@
             }
         </style>
     @endif
+    <style>
+            .swagger-ui .opblock .opblock-summary-path__deprecated {
+                -webkit-text-decoration: none !important;
+                text-decoration: none !important;
+            }
+            .swagger-ui .opblock .opblock-title_normal {
+                display: none !important;
+            }
+            .opblock-deprecated .try-out__btn {
+                display: none!important;
+            }
+            .swagger-ui .opblock.opblock-deprecated .opblock-summary-put .opblock-summary-method {
+                background: #fca130;
+                opacity: 0.4;
+            }
+
+            .swagger-ui .opblock.opblock-deprecated .opblock-summary-post .opblock-summary-method {
+                background: #49cc90;
+                opacity: 0.4;
+            }
+            .swagger-ui .opblock.opblock-deprecated .opblock-summary-delete .opblock-summary-method {
+                background: #f93e3e;
+                opacity: 0.4;
+            }
+
+            .swagger-ui .opblock.opblock-deprecated .opblock-summary-get .opblock-summary-method {
+                background: #61affe;
+                opacity: 0.4;
+            }
+
+            .swagger-ui .opblock.opblock-deprecated .opblock-summary-patch .opblock-summary-method {
+                background: #50e3c2;
+                opacity: 0.4;
+            }
+            
+    </style>
 </head>
 
 <body @if(config('l5-swagger.defaults.ui.display.dark_mode')) id="dark-mode" @endif>
@@ -131,6 +167,23 @@
             configUrl: {!! isset($configUrl) ? '"' . $configUrl . '"' : 'null' !!},
             validatorUrl: {!! isset($validatorUrl) ? '"' . $validatorUrl . '"' : 'null' !!},
             oauth2RedirectUrl: "{{ route('l5-swagger.'.$documentation.'.oauth2_callback', [], $useAbsolutePath) }}",
+            supportedSubmitMethods: ['get'],
+            onComplete: function () {
+                // Crear el mensaje
+                const notice = document.createElement('div');
+                notice.innerHTML = `
+                    <div style="background: #fff3cd; color: #856404; border: 1px solid #ffeeba; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                        🔐 <strong>Note:</strong> Only endpoints tagged as <code>Public</code> are available for testing in Swagger UI.
+                        These require an API Key (<code>X-API-KEY</code>) passed in the request header.
+                    </div>
+                `;
+
+                // Insertarlo arriba del contenido
+                const topBar = document.querySelector('.swagger-ui .info');
+                if (topBar && topBar.parentNode) {
+                    topBar.parentNode.insertBefore(notice, topBar.nextSibling);
+                }
+            },
 
             requestInterceptor: function(request) {
                 request.headers['X-CSRF-TOKEN'] = '{{ csrf_token() }}';

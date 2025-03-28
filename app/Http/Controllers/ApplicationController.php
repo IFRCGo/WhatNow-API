@@ -66,6 +66,8 @@ class ApplicationController extends Controller
      *     tags={"Applications"},
      *     summary="Get all applications for a user",
      *     operationId="getAllForUser",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="userId",
      *         in="query",
@@ -121,6 +123,8 @@ class ApplicationController extends Controller
      *     tags={"Applications"},
      *     summary="Get an application by ID",
      *     operationId="getApplicationById",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -177,6 +181,8 @@ class ApplicationController extends Controller
      *     tags={"Applications"},
      *     summary="Create a new application",
      *     operationId="createApplication",
+     *     security={},
+     *     deprecated=true,
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -236,6 +242,8 @@ class ApplicationController extends Controller
      *     tags={"Applications"},
      *     summary="Update an application by ID",
      *     operationId="updateApplication",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -294,6 +302,8 @@ class ApplicationController extends Controller
      *     tags={"Applications"},
      *     summary="Delete an application by ID",
      *     operationId="deleteApplication",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

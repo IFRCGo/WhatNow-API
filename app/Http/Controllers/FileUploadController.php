@@ -19,6 +19,8 @@ class FileUploadController extends Controller
      *     tags={"Whatnow"},
      *     summary="Upload a file",
      *     operationId="uploadFile",
+     *     security={},
+     *     deprecated=true,
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\MediaType(
