@@ -48,21 +48,6 @@ return [
                 ],
             ],
         ],
-        'users' => [
-            'api' => [
-                'title' => 'API Usuarios Autenticados',
-            ],
-            'routes' => [
-                'api' => 'api/users/documentation',
-            ],
-            'paths' => [
-                'docs_json' => 'users-docs.json',
-                'docs_yaml' => 'users-docs.yaml',
-                'annotations' => [
-                    base_path('app/Http/Controllers/ApiUsers'),
-                ],
-            ],
-        ],
     ],
     'defaults' => [
         'routes' => [
