@@ -690,22 +690,22 @@ class WhatNowController extends Controller
             ]);
         }
 
-        // try {
-        //     $this->validate($this->request, [
-        //         'countryCode' => 'alpha|size:3',
-        //         'eventType' => 'string|max:50',
-        //         'regionName' => 'nullable|string',
-        //         'translations' => 'array',
-        //         'translations.*.webUrl' => 'nullable|string',
-        //         'translations.*.lang' => 'alpha|size:2',
-        //         'translations.*.title' => 'string',
-        //         'translations.*.description' => 'string',
-        //     ]);
-        // } catch (ValidationException $e) {
-        //     Log::info($e->getMessage());
+        try {
+            $this->validate($this->request, [
+                'countryCode' => 'alpha|size:3',
+                'eventType' => 'string|max:50',
+                'regionName' => 'nullable|string',
+                'translations' => 'array',
+                'translations.*.webUrl' => 'nullable|string',
+                'translations.*.lang' => 'alpha|size:2',
+                'translations.*.title' => 'string',
+                'translations.*.description' => 'string',
+            ]);
+        } catch (ValidationException $e) {
+            Log::info($e->getMessage());
 
-        //     return $e->getResponse();
-        // }
+            return $e->getResponse();
+        }
 
         try {
             $org = $this->orgRepo->findByCountryCode($this->request->input('countryCode'));
