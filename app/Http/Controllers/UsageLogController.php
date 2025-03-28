@@ -52,6 +52,8 @@ class UsageLogController extends Controller
      *     tags={"UsageLogs"},
      *     summary="Get application usage logs",
      *     operationId="getApplicationLogs",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="fromDate",
      *         in="query",
@@ -126,6 +128,8 @@ class UsageLogController extends Controller
      *     tags={"UsageLogs"},
      *     summary="Get endpoint usage logs",
      *     operationId="getEndpointLogs",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="fromDate",
      *         in="query",
@@ -198,6 +202,8 @@ class UsageLogController extends Controller
      *     tags={"UsageLogs"},
      *     summary="Export usage logs as CSV",
      *     operationId="exportUsageLogs",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="fromDate",
      *         in="query",
@@ -306,6 +312,8 @@ class UsageLogController extends Controller
      *     tags={"UsageLogs"},
      *     summary="Get usage log totals",
      *     operationId="getTotals",
+     *     security={},
+     *     deprecated=true,
      *     @OA\Parameter(
      *         name="society",
      *         in="query",
