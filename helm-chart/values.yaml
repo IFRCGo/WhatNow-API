@@ -1,6 +1,6 @@
 # Azure Container Registry details
 image:
-    repository: whatnow.azurecr.io/whatnowapi
+    repository: ifrcsmdb.azurecr.io/whatnowapi
     tag: "latest"
     pullPolicy: Always
 
