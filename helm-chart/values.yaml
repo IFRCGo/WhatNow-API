@@ -44,7 +44,7 @@ env:
     PUSHER_APP_CLUSTER: mt1
     MIX_PUSHER_APP_KEY: "${PUSHER_APP_KEY}"
     MIX_PUSHER_APP_CLUSTER: "${PUSHER_APP_CLUSTER}"
-    AZURE_STORAGE_ACCOUNT: whatnowimages
+    AZURE_STORAGE_ACCOUNT: smdbstorageaccount
     AZURE_STORAGE_CONTAINER: images
     AZURE_STORAGE_DOMAIN: blob.core.windows.net
 
