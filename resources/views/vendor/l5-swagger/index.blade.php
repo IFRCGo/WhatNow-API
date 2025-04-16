@@ -186,8 +186,8 @@
             },
 
             requestInterceptor: function(request) {
-                request.headers['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
-                request.headers['Accept-Language'] = 'en';
+                delete request.headers['X-CSRF-TOKEN'];
+                request.headers['Accept-Language'] = '';
                 return request;
             },
 
