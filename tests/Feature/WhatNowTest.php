@@ -44,7 +44,7 @@ class WhatNowTest extends TestCase
             ])->id,
         ]);
 
-        $response = $this->call('GET', '/v1/whatnow/' . $translation->entity->id);
+        $response = $this->call('GET', '/' . config('app.api_version') . '/whatnow/' . $translation->entity->id);
 
         //dd($response->json());
 
@@ -64,7 +64,7 @@ class WhatNowTest extends TestCase
             'org_id' => $organisation->id,
         ]);
 
-        $response = $this->call('GET', '/v1/whatnow/' . $entity->id);
+        $response = $this->call('GET', '/' . config('app.api_version') . '/whatnow/' . $entity->id);
         $response->assertStatus(404);
     }
 
@@ -118,7 +118,7 @@ class WhatNowTest extends TestCase
             'entity_id' => $entity->id,
         ]);
 
-        $response = $this->call('GET', '/v1/whatnow/'.$entity->id);
+        $response = $this->call('GET', '/' . config('app.api_version') . '/whatnow/'.$entity->id);
         $response->assertStatus(200);
         $response->assertJsonStructure(['data' => $this->getEntityJsonStructure()]);
 
@@ -185,7 +185,7 @@ class WhatNowTest extends TestCase
             'entity_id' => $entity->id,
         ]);
 
-        $response = $this->call('GET', '/v1/whatnow/' . $entity->id . '/revisions/latest');
+        $response = $this->call('GET', '/' . config('app.api_version') . '/whatnow/' . $entity->id . '/revisions/latest');
 
         $response->assertStatus(200);
 
@@ -254,7 +254,7 @@ class WhatNowTest extends TestCase
             'entity_id' => $entity->id,
         ]);
 
-        $response = $this->call('GET', '/v1/whatnow/'.$entity->id);
+        $response = $this->call('GET', '/' . config('app.api_version') . '/whatnow/'.$entity->id);
         $response->assertStatus(200);
         $response->assertJsonStructure(['data' => $this->getEntityJsonStructure()]);
 
@@ -288,7 +288,7 @@ class WhatNowTest extends TestCase
             'region_id' => $region->id,
         ]);
 
-        $response = $this->call('POST', '/v1/whatnow/', [
+        $response = $this->call('POST', '/' . config('app.api_version') . '/whatnow/', [
             'countryCode' => $organisation->country_code,
             'eventType' => 'Example Event',
             'regionName' => $region->title,
@@ -371,7 +371,7 @@ class WhatNowTest extends TestCase
 
         sleep(2);
 
-        $response = $this->call('PUT', '/v1/whatnow/'.$entity->id, $putRequest);
+        $response = $this->call('PUT', '/' . config('app.api_version') . '/whatnow/'.$entity->id, $putRequest);
 
         $data = json_decode($response->getContent(), true);
 
@@ -418,7 +418,7 @@ class WhatNowTest extends TestCase
 
         sleep(1);
 
-        $response = $this->call('POST', '/v1/whatnow/'.$entity->id.'/revisions', $putRequest);
+        $response = $this->call('POST', '/' . config('app.api_version') . '/whatnow/'.$entity->id.'/revisions', $putRequest);
         $data = json_decode($response->getContent(), true);
 
         $response->assertStatus(201);
@@ -445,7 +445,7 @@ class WhatNowTest extends TestCase
             'entity_id' => $entity->id,
         ]);
 
-        $response = $this->call('PATCH', '/v1/whatnow/'.$entity->id.'/revisions/'.$translation->id, [
+        $response = $this->call('PATCH', '/' . config('app.api_version') . '/whatnow/'.$entity->id.'/revisions/'.$translation->id, [
             'published' => true,
         ]);
 
@@ -484,7 +484,7 @@ class WhatNowTest extends TestCase
             'entity_id' => $entity->id,
         ]);
 
-        $response = $this->call('PATCH', '/v1/whatnow/'.$entity->id.'/revisions/'.$translation->id, [
+        $response = $this->call('PATCH', '/' . config('app.api_version') . '/whatnow/'.$entity->id.'/revisions/'.$translation->id, [
             'published' => true,
         ]);
 
@@ -523,7 +523,7 @@ class WhatNowTest extends TestCase
             'entity_id' => $entity->id,
         ]);
 
-        $response = $this->call('PATCH', '/v1/whatnow/'.$entity->id.'/revisions/'.$translation->id, [
+        $response = $this->call('PATCH', '/' . config('app.api_version') . '/whatnow/'.$entity->id.'/revisions/'.$translation->id, [
             'published' => false,
         ]);
 
@@ -584,7 +584,7 @@ class WhatNowTest extends TestCase
             'entity_id' => $entity->id,
         ]);
 
-        $response = $this->call('POST', '/v1/whatnow/publish', [
+        $response = $this->call('POST', '/' . config('app.api_version') . '/whatnow/publish', [
             'translationIds' => [
                 $translation->id,
                 $translation2->id,
@@ -629,10 +629,10 @@ class WhatNowTest extends TestCase
             'entity_id' => $entity->id,
         ]);
 
-        $response = $this->json('DELETE', '/v1/whatnow/' . $entity->id);
+        $response = $this->json('DELETE', '/' . config('app.api_version') . '/whatnow/' . $entity->id);
         $response->assertStatus(200);
 
-        $response = $this->json('GET', '/v1/whatnow/' . $entity->id);
+        $response = $this->json('GET', '/' . config('app.api_version') . '/whatnow/' . $entity->id);
         $response->assertStatus(404);
 
         $this->assertDatabaseMissing('whatnow_entities', [
@@ -664,7 +664,7 @@ class WhatNowTest extends TestCase
             'entity_id' => $entity->id,
         ]);
 
-        $response = $this->call('GET', '/v1/org/'.$organisation->country_code.'/whatnow');
+        $response = $this->call('GET', '/' . config('app.api_version') . '/org/'.$organisation->country_code.'/whatnow');
 
         $data = json_decode($response->getContent(), true);
 
@@ -711,7 +711,7 @@ class WhatNowTest extends TestCase
             'entity_id' => $entity2->id,
         ]);
 
-        $response = $this->call('GET', '/v1/org/'.$organisation->country_code.'/whatnow');
+        $response = $this->call('GET', '/' . config('app.api_version') . '/org/'.$organisation->country_code.'/whatnow');
 
         $data = json_decode($response->getContent(), true);
 
@@ -761,7 +761,7 @@ class WhatNowTest extends TestCase
             'entity_id' => $entity->id,
         ]);
 
-        $response = $this->call('GET', '/v1/org/'.$organisation->country_code.'/whatnow/revisions/latest');
+        $response = $this->call('GET', '/' . config('app.api_version') . '/org/'.$organisation->country_code.'/whatnow/revisions/latest');
 
         $data = json_decode($response->getContent(), true);
 
@@ -771,7 +771,7 @@ class WhatNowTest extends TestCase
         $this->assertSame((string) $translation2->id, $data['data'][0]['translations'][$lang]['id']);
 
 
-        $response = $this->call('GET', '/v1/org/'.$organisation->country_code.'/'.$region->slug.'/whatnow/revisions/latest');
+        $response = $this->call('GET', '/' . config('app.api_version') . '/org/'.$organisation->country_code.'/'.$region->slug.'/whatnow/revisions/latest');
         $data = json_decode($response->getContent(), true);
 
 

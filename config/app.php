@@ -249,4 +249,5 @@ return [
 
     'bucket_container' => env('AZURE_STORAGE_CONTAINER'),
 
+    'api_version' => 'v2',
 ];

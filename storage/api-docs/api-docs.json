@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "https://api.whatnow.jazusoft.com/v1",
+            "url": "https://api.whatnow.jazusoft.com/v2",
             "description": "API Base URL"
         }
     ],

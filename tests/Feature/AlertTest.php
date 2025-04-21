@@ -23,7 +23,7 @@ class AlertTest extends TestCase
             $alert = factory(\App\Models\Alert::class)->make();
         }
 
-        return $this->json('POST', '/v1/alerts', [
+        return $this->json('POST', '/' . config('app.api_version') . '/alerts', [
             'country' => $alert->country_code,
             'language' => $alert->language_code,
             'event' => $alert->event,
@@ -93,7 +93,7 @@ class AlertTest extends TestCase
 
         $alert = Alert::find($alert->json('id'));
 
-        $path = storage_path('app/public') . '/v1/alerts/cap12/' . $alert->getXmlPath();
+        $path = storage_path('app/public') . '/' . config('app.api_version') . '/alerts/cap12/' . $alert->getXmlPath();
 
         $this->assertFileExists($path);
 
@@ -111,7 +111,7 @@ class AlertTest extends TestCase
 
         $alert = Alert::find($alert->json('id'));
 
-        $response = $this->call('GET', '/v1/alerts/rss');
+        $response = $this->call('GET', '/' . config('app.api_version') . '/alerts/rss');
         $this->assertEquals(200, $response->status());
 
         $xml = new SimpleXMLElement($response->content());
@@ -126,7 +126,7 @@ class AlertTest extends TestCase
 
         $alert = Alert::find($alert->json('id'));
 
-        $response = $this->call('GET', '/v1/org/' . strtolower($alert->organisation->country_code) . '/alerts/rss');
+        $response = $this->call('GET', '/' . config('app.api_version') . '/org/' . strtolower($alert->organisation->country_code) . '/alerts/rss');
         $this->assertEquals(200, $response->status());
 
         $xml = new SimpleXMLElement($response->content());
@@ -141,7 +141,7 @@ class AlertTest extends TestCase
 
         $alert = Alert::find($alert->json('id'));
 
-        $response = $this->call('GET', '/v1/alerts');
+        $response = $this->call('GET', '/' . config('app.api_version') . '/alerts');
 
         $response->assertStatus(200);
 
@@ -156,7 +156,7 @@ class AlertTest extends TestCase
 
         $alert = Alert::find($alert->json('id'));
 
-        $response = $this->call('GET', '/v1/alerts/' . $alert->getCapIdentifier());
+        $response = $this->call('GET', '/' . config('app.api_version') . '/alerts/' . $alert->getCapIdentifier());
 
         $response->assertStatus(200);
 

@@ -28,7 +28,7 @@ class AlertFeedTest extends TestCase
             $alert = factory(\App\Models\Alert::class)->make();
         }
 
-        return $this->json('POST', '/v1/alerts', [
+        return $this->json('POST', '/' . config('app.api_version') . '/alerts', [
             'country' => $alert->country_code,
             'language' => $alert->language_code,
             'event' => $alert->event,
@@ -56,7 +56,7 @@ class AlertFeedTest extends TestCase
 
         $alert = Alert::find($alert->json('id'));
 
-        $response = $this->call('GET', '/v1/alerts/rss', [
+        $response = $this->call('GET', '/' . config('app.api_version') . '/alerts/rss', [
             'severity' => $alert->severity,
         ]);
 
@@ -68,7 +68,7 @@ class AlertFeedTest extends TestCase
         $this->assertEquals($alert->getPublicUrl(), (string)$item[0]);
 
         // Load the xml from disk
-        $path = storage_path('app/public/v1/alerts/cap12/') . $alert->getXmlPath();
+        $path = storage_path('app/public/' . config('app.api_version') . '/alerts/cap12/') . $alert->getXmlPath();
         $this->assertFileExists($path);
 
         $cap = simplexml_load_file($path);
@@ -86,7 +86,7 @@ class AlertFeedTest extends TestCase
 
         $response = $this->call(
             'GET',
-            '/v1/org/' . strtolower($alert->organisation->country_code) . '/alerts/rss',
+            '/' . config('app.api_version') . '/org/' . strtolower($alert->organisation->country_code) . '/alerts/rss',
             ['eventType' => $alert->event]
         );
 
@@ -104,7 +104,7 @@ class AlertFeedTest extends TestCase
 
         $response = $this->call(
             'GET',
-            '/v1/org/' . strtolower($alert->organisation->country_code) . '/alerts',
+            '/' . config('app.api_version') . '/org/' . strtolower($alert->organisation->country_code) . '/alerts',
             ['eventType' => $alert->event]
         );
 
@@ -115,7 +115,7 @@ class AlertFeedTest extends TestCase
 
     public function test_json_feed_returns_alerts_filtered_by_severity()
     {
-        $response = $this->call('GET', '/v1/alerts', [
+        $response = $this->call('GET', '/' . config('app.api_version') . '/alerts', [
             'severity' => 'extreme',
         ]);
 
@@ -134,7 +134,7 @@ class AlertFeedTest extends TestCase
 
         $alert = Alert::find($alert->json('id'));
 
-        $response = $this->call('GET', '/v1/alerts/rss');
+        $response = $this->call('GET', '/' . config('app.api_version') . '/alerts/rss');
 
         $xml = new SimpleXMLElement($response->content());
         $item = $xml->xpath('//rss/channel/item[1]/guid/@isPermaLink');
@@ -158,7 +158,7 @@ class AlertFeedTest extends TestCase
 
         $response = $this->call(
             'GET',
-            '/v1/alerts/rss',
+            '/' . config('app.api_version') . '/alerts/rss',
             ['active' => 'true']
         );
 
@@ -187,7 +187,7 @@ class AlertFeedTest extends TestCase
 
         $response = $this->call(
             'GET',
-            '/v1/alerts/rss'
+            '/' . config('app.api_version') . '/alerts/rss'
         );
 
         $xml = new SimpleXMLElement($response->content());
@@ -211,7 +211,7 @@ class AlertFeedTest extends TestCase
         // Request last 24 hrs of alerts
         $response = $this->call(
             'GET',
-            '/v1/alerts/rss',
+            '/' . config('app.api_version') . '/alerts/rss',
             [
                 'startTime' => (new DateTime('now'))->sub(new DateInterval('PT24H'))->format('c'),
                 'endTime' => (new DateTime('now'))->format('c'),
@@ -236,7 +236,7 @@ class AlertFeedTest extends TestCase
         // Request alerts up to 24hrs old
         $response = $this->call(
             'GET',
-            '/v1/alerts/rss',
+            '/' . config('app.api_version') . '/alerts/rss',
             [
                 'startTime' => (new DateTime('now'))->sub(new DateInterval('PT24H'))->format('c'),
                 'endTime' => (new DateTime('now'))->format('c'),

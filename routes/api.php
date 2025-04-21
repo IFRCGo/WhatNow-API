@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => 'v1'], function () {
+Route::group(['prefix' => config('app.api_version')], function () {
     // Unauthenticated endpoints
     Route::get('alerts/rss', 'AlertController@getRss');
     Route::get('alerts/{identifier}', 'AlertController@getByIdentifier');
@@ -22,14 +22,14 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('org/{code}/alerts/rss', 'AlertController@getRssByOrg');
 });
 
-Route::group(['middleware' => 'BasicAuth', 'prefix' => 'v1'], function () {
+Route::group(['middleware' => 'BasicAuth', 'prefix' => config('app.api_version')], function () {
     // Alert management
     Route::post('alerts', 'AlertController@post');
 });
 
 Route::group([
     'middleware' => 'ApiAuth',
-    'prefix' => 'v1',
+    'prefix' => config('app.api_version'),
 ], function () {
     // Endpoints requiring API key authentication
     Route::get('org/', 'OrganisationController@getAll');
@@ -40,7 +40,7 @@ Route::group([
 
 Route::group([
     'middleware' => 'BasicAuth',
-    'prefix' => 'v1',
+    'prefix' => config('app.api_version'),
 ], function () {
     Route::get('/subnationals/{country_code}', 'RegionController@getAllForOrganisation');
     Route::get('/subnationals/{country_code}/{code}', 'RegionController@getForCountryCode');
@@ -87,4 +87,12 @@ Route::group([
 
 Route::get('/health', function () {
     return response()->json(['status' => 'ok']); // Or a more detailed status
+});
+
+Route::prefix('v1')->group(function () {
+    Route::any('{any}', function () {
+        return response()->json([
+            'error' => 'API version v1 is no longer supported. Please use /v2/.'
+        ], 410); // 410 Gone es semánticamente correcto
+    })->where('any', '.*');
 });
