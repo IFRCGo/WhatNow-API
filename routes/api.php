@@ -93,6 +93,6 @@ Route::prefix('v1')->group(function () {
     Route::any('{any}', function () {
         return response()->json([
             'error' => 'API version v1 is no longer supported. Please use /v2/.'
-        ], 410); // 410 Gone es semánticamente correcto
+        ], 410);
     })->where('any', '.*');
 });
