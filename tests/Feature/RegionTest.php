@@ -46,7 +46,7 @@ class RegionTest extends TestCase
             ],
         ];
 
-        $response = $this->json('POST', '/v1/subnationals', $data);
+        $response = $this->json('POST', '/' . config('app.api_version') .  '/subnationals', $data);
 
         //dd($response);
 
@@ -98,7 +98,7 @@ class RegionTest extends TestCase
 
         $this->assertEquals(0, $matched);
 
-        $this->json('PUT', "/v1/subnationals/subnational/{$region->id}", $data)
+        $this->json('PUT', '/' . config('app.api_version') .  '/subnationals/subnational/{$region->id}', $data)
             ->assertStatus(201);
 
         $matched = RegionTranslation::where('region_id', '=', $region->id)
@@ -111,13 +111,13 @@ class RegionTest extends TestCase
 
     public function testGetRegionsForOrganisation()
     {
-        $this->json('GET', '/v1/subnationals/USA')
+        $this->json('GET', '/' . config('app.api_version') .  '/subnationals/USA')
             ->assertStatus(200);
     }
 
     public function testGetLaguageSpecificRegionsForOrganisation()
     {
-        $this->json('GET', '/v1/subnationals/USA/es')
+        $this->json('GET', '/' . config('app.api_version') .  '/subnationals/USA/es')
             ->assertStatus(200);
     }
 
@@ -139,7 +139,7 @@ class RegionTest extends TestCase
             ],
         ]);
 
-        $this->json('DELETE', "/v1/subnationals/subnational/{$region->id}")
+        $this->json('DELETE', '/' . config('app.api_version') .  '/subnationals/subnational/{$region->id}')
             ->assertStatus(202);
     }
 }

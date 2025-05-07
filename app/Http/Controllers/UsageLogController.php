@@ -83,11 +83,15 @@ class UsageLogController extends Controller
         $this->validate($request, [
             'fromDate' => 'sometimes|date',
             'toDate' => 'sometimes|date',
+            'orderBy' => 'sometimes|string|in:name,username,estimatedUsers,requestCount',
+            'sort' => 'sometimes|string|in:asc,desc',
         ]);
 
         try {
+            $orderBy = $request->query('orderBy', 'name');
+            $sort = strtolower($request->query('sort', 'asc')) === 'desc';
             $apps = $this->applicationRepo->allDesc(['id', 'tenant_user_id', 'name', 'estimated_users_count']);
-
+            
             $usageLogs = collect([]);
 
             foreach ($apps as $app) {
@@ -108,7 +112,7 @@ class UsageLogController extends Controller
                 'errors' => [],
             ], 500);
         }
-
+        $usageLogs = $usageLogs->sortBy($orderBy, SORT_REGULAR, $sort)->values();
         $paginated = $usageLogs->paginate(10)->toArray();
 
         // TODO: Create custom paginator class
@@ -374,7 +378,7 @@ class UsageLogController extends Controller
             $query = $usageLog->query();
 
             if (isset($request->society)) {
-                $query->where('endpoint', 'v1/org/'.$request->society.'/whatnow');
+                $query->where('endpoint', config('app.api_version') . '/org/' .$request->society.'/whatnow');
             }
             if (isset($request->subnational)) {
                 $query->where('subnational', $request->subnational);

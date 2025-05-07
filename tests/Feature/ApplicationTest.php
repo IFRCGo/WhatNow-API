@@ -42,7 +42,7 @@ class ApplicationTest extends TestCase
             ],
         ];
 
-        $response = $this->json('GET', '/v1/apps?userId=999');
+        $response = $this->json('GET', '/' . config('app.api_version') . '/apps?userId=999');
 
         $response->assertStatus(200);
 
@@ -71,7 +71,7 @@ class ApplicationTest extends TestCase
             ],
         ];
 
-        $response = $this->json('GET', '/v1/apps/'.$app->id);
+        $response = $this->json('GET', '/' . config('app.api_version') . '/apps/'.$app->id);
 
         $response->assertStatus(200);
 
@@ -91,7 +91,7 @@ class ApplicationTest extends TestCase
             'key' => '1234567890',
         ]);
 
-        $this->json('DELETE', '/v1/apps/'.$app->id)->assertStatus(200);
+        $this->json('DELETE', '/' . config('app.api_version') . '/apps/'.$app->id)->assertStatus(200);
 
         $this->assertDatabaseHas('applications', [
             'id' => $app->id,
@@ -106,7 +106,7 @@ class ApplicationTest extends TestCase
     {
         $this->markTestSkipped('Bug Request POST parameters lost when unit testing https://github.com/laravel/lumen-framework/issues/559 upgrade to Lumen 5.4.2+');
 
-        $this->json('POST', '/v1/apps/', [
+        $this->json('POST', '/' . config('app.api_version') . '/apps/', [
             'userId' => '55',
             'name' => 'Hello',
         ])->assertStatus(200);
