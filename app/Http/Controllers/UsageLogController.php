@@ -91,7 +91,7 @@ class UsageLogController extends Controller
             $orderBy = $request->query('orderBy', 'name');
             $sort = strtolower($request->query('sort', 'asc')) === 'desc';
             $apps = $this->applicationRepo->allDesc(['id', 'tenant_user_id', 'name', 'estimated_users_count']);
-            
+
             $usageLogs = collect([]);
 
             foreach ($apps as $app) {
@@ -372,11 +372,13 @@ class UsageLogController extends Controller
             'date' => 'sometimes|date',
             'language' => 'sometimes|string',
         ]);
+
         try {
             $usageLog = new UsageLog;
             $query = $usageLog->query();
 
-            if (isset($request->society)) {
+            if ($request->has('society')) {
+                $query->where('endpoint', 'v2/org/' . $request->society . '/whatnow');
             }
             if ($request->has('subnational')) {
                 $query->where('subnational', $request->subnational);
@@ -396,6 +398,8 @@ class UsageLogController extends Controller
 
 
             $applicationQuery = $usageLog->query();
+            if ($request->has('society')) {
+                $applicationQuery->where('endpoint', 'v2/org/' . $request->society . '/whatnow');
             }
             if ($request->has('subnational')) {
                 $applicationQuery->where('subnational', $request->subnational);
@@ -403,22 +407,28 @@ class UsageLogController extends Controller
             if ($request->has('hazard')) {
                 $applicationQuery->where('event_type', 'like', '%' . $request->hazard . '%');
             }
+            if ($request->has('date')) {
+                $applicationQuery->whereDate('timestamp', $request->date);
             }
             if ($request->has('language')) {
                 $applicationQuery->where('language', $request->language);
             }
 
             $uniqueApplicationIds = $applicationQuery->select('application_id')
+                ->distinct()
                 ->pluck('application_id')
+                ->toArray();
 
-                return $application->estimated_users_count;
-            })->sum();
+            $totalEstimatedUsers = 0;
+            if (!empty($uniqueApplicationIds)) {
                 $totalEstimatedUsers = $this->applicationRepo->findIn($uniqueApplicationIds)
+                    ->sum('estimated_users_count');
+            }
 
             $totals = [
-                'applications' => count($uniqueApplicationIds),
                 'applications' => $stats->unique_apps,
                 'estimatedUsers' => $totalEstimatedUsers,
+                'hits' => $stats->hits,
             ];
 
 
