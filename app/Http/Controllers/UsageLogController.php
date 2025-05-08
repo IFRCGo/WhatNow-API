@@ -373,43 +373,57 @@ class UsageLogController extends Controller
             'language' => 'sometimes|string',
         ]);
         try {
-            // Cache to be enabled in production
             $usageLog = new UsageLog;
             $query = $usageLog->query();
 
             if (isset($request->society)) {
-                $query->where('endpoint', config('app.api_version') . '/org/' .$request->society.'/whatnow');
             }
-            if (isset($request->subnational)) {
+            if ($request->has('subnational')) {
                 $query->where('subnational', $request->subnational);
             }
-            if (isset($request->hazard)) {
+            if ($request->has('hazard')) {
                 $query->where('event_type', 'like', '%' . $request->hazard . '%');
             }
-            if (isset($request->date)) {
+            if ($request->has('date')) {
                 $query->whereDate('timestamp', $request->date);
             }
-            if (isset($request->language)) {
+            if ($request->has('language')) {
                 $query->where('language', $request->language);
             }
-            $usageLogs = $query->get();
 
-            $uniqueApplicationIds = $usageLogs->pluck('application_id')->unique();
+            $stats = $query->selectRaw('COUNT(*) as hits, COUNT(DISTINCT application_id) as unique_apps')
+                ->first();
 
-            $applications = $this->applicationRepo->findIn($uniqueApplicationIds->toArray());
 
-            // Calculate total estimated users
-            $totalEstimatedUsers = $applications->map(function ($application) {
+            $applicationQuery = $usageLog->query();
+            }
+            if ($request->has('subnational')) {
+                $applicationQuery->where('subnational', $request->subnational);
+            }
+            if ($request->has('hazard')) {
+                $applicationQuery->where('event_type', 'like', '%' . $request->hazard . '%');
+            }
+            }
+            if ($request->has('language')) {
+                $applicationQuery->where('language', $request->language);
+            }
+
+            $uniqueApplicationIds = $applicationQuery->select('application_id')
+                ->pluck('application_id')
+
                 return $application->estimated_users_count;
             })->sum();
+                $totalEstimatedUsers = $this->applicationRepo->findIn($uniqueApplicationIds)
 
             $totals = [
                 'applications' => count($uniqueApplicationIds),
+                'applications' => $stats->unique_apps,
                 'estimatedUsers' => $totalEstimatedUsers,
-                'hits' => count($usageLogs),
             ];
+
+
         } catch (\Exception $e) {
-            Log::error('Could not get Usage Log totals', ['message' => $e->getMessage()]);
+            \Log::error('Could not get Usage Log totals', ['message' => $e->getMessage()]);
             return response()->json([
                 'status' => 500,
                 'error_message' => 'Could not get Usage Log totals',
@@ -422,3 +436,4 @@ class UsageLogController extends Controller
         ], 200);
     }
 }
+
