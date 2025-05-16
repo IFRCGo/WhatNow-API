@@ -73,11 +73,11 @@ ingress:
           paths:
               - path: /
                 pathType: ImplementationSpecific
-        - host: "api.whatnow.jazusoft.com"
+        - host: "api-preparemessages-stage.ifrc.org"
           paths:
               - path: /
                 pathType: Prefix
     tls:
         - hosts:
-              - "api.whatnow.jazusoft.com"
-          secretName: "your-tls-secret"
+              - "api-preparemessages-stage.ifrc.org"
+          secretName: "ifrc.certificates.secret"
