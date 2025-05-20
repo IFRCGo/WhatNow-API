@@ -24,6 +24,9 @@ COPY ./ /var/www/html
 WORKDIR /var/www/html
 RUN composer install --no-dev --prefer-dist --optimize-autoloader
 
+# Generate Swagger documentation
+RUN php artisan l5-swagger:generate
+
 RUN mkdir -p storage/framework/sessions
 RUN mkdir -p storage/framework/views
 RUN mkdir -p storage/framework/cache
