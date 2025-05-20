@@ -252,7 +252,7 @@ return [
          * Constants which can be used in annotations
          */
         'constants' => [
-            'L5_SWAGGER_CONST_HOST' => env('APP_URL', 'http://localhost') . '/v1',
+            'L5_SWAGGER_CONST_HOST' => env('APP_URL', 'https://api-preparemessages-stage.ifrc.org') . '/v2',
         ],
     ],
 ];
