@@ -27,3 +27,4 @@ helm-chart/secrets-ifrc.yml
 helm-chart/secrets-qa.yml
 helm-chart/secrets-prod.yml
 helm-chart/ssl-secret.yaml
+.DS_Store
