@@ -1,0 +1,83 @@
+# Azure Container Registry details
+image:
+    repository: ifrcsmdb.azurecr.io/whatnowapi
+    tag: "latest"
+    pullPolicy: Always
+
+replicaCount: 1
+
+# Kubernetes service configuration
+service:
+    type: ClusterIP
+    port: 80
+    targetPort: 80
+# Environment variables
+env:
+    APP_NAME: Laravel
+    APP_ENV: local
+    APP_DEBUG: false
+    APP_URL: http://localhost
+    LOG_CHANNEL: stack
+    DB_PORT: 3306
+    DB_CONNECTION: mysql
+    BROADCAST_DRIVER: log
+    CACHE_DRIVER: file
+    QUEUE_CONNECTION: sync
+    SESSION_DRIVER: file
+    SESSION_LIFETIME: 120
+    REDIS_HOST: 127.0.0.1
+    REDIS_PASSWORD: null
+    REDIS_PORT: 6379
+    MAIL_DRIVER: smtp
+    MAIL_HOST: smtp.mailtrap.io
+    MAIL_PORT: 2525
+    MAIL_USERNAME: null
+    MAIL_PASSWORD: null
+    MAIL_ENCRYPTION: null
+    AWS_ACCESS_KEY_ID:
+    AWS_SECRET_ACCESS_KEY:
+    AWS_DEFAULT_REGION: us-east-1
+    AWS_BUCKET:
+    PUSHER_APP_ID:
+    PUSHER_APP_KEY:
+    PUSHER_APP_SECRET:
+    PUSHER_APP_CLUSTER: mt1
+    MIX_PUSHER_APP_KEY: "${PUSHER_APP_KEY}"
+    MIX_PUSHER_APP_CLUSTER: "${PUSHER_APP_CLUSTER}"
+    AZURE_STORAGE_ACCOUNT: smdbstorageaccount
+    AZURE_STORAGE_CONTAINER: images
+    AZURE_STORAGE_DOMAIN: blob.core.windows.net
+
+secrets:
+    dbSecretName: admin-credentials
+    variables:
+        ADMIN_USER: ADMIN_USER
+        ADMIN_PASSWORD: ADMIN_PASSWORD
+        DB_HOST: DB_HOST
+        DB_DATABASE: DB_DATABASE
+        DB_USERNAME: DB_USERNAME
+        DB_PASSWORD: DB_PASSWORD
+        APP_KEY: APP_KEY
+        AZURE_STORAGE_KEY: AZURE_STORAGE_KEY
+        AZURE_STORAGE_CONNECTION_STRING: AZURE_STORAGE_CONNECTION_STRING
+
+# Ingress (if using)
+ingress:
+    enabled: true
+    annotations:
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts:
+        - host: "api.whatnow"
+          paths:
+              - path: /
+                pathType: ImplementationSpecific
+        - host: "api-preparemessages.ifrc.org"
+          paths:
+              - path: /
+                pathType: Prefix
+    tls:
+        - hosts:
+              - "api-preparemessages.ifrc.org"
+          secretName: "ifrc.certificates.secret"
