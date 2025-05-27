@@ -13,10 +13,11 @@ service:
     targetPort: 80
 # Environment variables
 env:
-    APP_NAME: Laravel
-    APP_ENV: local
+    APP_NAME: 'IFRC National Society Preparedness Messages'
+    APP_ENV: production
     APP_DEBUG: false
-    APP_URL: http://localhost
+    APP_LOG_LEVEL: info
+    APP_URL: https://api-preparemessages.ifrc.org
     LOG_CHANNEL: stack
     DB_PORT: 3306
     DB_CONNECTION: mysql
