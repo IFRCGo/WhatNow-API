@@ -1,11 +1,8 @@
-on:
- pull_request:
-        types:
-            - closed
-        branches:
-            - 'develop'
+name: Production pipeline
 
-name: Linux_Container_Workflow
+on:
+  workflow_dispatch:  # Allows manual execution
+
 jobs:
    build-and-deploy:
        runs-on: ubuntu-latest
