@@ -1,13 +1,7 @@
 name: Production pipeline
 
 on:
-  pull_request:
-    types:
-      - closed
-    branches:
-      - 'staging'
-
-
+  workflow_dispatch:  # Allows manual execution
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
