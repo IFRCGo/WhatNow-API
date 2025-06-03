@@ -32,17 +32,17 @@ jobs:
             touch .env
           fi
           cp swagger.prod .env
-          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi-qa:${{ github.sha }} -f ./docker/Dockerfile .
-          docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi-qa:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi-qa:latest
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi-qa:${{ github.sha }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi-qa:latest
+          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi:${{ github.sha }} -f ./docker/Dockerfile .
+          docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi:latest
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi:latest
 
-      - name: 'Copy staging values file'
+      - name: 'Copy production values file'
         run: |
           cp ./helm-chart/values-production.yaml ./helm-chart/values.yaml
 
       - name: 'Deploy to AKS with Helm'
         run: |
-          helm upgrade --install whatnow-qa ./helm-chart \
-            --namespace ${{ secrets.AKS_CLUSTER_NAMESPACE_QA }} \
+          helm upgrade --install whatnow ./helm-chart \
+            --namespace ${{ secrets.AKS_CLUSTER_NAMESPACE }} \
             --create-namespace
