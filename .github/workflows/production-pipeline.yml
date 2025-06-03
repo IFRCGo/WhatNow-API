@@ -29,6 +29,9 @@ jobs:
            username: ${{ secrets.REGISTRY_USERNAME }}
            password: ${{ secrets.REGISTRY_PASSWORD }}
        - run: |
+           if [ ! -f .env ]; then
+           touch .env
+           fi
            cp swagger.prod .env
            docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi:${{ github.sha }} -f ./docker/Dockerfile .
            docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi:latest
