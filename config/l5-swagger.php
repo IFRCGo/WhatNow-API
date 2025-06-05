@@ -169,10 +169,18 @@ return [
          * API security definitions. Will be generated into documentation file.
         */
         'securityDefinitions' => [
-            'securitySchemes' => [],
-            'security' => [],
+            'securitySchemes' => [
+                'ApiKeyAuth' => [
+                    'type' => 'apiKey',
+                    'description' => 'Enter your API key in the header',
+                    'name' => 'x-api-key',
+                    'in' => 'header',
+                ],
+            ],
+            'security' => [
+                ['ApiKeyAuth' => []],
+            ],
         ],
-
         /*
          * Set this to `true` in development mode so that docs would be regenerated on each request
          * Set this to `false` to disable swagger generation on production

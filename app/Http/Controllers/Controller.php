@@ -19,6 +19,12 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
  *        description="API Base URL"
  *    )
  * )
+ * @OA\SecurityScheme(
+ *     securityScheme="ApiKeyAuth",
+ *     type="apiKey",
+ *     in="header",
+ *     name="x-api-key"
+ * )
  */
 class Controller extends BaseController
 {
