@@ -68,7 +68,7 @@ class OrganisationController extends Controller
     {
         try {
             /** @var Collection $orgs */
-            $orgs = $this->orgRepo->all();
+            $orgs = $this->orgRepo->all()->load('details');
         } catch (\Exception $e) {
             Log::error('Could not get Organisations list', ['message' => $e->getMessage()]);
 
@@ -78,10 +78,6 @@ class OrganisationController extends Controller
                 'errors' => [],
             ], 500);
         }
-
-        $orgs->each(function (Organisation $org) {
-            $org->load('details');
-        });
 
         $resource = new \League\Fractal\Resource\Collection($orgs, new OrganisationTransformer([
             'unpublished' => $request->header('x-api-key') ? false : true,
