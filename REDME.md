@@ -90,7 +90,7 @@ php artisan serve --port=8001
 
 2. Dirígete al archivo `.env` y ajusta las siguientes configuraciones para conectar correctamente la API y el backoffice:
 
-   ```dotenv
+   ```dotenv 
    RCN_API_VERSION=v1
    RCN_API_URL=http://127.0.0.1:8001
    RCN_API_USER=admin

@@ -20,3 +20,11 @@ npm-debug.log
 yarn-error.log
 helm-chart/secrets.yml
 .idea/*
+helm-chart/fullchain.pem
+helm-chart/privkey.pem
+helm-chart/secrets.yml
+helm-chart/secrets-ifrc.yml
+helm-chart/secrets-qa.yml
+helm-chart/secrets-prod.yml
+helm-chart/ssl-secret.yaml
+.DS_Store
