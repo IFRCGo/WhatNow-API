@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Application;
+use App\Classes\Repositories\ApplicationRepositoryInterface;
+use App\Classes\Transformers\ApplicationTransformer;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use League\Fractal\Manager;
 
 /**
  * @OA\Tag(
@@ -17,10 +18,47 @@ use Illuminate\Support\Facades\Validator;
 class ApplicationController extends Controller
 {
     /**
-     * Get all active applications for the authenticated user
+     * @var ApplicationRepositoryInterface
+     */
+    protected $repo;
+
+    /**
+     * @var Request
+     */
+    protected $request;
+
+    /**
+     * @var Manager
+     */
+    protected $manager;
+
+    /**
+     * When more tenants are added, this will be inferred from the auth token that was used.
      *
+     * @var int
+     */
+    private $tenantId = 1;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @param ApplicationRepositoryInterface $repo
      * @param Request $request
-     * @return JsonResponse
+     * @param Manager $manager
+     */
+    public function __construct(
+        ApplicationRepositoryInterface $repo,
+        Request $request,
+        Manager $manager
+    ) {
+        $this->repo = $repo;
+        $this->request = $request;
+        $this->manager = $manager;
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     /**
      * @OA\Get(
@@ -49,41 +87,35 @@ class ApplicationController extends Controller
      */
     public function getAllForUser(Request $request)
     {
+        $this->validate($this->request, [
+            'userId' => 'required|string',
+        ]);
+
+        $userId = $request->get('userId', null);
+        $tenantId = $this->tenantId;
+
         try {
-            // Obtener el userId del parámetro de query
-            $userId = $request->query('userId');
-
-            // Validar que se proporcione el userId
-            if (!$userId) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'userId parameter is required'
-                ], 400);
-            }
-
-            $applications = Application::where('tenant_user_id', $userId)
-                ->active()
-                ->get();
-
-            return response()->json([
-                'success' => true,
-                'data' => $applications,
-                'message' => 'Applications retrieved successfully'
-            ], 200);
-
+            /** @var Collection $apps */
+            $apps = $this->repo->findForUserId($tenantId, $userId);
         } catch (\Exception $e) {
+            Log::error('Could not get Applications list for user', ['message' => $e->getMessage()]);
+
             return response()->json([
-                'success' => false,
-                'message' => 'Error retrieving applications: ' . $e->getMessage()
+                'status' => 500,
+                'error_message' => 'Could not get Applications list',
+                'errors' => [],
             ], 500);
         }
+
+        $resource = new \League\Fractal\Resource\Collection($apps, new ApplicationTransformer);
+        $response = $this->manager->createData($resource);
+
+        return response()->json($response->toArray(), 200);
     }
 
     /**
-     * Get a specific active application by ID
-     *
      * @param int $id
-     * @return JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     /**
      * @OA\Get(
@@ -110,44 +142,32 @@ class ApplicationController extends Controller
      *     )
      * )
      */
-    public function getById(Request $request, $id)
+    public function getById($id)
     {
         try {
-            // Obtener el userId del parámetro de query
-            $userId = $request->query('userId');
-
-            // Validar que se proporcione el userId
-            if (!$userId) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'userId parameter is required'
-                ], 400);
-            }
-
-            $application = Application::where('id', $id)
-                ->where('tenant_user_id', $userId)
-                ->active()
-                ->first();
-
-            if (!$application) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Active application not found'
-                ], 404);
-            }
-
-            return response()->json([
-                'success' => true,
-                'data' => $application,
-                'message' => 'Application retrieved successfully'
-            ], 200);
-
+            $application = $this->repo->find($id);
         } catch (\Exception $e) {
+            Log::error('Application not found', ['message' => $e->getMessage()]);
+
             return response()->json([
-                'success' => false,
-                'message' => 'Error retrieving application: ' . $e->getMessage()
-            ], 500);
+                'status' => 404,
+                'error_message' => 'Application does not exist',
+                'errors' => ['No matching Application'],
+            ], 404);
         }
+
+        if ($application->tenant_id !== $this->tenantId) {
+            return response()->json([
+                'status' => 403,
+                'error_message' => 'Application does not belong to tenant',
+                'errors' => ['Application does not belong to tenant'],
+            ], 403);
+        }
+
+        $resource = new \League\Fractal\Resource\Item($application, new ApplicationTransformer());
+        $response = $this->manager->createData($resource);
+
+        return response()->json($response->toArray(), 200);
     }
 
     /**
@@ -185,59 +205,35 @@ class ApplicationController extends Controller
      */
     public function create(Request $request)
     {
+        $this->validate($this->request, [
+            'name' => 'required|string',
+            'description' => 'string',
+            'userId' => 'required|string',
+            'estimatedUsers' => 'sometimes|integer',
+        ]);
+
+
+        $data = $this->request->except('userId');
+        $data['estimated_users_count'] = $request->get('estimatedUsers', 0);
+        $data['tenant_user_id'] = $request->get('userId');
+        $data['tenant_id'] = $this->tenantId;
+
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'description' => 'nullable|string',
-                'estimated_users_count' => 'nullable|integer|min:1',
-                'is_active' => 'nullable|boolean',
-                'userId' => 'required|string'
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-
-            // Obtener el userId del request
-            $userId = $request->input('userId');
-
-            // Generar la clave API
-            $apiKey = Application::generateKey();
-
-            // Verificar que la clave se generó correctamente
-            if (!$apiKey) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to generate API key'
-                ], 500);
-            }
-
-            $application = Application::create([
-                'tenant_id' => 1,
-                'tenant_user_id' => $userId,
-                'name' => $request->input('name'),
-                'description' => $request->input('description'),
-                'estimated_users_count' => $request->input('estimated_users_count', $request->input('estimatedUsers', 0)),
-                'key' => $apiKey,
-                'is_active' => $request->input('is_active', true)
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'data' => $application,
-                'message' => 'Application created successfully'
-            ], 201);
-
+            $application = $this->repo->create($data);
         } catch (\Exception $e) {
+            Log::error('Application not created', ['message' => $e->getMessage()]);
+
             return response()->json([
-                'success' => false,
-                'message' => 'Error creating application: ' . $e->getMessage()
+                'status' => 500,
+                'error_message' => 'Unable to create Application',
+                'errors' => [$e->getMessage()],
             ], 500);
         }
+
+        $resource = new \League\Fractal\Resource\Item($application, new ApplicationTransformer());
+        $response = $this->manager->createData($resource);
+
+        return response()->json($response->toArray(), 201);
     }
 
     /**
@@ -273,61 +269,31 @@ class ApplicationController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($this->request, [
+            'estimatedUsers' => 'sometimes|integer',
+        ]);
+
+        $data = [];
+        $data['estimated_users_count'] = $request->get('estimatedUsers', 0);
+
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'nullable|string|max:255',
-                'description' => 'nullable|string',
-                'estimated_users_count' => 'nullable|integer|min:1',
-                'is_active' => 'nullable|boolean',
-                'userId' => 'required|string'
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Validation failed',
-                    'errors' => $validator->errors()
-                ], 422);
-            }
-
-            // Obtener el userId del request
-            $userId = $request->input('userId');
-
-            $application = Application::where('id', $id)
-                ->where('tenant_user_id', $userId)
-                ->first();
-
-            if (!$application) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Application not found'
-                ], 404);
-            }
-
-            // Actualizar solo los campos proporcionados
-            $updateData = array_filter($request->only([
-                'name',
-                'description',
-                'estimated_users_count',
-                'is_active'
-            ]), function($value) {
-                return $value !== null;
-            });
-
-            $application->update($updateData);
-
-            return response()->json([
-                'success' => true,
-                'data' => $application->fresh(),
-                'message' => 'Application updated successfully'
-            ], 200);
-
+            $this->repo->updateWithIdAndInput($id, $data);
         } catch (\Exception $e) {
+            Log::error('Application not updated', ['message' => $e->getMessage()]);
+
             return response()->json([
-                'success' => false,
-                'message' => 'Error updating application: ' . $e->getMessage()
+                'status' => 500,
+                'error_message' => 'Unable to update Application',
+                'errors' => [$e->getMessage()],
             ], 500);
         }
+
+        $application = $this->repo->find($id);
+
+        $resource = new \League\Fractal\Resource\Item($application, new ApplicationTransformer());
+        $response = $this->manager->createData($resource);
+
+        return response()->json($response->toArray(), 201);
     }
 
     /**
@@ -355,151 +321,177 @@ class ApplicationController extends Controller
      *     )
      * )
      */
-    public function delete(Request $request, $id)
+    public function delete($id)
     {
         try {
-
-            $userId = $request->query('userId');
-
-            if (!$userId) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'userId parameter is required'
-                ], 400);
-            }
-
-            $application = Application::where('id', $id)
-                ->where('tenant_user_id', $userId)
-                ->first();
-
-            if (!$application) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Application not found'
-                ], 404);
-            }
-
-            $application->delete();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Application deleted successfully'
-            ], 200);
-
+            $application = $this->repo->find($id);
         } catch (\Exception $e) {
+            Log::error('Application not found', ['message' => $e->getMessage()]);
+
             return response()->json([
-                'success' => false,
-                'message' => 'Error deleting application: ' . $e->getMessage()
-            ], 500);
+                'status' => 404,
+                'error_message' => 'Application does not exist',
+                'errors' => ['No matching Application'],
+            ], 404);
         }
+
+        if ($application->tenant_id !== $this->tenantId) {
+            return response()->json([
+                'status' => 403,
+                'error_message' => 'Application does not belong to tenant',
+                'errors' => ['Application does not belong to tenant'],
+            ], 403);
+        }
+
+        try {
+            $this->repo->destroy($id);
+        } catch (\Exception $e) {
+            Log::error('Application not found', ['message' => $e->getMessage()]);
+
+            return response()->json([
+                'status' => 404,
+                'error_message' => 'Application does not exist',
+                'errors' => ['No matching Application'],
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Application deleted',
+        ], 200);
     }
 
     /**
-     * Get all applications for admin (including inactive ones)
-     * This method can be used by administrators to see all applications
-     *
-     * @param Request $request
-     * @return JsonResponse
+     * @OA\Patch(
+     *     path="/apps/{id}/activate",
+     *     tags={"Applications"},
+     *     summary="Activate an application by ID",
+     *     operationId="activateApplication",
+     *     security={},
+     *     deprecated=true,
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the application to activate",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
      */
-    public function getAllForAdmin(Request $request)
+    public function activate($id)
     {
         try {
-            $applications = Application::all();
-
-            return response()->json([
-                'success' => true,
-                'data' => $applications,
-                'message' => 'All applications retrieved successfully'
-            ], 200);
-
+            $application = $this->repo->find($id);
         } catch (\Exception $e) {
+            Log::error('Application not found', ['message' => $e->getMessage()]);
+
             return response()->json([
-                'success' => false,
-                'message' => 'Error retrieving applications: ' . $e->getMessage()
+                'status' => 404,
+                'error_message' => 'Application does not exist',
+                'errors' => ['No matching Application'],
+            ], 404);
+        }
+
+        if ($application->tenant_id !== $this->tenantId) {
+            return response()->json([
+                'status' => 403,
+                'error_message' => 'Application does not belong to tenant',
+                'errors' => ['Application does not belong to tenant'],
+            ], 403);
+        }
+
+        try {
+            $this->repo->updateWithIdAndInput($id, ['is_active' => true]);
+        } catch (\Exception $e) {
+            Log::error('Application not activated', ['message' => $e->getMessage()]);
+
+            return response()->json([
+                'status' => 500,
+                'error_message' => 'Unable to activate Application',
+                'errors' => [$e->getMessage()],
             ], 500);
         }
+
+        $application = $this->repo->find($id);
+
+        $resource = new \League\Fractal\Resource\Item($application, new ApplicationTransformer());
+        $response = $this->manager->createData($resource);
+
+        return response()->json($response->toArray(), 200);
     }
 
     /**
-     * Activate all applications for a specific user
-     *
-     * @param int $id - User ID (tenant_user_id)
-     * @return JsonResponse
+     * @OA\Patch(
+     *     path="/apps/{id}/deactivate",
+     *     tags={"Applications"},
+     *     summary="Deactivate an application by ID",
+     *     operationId="deactivateApplication",
+     *     security={},
+     *     deprecated=true,
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the application to deactivate",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
      */
-    public function activate(Request $request, $id)
+    public function deactivate($id)
     {
         try {
-
-            $userId = $id;
-
-
-            $applications = Application::where('tenant_user_id', $userId)->get();
-
-            if ($applications->isEmpty()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No applications found for this user'
-                ], 404);
-            }
-
-            $updatedCount = Application::where('tenant_user_id', $userId)
-                ->update(['is_active' => true]);
-
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'user_id' => $userId,
-                    'updated_applications_count' => $updatedCount
-                ],
-                'message' => 'All applications activated successfully for user ' . $userId
-            ], 200);
-
+            $application = $this->repo->find($id);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error activating applications: ' . $e->getMessage()
-            ], 500);
-        }
-    }
+            Log::error('Application not found', ['message' => $e->getMessage()]);
 
-    /**
-     * Deactivate all applications for a specific user
-     *
-     * @param int $id - User ID (tenant_user_id)
-     * @return JsonResponse
-     */
-    public function deactivate(Request $request, $id)
-    {
+            return response()->json([
+                'status' => 404,
+                'error_message' => 'Application does not exist',
+                'errors' => ['No matching Application'],
+            ], 404);
+        }
+
+        if ($application->tenant_id !== $this->tenantId) {
+            return response()->json([
+                'status' => 403,
+                'error_message' => 'Application does not belong to tenant',
+                'errors' => ['Application does not belong to tenant'],
+            ], 403);
+        }
+
         try {
-
-            $userId = $id;
-
-            $applications = Application::where('tenant_user_id', $userId)->get();
-
-            if ($applications->isEmpty()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'No applications found for this user'
-                ], 404);
-            }
-
-            $updatedCount = Application::where('tenant_user_id', $userId)
-                ->update(['is_active' => false]);
-
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'user_id' => $userId,
-                    'updated_applications_count' => $updatedCount
-                ],
-                'message' => 'All applications deactivated successfully for user ' . $userId
-            ], 200);
-
+            $this->repo->updateWithIdAndInput($id, ['is_active' => false]);
         } catch (\Exception $e) {
+            Log::error('Application not deactivated', ['message' => $e->getMessage()]);
+
             return response()->json([
-                'success' => false,
-                'message' => 'Error deactivating applications: ' . $e->getMessage()
+                'status' => 500,
+                'error_message' => 'Unable to deactivate Application',
+                'errors' => [$e->getMessage()],
             ], 500);
         }
+
+        $application = $this->repo->find($id);
+
+        $resource = new \League\Fractal\Resource\Item($application, new ApplicationTransformer());
+        $response = $this->manager->createData($resource);
+
+        return response()->json($response->toArray(), 200);
     }
 }
