@@ -360,4 +360,138 @@ class ApplicationController extends Controller
             'message' => 'Application deleted',
         ], 200);
     }
+
+    /**
+     * @OA\Patch(
+     *     path="/apps/{id}/activate",
+     *     tags={"Applications"},
+     *     summary="Activate an application by ID",
+     *     operationId="activateApplication",
+     *     security={},
+     *     deprecated=true,
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the application to activate",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
+    public function activate($id)
+    {
+        try {
+            $application = $this->repo->find($id);
+        } catch (\Exception $e) {
+            Log::error('Application not found', ['message' => $e->getMessage()]);
+
+            return response()->json([
+                'status' => 404,
+                'error_message' => 'Application does not exist',
+                'errors' => ['No matching Application'],
+            ], 404);
+        }
+
+        if ($application->tenant_id !== $this->tenantId) {
+            return response()->json([
+                'status' => 403,
+                'error_message' => 'Application does not belong to tenant',
+                'errors' => ['Application does not belong to tenant'],
+            ], 403);
+        }
+
+        try {
+            $this->repo->updateWithIdAndInput($id, ['is_active' => true]);
+        } catch (\Exception $e) {
+            Log::error('Application not activated', ['message' => $e->getMessage()]);
+
+            return response()->json([
+                'status' => 500,
+                'error_message' => 'Unable to activate Application',
+                'errors' => [$e->getMessage()],
+            ], 500);
+        }
+
+        $application = $this->repo->find($id);
+
+        $resource = new \League\Fractal\Resource\Item($application, new ApplicationTransformer());
+        $response = $this->manager->createData($resource);
+
+        return response()->json($response->toArray(), 200);
+    }
+
+    /**
+     * @OA\Patch(
+     *     path="/apps/{id}/deactivate",
+     *     tags={"Applications"},
+     *     summary="Deactivate an application by ID",
+     *     operationId="deactivateApplication",
+     *     security={},
+     *     deprecated=true,
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the application to deactivate",
+     *         @OA\Schema(type="integer", format="int64")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful response",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
+     *         )
+     *     )
+     * )
+     */
+    public function deactivate($id)
+    {
+        try {
+            $application = $this->repo->find($id);
+        } catch (\Exception $e) {
+            Log::error('Application not found', ['message' => $e->getMessage()]);
+
+            return response()->json([
+                'status' => 404,
+                'error_message' => 'Application does not exist',
+                'errors' => ['No matching Application'],
+            ], 404);
+        }
+
+        if ($application->tenant_id !== $this->tenantId) {
+            return response()->json([
+                'status' => 403,
+                'error_message' => 'Application does not belong to tenant',
+                'errors' => ['Application does not belong to tenant'],
+            ], 403);
+        }
+
+        try {
+            $this->repo->updateWithIdAndInput($id, ['is_active' => false]);
+        } catch (\Exception $e) {
+            Log::error('Application not deactivated', ['message' => $e->getMessage()]);
+
+            return response()->json([
+                'status' => 500,
+                'error_message' => 'Unable to deactivate Application',
+                'errors' => [$e->getMessage()],
+            ], 500);
+        }
+
+        $application = $this->repo->find($id);
+
+        $resource = new \League\Fractal\Resource\Item($application, new ApplicationTransformer());
+        $response = $this->manager->createData($resource);
+
+        return response()->json($response->toArray(), 200);
+    }
 }
