@@ -64,7 +64,7 @@ Route::group([
     Route::delete('apps/{id}', 'ApplicationController@delete');
     Route::patch('apps/{id}', 'ApplicationController@update');
 
-    // Rutas adicionales para manejar el estado activo/inactivo
+    // Routes for activating/deactivating applications
     Route::patch('apps/{id}/activate', 'ApplicationController@activate');
     Route::patch('apps/{id}/deactivate', 'ApplicationController@deactivate');
     Route::get('admin/apps', 'ApplicationController@getAllForAdmin');
