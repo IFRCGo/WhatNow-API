@@ -18,5 +18,9 @@
         "sass": "^1.15.2",
         "sass-loader": "^7.1.0",
         "vue-template-compiler": "^2.7.16"
+    },
+    "overrides": {
+        "cipher-base": "^1.0.5",
+        "sha.js": "^2.4.12"
     }
 }

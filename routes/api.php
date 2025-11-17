@@ -64,6 +64,11 @@ Route::group([
     Route::delete('apps/{id}', 'ApplicationController@delete');
     Route::patch('apps/{id}', 'ApplicationController@update');
 
+    // Routes for activating/deactivating applications
+    Route::patch('apps/{id}/activate', 'ApplicationController@activate');
+    Route::patch('apps/{id}/deactivate', 'ApplicationController@deactivate');
+    Route::get('admin/apps', 'ApplicationController@getAllForAdmin');
+
     // Usage log endpoints
     Route::get('usage/applications', 'UsageLogController@getApplicationLogs');
     Route::get('usage/endpoints', 'UsageLogController@getEndpointLogs');
@@ -96,3 +101,4 @@ Route::prefix('v1')->group(function () {
         ], 410);
     })->where('any', '.*');
 });
+

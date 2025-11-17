@@ -16,7 +16,7 @@ class Application extends Model
      */
     protected $table = 'applications';
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     /**
      * The attributes that are mass assignable.
@@ -30,9 +30,30 @@ class Application extends Model
         'description',
         'estimated_users_count',
         'key',
+        'is_active',
     ];
 
     protected $dates = ['deleted_at'];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    /**
+     * Scope to get only active applications
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 
     /**
      * A sure method to generate a unique API key
@@ -42,7 +63,7 @@ class Application extends Model
     public static function generateKey()
     {
         do {
-            $newKey = str_random(32);
+            $newKey = \Illuminate\Support\Str::random(32);
         } // Already in the DB? Fail. Try again
         while (self::keyExists($newKey));
 
