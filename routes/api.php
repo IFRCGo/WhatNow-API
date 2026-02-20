@@ -94,10 +94,12 @@ Route::get('/health', function () {
     return response()->json(['status' => 'ok']); // Or a more detailed status
 });
 
-Route::prefix('v1')->group(function () {
+Route::group(['middleware' => 'ApiAuth', 'prefix' => 'v1'], function () {
+    Route::get('org/{code}/whatnow', '\\App\\Legacy\\Http\\Controllers\\WhatNowController@getFeed');
+
     Route::any('{any}', function () {
         return response()->json([
-            'error' => 'API version v1 is no longer supported. Please use /v2/.'
+            'error' => 'API version v1 is no longer supported. Please use /v2.'
         ], 410);
     })->where('any', '.*');
 });
