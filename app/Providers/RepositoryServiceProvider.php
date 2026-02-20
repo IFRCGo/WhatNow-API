@@ -50,5 +50,21 @@ class RepositoryServiceProvider extends ServiceProvider
             'App\Classes\Repositories\SupportingMessageRepositoryInterface',
             'App\Classes\Repositories\SupportingMessageRepository'
         );
+
+        // Legacy Bindings
+        $this->app->bind(
+            'App\Legacy\Classes\Repositories\OrganisationRepositoryInterface',
+            'App\Legacy\Classes\Repositories\OrganisationRepository'
+        );
+
+        $this->app->bind(
+            'App\Legacy\Classes\Repositories\WhatNowRepositoryInterface',
+            'App\Legacy\Classes\Repositories\WhatNowRepository'
+        );
+
+        $this->app->bind(
+            'App\Legacy\Classes\Repositories\WhatNowTranslationRepositoryInterface',
+            'App\Legacy\Classes\Repositories\WhatNowTranslationRepository'
+        );
     }
 }
