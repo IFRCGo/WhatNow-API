@@ -44,6 +44,6 @@ class Organisation extends Model
 
 	public function getAttributionImageUrl()
 	{
-		return 'https://smdbstorageaccount.blob.core.windows.net/whatnow-assets/attribution_images/' . $this->attribution_file_name;
+		return 'https://' . config('filesystems.bucket_name') . '.blob.core.windows.net/whatnow-assets/attribution_images/' . $this->attribution_file_name;
 	}
 }
