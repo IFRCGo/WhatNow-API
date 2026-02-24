@@ -2,6 +2,8 @@
 
 return [
 
+    'bucket_name' => env('BUCKET_NAME', 'smdbstorageaccount'),
+
     /*
     |--------------------------------------------------------------------------
     | Default Filesystem Disk
