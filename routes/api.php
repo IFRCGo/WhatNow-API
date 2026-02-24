@@ -95,7 +95,10 @@ Route::get('/health', function () {
 });
 
 Route::group(['middleware' => 'ApiAuth', 'prefix' => 'v1'], function () {
+    Route::get('org/', '\\App\\Legacy\\Http\\Controllers\\OrganisationController@getAll');
     Route::get('org/{code}/whatnow', '\\App\\Legacy\\Http\\Controllers\\WhatNowController@getFeed');
+    Route::get('org/{code}', '\\App\\Legacy\\Http\\Controllers\\OrganisationController@getById');
+    Route::get('whatnow/{id}', '\\App\\Legacy\\Http\\Controllers\\WhatNowController@getPublishedById');
 
     Route::any('{any}', function () {
         return response()->json([

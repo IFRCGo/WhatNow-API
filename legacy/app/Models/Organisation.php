@@ -24,7 +24,8 @@ class Organisation extends Model
 		'org_name',
 		'oid',
 		'attribution_url',
-		'attribution_file_name'
+		'attribution_file_name',
+		'country_code',
 	];
 
 	public function alerts()
