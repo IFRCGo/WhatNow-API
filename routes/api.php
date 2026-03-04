@@ -58,6 +58,7 @@ Route::group([
     // Route::delete('org/{code}/image', 'OrganisationController@deleteImageById');
 
     // "Applications" endpoints
+    Route::post('applications/rules', 'ApplicationController@upsertRules');
     Route::get('apps', 'ApplicationController@getAllForUser');
     Route::post('apps', 'ApplicationController@create');
     Route::get('apps/{id}', 'ApplicationController@getById');
