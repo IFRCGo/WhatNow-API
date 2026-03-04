@@ -62,11 +62,11 @@ class ApiAuthMiddleware extends BasicAuthMiddleware
     private function canAccessRequestedVersion(string $path, array $rules): bool
     {
         if (strpos($path, 'v1/') === 0) {
-            return !empty($rules['can_access_legacy_whatnow']);
+            return $rules['can_access_legacy_whatnow'];
         }
 
         if (strpos($path, 'v2/') === 0) {
-            return !empty($rules['can_access_preparedness_v2']);
+            return $rules['can_access_preparedness_v2'];
         }
 
         return true;
