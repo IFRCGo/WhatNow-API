@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Classes\Repositories\ApplicationRepositoryInterface;
 use App\Classes\Transformers\ApplicationTransformer;
+use App\Http\Requests\UpsertApplicationRulesRequest;
+use App\Models\Application;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -493,5 +495,30 @@ class ApplicationController extends Controller
         $response = $this->manager->createData($resource);
 
         return response()->json($response->toArray(), 200);
+    }
+
+    /**
+     * Bulk replace rules for all applications belonging to a tenant user.
+     *
+     * @param UpsertApplicationRulesRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function upsertRules(UpsertApplicationRulesRequest $request)
+    {
+        $validated = $request->validated();
+
+        $updated = Application::query()
+            ->where('tenant_user_id', $validated['tenant_user_id'])
+            ->update([
+                'rules' => $validated['rules'],
+                'updated_at' => now(),
+            ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Application rules updated successfully.',
+            'tenant_user_id' => $validated['tenant_user_id'],
+            'updated_count' => $updated,
+        ], 200);
     }
 }
