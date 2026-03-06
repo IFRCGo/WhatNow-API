@@ -365,136 +365,140 @@ class ApplicationController extends Controller
 
     /**
      * @OA\Patch(
-     *     path="/apps/{id}/activate",
+     *     path="/apps/{tenant_user_id}/activate",
      *     tags={"Applications"},
-     *     summary="Activate an application by ID",
-     *     operationId="activateApplication",
+     *     summary="Activate all applications by tenant_user_id",
+     *     operationId="activateApplicationsByTenantUserId",
      *     security={},
      *     deprecated=true,
      *     @OA\Parameter(
-     *         name="id",
+     *         name="tenant_user_id",
      *         in="path",
      *         required=true,
-     *         description="ID of the application to activate",
-     *         @OA\Schema(type="integer", format="int64")
+     *         description="Tenant user ID used to activate all linked applications",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful response",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
-     *         )
+     *         @OA\JsonContent(type="object")
      *     )
      * )
      */
-    public function activate($id)
+    public function activate($tenantUserId)
     {
-        try {
-            $application = $this->repo->find($id);
-        } catch (\Exception $e) {
-            Log::error('Application not found', ['message' => $e->getMessage()]);
+        $applications = Application::query()
+            ->where('tenant_id', $this->tenantId)
+            ->where('tenant_user_id', $tenantUserId)
+            ->get();
 
+        if ($applications->isEmpty()) {
             return response()->json([
                 'status' => 404,
                 'error_message' => 'Application does not exist',
-                'errors' => ['No matching Application'],
+                'errors' => ['No matching Application for tenant_user_id'],
             ], 404);
         }
 
-        if ($application->tenant_id !== $this->tenantId) {
-            return response()->json([
-                'status' => 403,
-                'error_message' => 'Application does not belong to tenant',
-                'errors' => ['Application does not belong to tenant'],
-            ], 403);
-        }
-
         try {
-            $this->repo->updateWithIdAndInput($id, ['is_active' => true]);
+            Application::query()
+                ->where('tenant_id', $this->tenantId)
+                ->where('tenant_user_id', $tenantUserId)
+                ->update([
+                    'is_active' => true,
+                    'updated_at' => now(),
+                ]);
         } catch (\Exception $e) {
-            Log::error('Application not activated', ['message' => $e->getMessage()]);
+            Log::error('Applications not activated', ['message' => $e->getMessage()]);
 
             return response()->json([
                 'status' => 500,
-                'error_message' => 'Unable to activate Application',
+                'error_message' => 'Unable to activate Applications',
                 'errors' => [$e->getMessage()],
             ], 500);
         }
 
-        $application = $this->repo->find($id);
+        $applications = Application::query()
+            ->where('tenant_id', $this->tenantId)
+            ->where('tenant_user_id', $tenantUserId)
+            ->get();
 
-        $resource = new \League\Fractal\Resource\Item($application, new ApplicationTransformer());
+        $resource = new \League\Fractal\Resource\Collection($applications, new ApplicationTransformer());
         $response = $this->manager->createData($resource);
+        $payload = $response->toArray();
+        $payload['updated_count'] = $applications->count();
+        $payload['tenant_user_id'] = $tenantUserId;
 
-        return response()->json($response->toArray(), 200);
+        return response()->json($payload, 200);
     }
 
     /**
      * @OA\Patch(
-     *     path="/apps/{id}/deactivate",
+     *     path="/apps/{tenant_user_id}/deactivate",
      *     tags={"Applications"},
-     *     summary="Deactivate an application by ID",
-     *     operationId="deactivateApplication",
+     *     summary="Deactivate all applications by tenant_user_id",
+     *     operationId="deactivateApplicationsByTenantUserId",
      *     security={},
      *     deprecated=true,
      *     @OA\Parameter(
-     *         name="id",
+     *         name="tenant_user_id",
      *         in="path",
      *         required=true,
-     *         description="ID of the application to deactivate",
-     *         @OA\Schema(type="integer", format="int64")
+     *         description="Tenant user ID used to deactivate all linked applications",
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful response",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(property="data", type="array", @OA\Items(type="object"))
-     *         )
+     *         @OA\JsonContent(type="object")
      *     )
      * )
      */
-    public function deactivate($id)
+    public function deactivate($tenantUserId)
     {
-        try {
-            $application = $this->repo->find($id);
-        } catch (\Exception $e) {
-            Log::error('Application not found', ['message' => $e->getMessage()]);
+        $applications = Application::query()
+            ->where('tenant_id', $this->tenantId)
+            ->where('tenant_user_id', $tenantUserId)
+            ->get();
 
+        if ($applications->isEmpty()) {
             return response()->json([
                 'status' => 404,
                 'error_message' => 'Application does not exist',
-                'errors' => ['No matching Application'],
+                'errors' => ['No matching Application for tenant_user_id'],
             ], 404);
         }
 
-        if ($application->tenant_id !== $this->tenantId) {
-            return response()->json([
-                'status' => 403,
-                'error_message' => 'Application does not belong to tenant',
-                'errors' => ['Application does not belong to tenant'],
-            ], 403);
-        }
-
         try {
-            $this->repo->updateWithIdAndInput($id, ['is_active' => false]);
+            Application::query()
+                ->where('tenant_id', $this->tenantId)
+                ->where('tenant_user_id', $tenantUserId)
+                ->update([
+                    'is_active' => false,
+                    'updated_at' => now(),
+                ]);
         } catch (\Exception $e) {
-            Log::error('Application not deactivated', ['message' => $e->getMessage()]);
+            Log::error('Applications not deactivated', ['message' => $e->getMessage()]);
 
             return response()->json([
                 'status' => 500,
-                'error_message' => 'Unable to deactivate Application',
+                'error_message' => 'Unable to deactivate Applications',
                 'errors' => [$e->getMessage()],
             ], 500);
         }
 
-        $application = $this->repo->find($id);
+        $applications = Application::query()
+            ->where('tenant_id', $this->tenantId)
+            ->where('tenant_user_id', $tenantUserId)
+            ->get();
 
-        $resource = new \League\Fractal\Resource\Item($application, new ApplicationTransformer());
+        $resource = new \League\Fractal\Resource\Collection($applications, new ApplicationTransformer());
         $response = $this->manager->createData($resource);
+        $payload = $response->toArray();
+        $payload['updated_count'] = $applications->count();
+        $payload['tenant_user_id'] = $tenantUserId;
 
-        return response()->json($response->toArray(), 200);
+        return response()->json($payload, 200);
     }
 
     /**
