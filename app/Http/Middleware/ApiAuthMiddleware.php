@@ -43,6 +43,12 @@ class ApiAuthMiddleware extends BasicAuthMiddleware
                 return response()->json(['error' => 'Application is not allowed to access this API version'], 403);
             }
 
+            $canAccessOrganisation = $this->canAccessOrganisation($request->path(), (array) $application->rules);
+
+            if (!$canAccessOrganisation) {
+                return response()->json(['error' => 'Application is not allowed to access this organisation'], 403);
+            }
+
             $usageLog = new UsageLog;
             $usageLog->application_id = $application->id;
             $usageLog->method = $request->method();
@@ -67,6 +73,23 @@ class ApiAuthMiddleware extends BasicAuthMiddleware
 
         if (strpos($path, 'v2/') === 0) {
             return $rules['can_access_preparedness_v2'];
+        }
+
+        return true;
+    }
+
+    private function canAccessOrganisation(string $path, array $rules): bool
+    {
+        // Check if accessing org/{code}/whatnow endpoint
+        if (preg_match('#org/([^/]+)/whatnow#', $path, $matches)) {
+            $orgCode = $matches[1];
+
+            // If allowed_country_code is defined in rules, check if this org is restricted
+            if (isset($rules['allowed_country_code']) && is_array($rules['allowed_country_code'])) {
+                if (!in_array($orgCode, $rules['allowed_country_code'])) {
+                    return false;
+                }
+            }
         }
 
         return true;
