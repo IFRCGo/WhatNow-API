@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Application;
 use App\Models\UsageLog;
+use App\Models\WhatNowEntity;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Support\Facades\Log;
@@ -87,6 +88,22 @@ class ApiAuthMiddleware extends BasicAuthMiddleware
             // If allowed_country_code is defined in rules, check if this org is restricted
             if (isset($rules['allowed_country_code']) && is_array($rules['allowed_country_code'])) {
                 if (!in_array($orgCode, $rules['allowed_country_code'])) {
+                    return false;
+                }
+            }
+        }
+
+        if (preg_match('#whatnow/(\d+)(?:/|$)#', $path, $matches) && !str_contains($path, 'org/')) {
+            if (isset($rules['allowed_country_code']) && is_array($rules['allowed_country_code'])) {
+                $whatnowId = $matches[1];
+
+                $entity = WhatNowEntity::with('organisation')->find($whatnowId);
+
+                if (!$entity || !$entity->organisation) {
+                    return false;
+                }
+
+                if (!in_array($entity->organisation->country_code, $rules['allowed_country_code'])) {
                     return false;
                 }
             }
