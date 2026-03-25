@@ -7,6 +7,12 @@ use App\Models\Organisation;
 interface OrganisationRepositoryInterface extends RepositoryInterface
 {
 	/**
+	 * @param bool $published
+	 * @return \Illuminate\Database\Eloquent\Collection|static[]
+	 */
+	public function allByTranslationPublished($published);
+
+	/**
 	 * @param $code
 	 * @return mixed
 	 */

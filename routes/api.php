@@ -20,6 +20,8 @@ Route::group(['prefix' => config('app.api_version')], function () {
     Route::get('alerts', 'AlertController@get');
     Route::get('org/{code}/alerts', 'AlertController@getByOrg');
     Route::get('org/{code}/alerts/rss', 'AlertController@getRssByOrg');
+    Route::get('org/', 'OrganisationController@getAll');
+    Route::get('organisations', 'OrganisationController@getAll');
 });
 
 Route::group(['middleware' => 'BasicAuth', 'prefix' => config('app.api_version')], function () {
@@ -32,7 +34,6 @@ Route::group([
     'prefix' => config('app.api_version'),
 ], function () {
     // Endpoints requiring API key authentication
-    Route::get('org/', 'OrganisationController@getAll');
     Route::get('org/{code}', 'OrganisationController@getById');
     Route::get('org/{code}/whatnow', 'WhatNowController@getFeed');
     Route::get('whatnow/{id}', 'WhatNowController@getPublishedById');
