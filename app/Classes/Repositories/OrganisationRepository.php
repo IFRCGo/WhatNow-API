@@ -41,6 +41,19 @@ class OrganisationRepository implements OrganisationRepositoryInterface
     }
 
     /**
+     * @param bool $published
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function allByTranslationPublished($published)
+    {
+        return $this->orgModel
+            ->whereHas('details', function ($query) use ($published) {
+                $query->where('published', $published);
+            })
+            ->get();
+    }
+
+    /**
      * @param array $attributes
      * @return static
      */

@@ -54,6 +54,13 @@ class OrganisationController extends Controller
      *     summary="Get all organisations (public)",
      *     security={{"ApiKeyAuth": {}}},
      *     tags={"Organisation"},
+    *     @OA\Parameter(
+    *         name="published",
+    *         in="query",
+    *         required=false,
+    *         description="Filter organisations by whether they have translations with published=true/false",
+    *         @OA\Schema(type="boolean")
+    *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful response",
@@ -67,8 +74,27 @@ class OrganisationController extends Controller
     public function getAll(Request $request)
     {
         try {
+            $publishedParam = $request->query('published', null);
+            $publishedFilter = null;
+
+            if (!is_null($publishedParam)) {
+                $publishedFilter = filter_var($publishedParam, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+                if (is_null($publishedFilter)) {
+                    return response()->json([
+                        'status' => 422,
+                        'error_message' => 'Invalid published filter. Use true or false.',
+                        'errors' => ['published query param must be a boolean'],
+                    ], 422);
+                }
+            }
+
             /** @var Collection $orgs */
-            $orgs = $this->orgRepo->all()->load('details');
+            if (!is_null($publishedFilter)) {
+                $orgs = $this->orgRepo->allByTranslationPublished($publishedFilter)->load('details');
+            } else {
+                $orgs = $this->orgRepo->all()->load('details');
+            }
         } catch (\Exception $e) {
             Log::error('Could not get Organisations list', ['message' => $e->getMessage()]);
 

@@ -31,6 +31,7 @@ class Application extends Model
         'estimated_users_count',
         'key',
         'is_active',
+        'rules',
     ];
 
     protected $dates = ['deleted_at'];
@@ -42,6 +43,7 @@ class Application extends Model
      */
     protected $casts = [
         'is_active' => 'boolean',
+        'rules' => 'array',
     ];
 
     /**
