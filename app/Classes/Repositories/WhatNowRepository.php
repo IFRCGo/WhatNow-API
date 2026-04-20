@@ -14,7 +14,7 @@ class WhatNowRepository implements WhatNowRepositoryInterface
         'recover',
         'anticipated',
         'assess_and_plan',
-        'mitigate_risks',
+        'mitigate_risk',
         'prepare_to_respond',
 
         
