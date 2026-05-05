@@ -54,6 +54,11 @@ class ApplicationRepository implements ApplicationRepositoryInterface
     public function create(array $attributes)
     {
         $attributes['key'] = Application::generateKey();
+        $attributes['rules'] = array_merge([
+            'can_access_legacy_whatnow' => true,
+            'can_access_preparedness_v2' => false,
+            'allowed_country_code' => [],
+        ], $attributes['rules'] ?? []);
 
         return $this->applicationModel->create($attributes);
     }
