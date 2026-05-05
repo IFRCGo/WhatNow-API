@@ -35,8 +35,8 @@ Route::group([
 ], function () {
     // Endpoints requiring API key authentication
     Route::get('org/{code}', 'OrganisationController@getById');
-    Route::get('org/{code}/whatnow', 'WhatNowController@getFeed');
-    Route::get('whatnow/{id}', 'WhatNowController@getPublishedById');
+    Route::get('org/{code}/preparemessages', 'WhatNowController@getFeed');
+    Route::get('preparemessages/{id}', 'WhatNowController@getPublishedById');
 });
 
 Route::group([
