@@ -44,7 +44,10 @@ class ApiAuthMiddleware extends BasicAuthMiddleware
                 return response()->json(['error' => 'Application is not allowed to access this API version'], 403);
             }
 
-            $canAccessOrganisation = $this->canAccessOrganisation($request->path(), (array) $application->rules);
+            $canAccessOrganisation = true;
+            if (strpos($request->path(), 'v2/') === 0) {
+                $canAccessOrganisation = $this->canAccessOrganisation($request->path(), (array) $application->rules);
+            }
 
             if (!$canAccessOrganisation) {
                 return response()->json(['error' => 'Application is not allowed to access this organisation'], 403);
