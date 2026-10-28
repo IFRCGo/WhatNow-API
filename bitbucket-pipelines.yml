@@ -1,4 +1,4 @@
-image: php:8.3.36
+image: php:8.4-cli-bookworm
 
 definitions:
   services:

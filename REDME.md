@@ -7,7 +7,7 @@ WhatNow is a web application built with Laravel 13 and Vue.js that provides disa
 
 Make sure the following tools are installed on your system:
 
-- **PHP (version 8.3.36 or later, with the security patch for CVE-2026-109618 and CVE-2026-109619):**
+- **PHP (version 8.4.1 or later; Docker and CI use PHP 8.4):**
   ```bash
   php -v
   ```
@@ -108,7 +108,7 @@ The API and the backoffice are now connected and ready to use.
 
 ## Swagger URL for Docker Builds
 
-Set the GitHub Actions repository variables `SWAGGER_URL_DEV`, `SWAGGER_URL_QA`,
+Set the GitHub Actions repository variables or secrets `SWAGGER_URL_DEV`, `SWAGGER_URL_QA`,
 and `SWAGGER_URL_PROD` to the public API origin for each deployment. Use the origin
 without `/v2`; the Swagger configuration appends that path. The workflows pass
 this value through the required `SWAGGER_URL` Docker build argument instead of

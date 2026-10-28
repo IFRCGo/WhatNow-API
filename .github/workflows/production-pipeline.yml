@@ -29,9 +29,9 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - name: Build and push application image
         env:
-          SWAGGER_URL: ${{ vars.SWAGGER_URL_PROD }}
+          SWAGGER_URL: ${{ vars.SWAGGER_URL_PROD || secrets.SWAGGER_URL_PROD }}
         run: |
-          : "${SWAGGER_URL:?Set the SWAGGER_URL_PROD repository variable}"
+          : "${SWAGGER_URL:?Set the SWAGGER_URL_PROD repository variable or secret}"
           docker build --build-arg "SWAGGER_URL=$SWAGGER_URL" -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi:${{ github.sha }} -f ./docker/Dockerfile .
           docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi:latest
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/whatnowapi:${{ github.sha }}
