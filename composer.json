@@ -13,7 +13,6 @@
         "doctrine/annotations": "^2.0",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^2.10 || ^3.0",
-        "laravel/vapor-core": "^2.38",
         "league/csv": "^9.16",
         "league/flysystem-aws-s3-v3": "^3.0",
         "league/flysystem-azure-blob-storage": "^3.0",
@@ -24,7 +23,6 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
-        "laravel/vapor-cli": "^1.65",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.0 || ^9.0",
         "phpunit/phpunit": "^11.0 || ^12.0"

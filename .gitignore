@@ -7,7 +7,6 @@
 /public/vendor
 /storage/*.key
 /vendor
-.vapor/
 storage/**/*
 !storage/api-docs/
 !storage/api-docs/api-docs.json
