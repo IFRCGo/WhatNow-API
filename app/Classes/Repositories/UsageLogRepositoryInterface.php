@@ -4,7 +4,7 @@ namespace App\Classes\Repositories;
 
 interface UsageLogRepositoryInterface extends RepositoryInterface
 {
-    public function getForApplication(int $applicationId);
+    public function getForApplication($applicationId, $fromDate = null, $toDate = null);
 
-    public function getForEndpoint(string $endpoint);
+    public function getForEndpoint($endpoint, $fromDate = null, $toDate = null);
 }

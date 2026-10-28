@@ -2,10 +2,17 @@
 
 namespace Database\Factories;
 
-use Faker\Generator as Faker;
+use App\Models\WhatNowEntity;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(\App\Models\WhatNowEntity::class, function (Faker $faker) {
-    return [
-        'event_type' => $faker->randomElement(['General', 'Earthquake', 'Tornado', 'Wildfire', 'Flood', 'Tsunami', 'Volcano', 'Wind']),
-    ];
-});
+class WhatNowEntityFactory extends Factory
+{
+    protected $model = WhatNowEntity::class;
+
+    public function definition(): array
+    {
+        return [
+            'event_type' => $this->faker->randomElement(['General', 'Earthquake', 'Tornado', 'Wildfire', 'Flood', 'Tsunami', 'Volcano', 'Wind']),
+        ];
+    }
+}

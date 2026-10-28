@@ -242,7 +242,7 @@ class WhatNowController extends Controller
         }
 
         try {
-            $region = $org->regions()->where('slug', str_slug($region))->firstOrFail();
+            $region = $org->regions()->where('slug', \Illuminate\Support\Str::slug($region))->firstOrFail();
         } catch (\Exception $e) {
             Log::error('Organisation not found', ['message' => $e->getMessage()]);
 

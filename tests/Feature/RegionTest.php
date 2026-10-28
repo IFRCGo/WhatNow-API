@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature;
+
 use App\Models\Organisation;
 use App\Models\OrganisationDetails;
 use App\Models\RegionTranslation;
@@ -15,7 +17,7 @@ class RegionTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->app->instance('middleware.disable', true);
+        $this->withoutMiddleware();
 
         $this->organisation = factory(Organisation::class)->create();
 

@@ -93,14 +93,14 @@ class WhatNowController extends Controller
      * @OA\Get(
      *     path="/whatnow/{id}",
      *     tags={"Whatnow"},
-     *     summary="Obtiene un recurso publicado por ID (public)",
-     *     description="Retorna los detalles de un recurso publicado basado en el ID proporcionado.",
+     *     summary="Get a published resource by ID (public)",
+     *     description="Return the details of a published resource based on the provided ID.",
      *     operationId="getPublishedById",
      *     security={{"ApiKeyAuth": {}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="ID del recurso publicado",
+     *         description="Published resource ID",
      *         required=true,
      *         @OA\Schema(
      *             type="integer",
@@ -459,7 +459,7 @@ class WhatNowController extends Controller
         }
 
         try {
-            $region = $org->subnationals()->where('slug', str_slug($region))->firstOrFail();
+            $region = $org->subnationals()->where('slug', \Illuminate\Support\Str::slug($region))->firstOrFail();
         } catch (\Exception $e) {
             Log::error('Organisation not found', ['message' => $e->getMessage()]);
 

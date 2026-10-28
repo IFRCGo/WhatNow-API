@@ -125,7 +125,7 @@ return [
              *
              * @see \OpenApi\scan
              */
-            'analyser' => null,
+            'analyser' => new \App\Swagger\DocBlockReflectionAnalyser(),
 
             /**
              * analysis: defaults to a new \OpenApi\Analysis .

@@ -117,10 +117,10 @@ class WhatNowTranslationRepository implements WhatNowTranslationRepositoryInterf
     {
         $model = $this->whatNowTranslationModel;
 
-        return $model::fromQuery(DB::raw('SELECT wet1.*
+        return $model::fromQuery('SELECT wet1.*
 FROM legacy_whatnow_entity_translations wet1
 LEFT JOIN legacy_whatnow_entity_translations wet2 ON wet1.entity_id = wet2.entity_id AND wet1.language_code = wet2.language_code AND wet1.created_at < wet2.created_at
-WHERE wet2.created_at IS NULL AND wet1.entity_id = :entityId'), ['entityId' => $id]);
+WHERE wet2.created_at IS NULL AND wet1.entity_id = :entityId', ['entityId' => $id]);
     }
 
     /**
@@ -136,10 +136,10 @@ WHERE wet2.created_at IS NULL AND wet1.entity_id = :entityId'), ['entityId' => $
     {
         $model = $this->whatNowTranslationModel;
 
-        return $model::fromQuery(DB::raw('SELECT wet1.*
+        return $model::fromQuery('SELECT wet1.*
 FROM legacy_whatnow_entity_translations wet1
 LEFT JOIN legacy_whatnow_entity_translations wet2 ON wet1.entity_id = wet2.entity_id AND wet1.language_code = wet2.language_code AND wet1.published_at < wet2.published_at
-WHERE wet2.published_at IS NULL AND wet1.entity_id = :entityId AND wet1.published_at IS NOT NULL'), ['entityId' => $id]);
+WHERE wet2.published_at IS NULL AND wet1.entity_id = :entityId AND wet1.published_at IS NOT NULL', ['entityId' => $id]);
     }
 
     /**

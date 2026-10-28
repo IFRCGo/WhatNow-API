@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DRIVER', 'local'),
+    'default' => env('FILESYSTEM_DISK', env('FILESYSTEM_DRIVER', 'local')),
 
     /*
     |--------------------------------------------------------------------------
@@ -61,7 +61,7 @@ return [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'subnational' => env('AWS_DEFAULT_REGION'),
+            'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],

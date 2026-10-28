@@ -42,7 +42,7 @@ class RegionRepository implements RegionRepositoryInterface
             'region_id' => $regionId,
             'language_code' => $language_code,
             'title' => $data['title'],
-            'slug' => str_slug($data['title']),
+            'slug' => \Illuminate\Support\Str::slug($data['title']),
             'description' => $data['description'],
         ];
     }

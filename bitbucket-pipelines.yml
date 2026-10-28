@@ -1,4 +1,4 @@
-image: 3sidedcube/php:7.4
+image: php:8.3.36
 
 definitions:
   services:

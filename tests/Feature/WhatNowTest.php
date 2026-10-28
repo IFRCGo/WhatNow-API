@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature;
+
 use App\Classes\Repositories\WhatNowRepository;
 use App\Models\Organisation;
 use App\Models\OrganisationDetails;
@@ -20,7 +22,7 @@ class WhatNowTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->app->instance('middleware.disable', true);
+        $this->withoutMiddleware();
 
         DB::delete('DELETE FROM alerts');
         DB::delete('DELETE FROM organisation_details');

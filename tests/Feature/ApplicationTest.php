@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature;
+
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +15,7 @@ class ApplicationTest extends TestCase
     {
         parent::setUp();
 
-        $this->app->instance('middleware.disable', true);
+        $this->withoutMiddleware();
 
         DB::delete('DELETE FROM applications');
     }

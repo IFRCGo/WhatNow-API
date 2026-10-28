@@ -2,16 +2,19 @@
 
 namespace Database\Factories;
 
-use Faker\Generator as Faker;
+use App\Classes\Repositories\WhatNowRepository;
+use App\Models\WhatNowEntityStage;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(\App\Models\WhatNowEntityStage::class, function (Faker $faker) {
-    return [
-        'language_code' => $faker->randomElement(['fr', 'en']),
-        'stage' => $faker->randomElement(\App\Classes\Repositories\WhatNowRepository::EVENT_STAGES),
-        'content' => json_encode([
-            $faker->text(),
-            $faker->text(),
-            $faker->text(),
-        ]),
-    ];
-});
+class WhatNowEntityStageFactory extends Factory
+{
+    protected $model = WhatNowEntityStage::class;
+
+    public function definition(): array
+    {
+        return [
+            'language_code' => $this->faker->randomElement(['fr', 'en']),
+            'stage' => $this->faker->randomElement(WhatNowRepository::EVENT_STAGES),
+        ];
+    }
+}

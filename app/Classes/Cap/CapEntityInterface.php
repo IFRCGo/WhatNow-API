@@ -28,5 +28,5 @@ interface CapEntityInterface
 	 * @param $extension
 	 * @return mixed
 	 */
-	public function getPublicUrl($extension);
+	public function getPublicUrl($extension = 'xml');
 }

@@ -2,13 +2,20 @@
 
 namespace Database\Factories;
 
-use Faker\Generator as Faker;
+use App\Models\WhatNowEntityTranslation;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(\App\Models\WhatNowEntityTranslation::class, function (Faker $faker) {
-    return [
-        'language_code' => $faker->randomElement(['fr', 'en']),
-        'title' => $faker->text(),
-        'web_url' => $faker->url,
-        'description' => $faker->text(),
-    ];
-});
+class WhatNowEntityTranslationFactory extends Factory
+{
+    protected $model = WhatNowEntityTranslation::class;
+
+    public function definition(): array
+    {
+        return [
+            'language_code' => $this->faker->randomElement(['fr', 'en']),
+            'title' => $this->faker->text(),
+            'web_url' => $this->faker->url(),
+            'description' => $this->faker->text(),
+        ];
+    }
+}

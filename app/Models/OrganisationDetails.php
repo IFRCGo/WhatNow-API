@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class OrganisationDetails extends Model
 {
+	use HasFactory;
 	public $timestamps = false;
 
 	/**
