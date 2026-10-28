@@ -1,7 +1,6 @@
-# PHP 8.3.36+ includes security patches for CVE-2026-109618 and CVE-2026-109619 (PHP2Shell)
-FROM php:8.3.36-apache
+FROM php:8.4-apache-bookworm
 
-RUN php -r 'if (version_compare(PHP_VERSION, "8.3.36", "<")) { fwrite(STDERR, "PHP >= 8.3.36 is required to patch CVE-2026-109618 and CVE-2026-109619\n"); exit(1); }'
+RUN php -r 'if (version_compare(PHP_VERSION, "8.4.1", "<")) { fwrite(STDERR, "PHP >= 8.4.1 is required by the locked dependencies\n"); exit(1); }'
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
@@ -20,7 +19,9 @@ COPY ./docker/vhost.conf /etc/apache2/sites-available/000-default.conf
 COPY ./ /var/www/html
 
 WORKDIR /var/www/html
-RUN composer install --no-dev --prefer-dist --optimize-autoloader
+RUN composer validate --strict --no-check-publish \
+    && composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction \
+    && composer check-platform-reqs --no-dev
 
 ARG SWAGGER_URL
 RUN : "${SWAGGER_URL:?SWAGGER_URL build argument is required}" \
