@@ -105,3 +105,18 @@ php artisan serve --port=8001
    ```
 
 The API and the backoffice are now connected and ready to use.
+
+## Swagger URL for Docker Builds
+
+Set the GitHub Actions repository variables `SWAGGER_URL_DEV`, `SWAGGER_URL_QA`,
+and `SWAGGER_URL_PROD` to the public API origin for each deployment. Use the origin
+without `/v2`; the Swagger configuration appends that path. The workflows pass
+this value through the required `SWAGGER_URL` Docker build argument instead of
+copying a deployment-specific `.env` file.
+
+For local builds, set `SWAGGER_URL` in your shell and pass it explicitly:
+
+```bash
+: "${SWAGGER_URL:?Set the public API origin before building}"
+docker build --build-arg "SWAGGER_URL=$SWAGGER_URL" -f docker/Dockerfile -t whatnow-api .
+```

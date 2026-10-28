@@ -22,7 +22,9 @@ COPY ./ /var/www/html
 WORKDIR /var/www/html
 RUN composer install --no-dev --prefer-dist --optimize-autoloader
 
-RUN php artisan l5-swagger:generate
+ARG SWAGGER_URL
+RUN : "${SWAGGER_URL:?SWAGGER_URL build argument is required}" \
+    && SWAGGER_URL="$SWAGGER_URL" php artisan l5-swagger:generate
 
 RUN mkdir -p storage/framework/sessions
 RUN mkdir -p storage/framework/views
