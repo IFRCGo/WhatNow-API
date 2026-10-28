@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Application extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     /**
      * The database table used by the model.
@@ -34,8 +35,6 @@ class Application extends Model
         'rules',
     ];
 
-    protected $dates = ['deleted_at'];
-
     /**
      * The attributes that should be cast to native types.
      *
@@ -44,6 +43,7 @@ class Application extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'rules' => 'array',
+        'deleted_at' => 'datetime',
     ];
 
     /**

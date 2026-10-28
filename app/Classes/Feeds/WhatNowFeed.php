@@ -20,9 +20,14 @@ class WhatNowFeed implements JsonFeedInterface
 	protected $language;
 
 	/**
-	 * @var Region
+	 * @var Region|null
 	 */
 	protected $region;
+
+	/**
+	 * @var Region|null
+	 */
+	protected $subnational;
 
 	/**
 	 * @var Organisation
@@ -94,7 +99,7 @@ class WhatNowFeed implements JsonFeedInterface
 	 * @param null $region
 	 * @return $this
 	 */
-	public function setRegion(Region $region = null)
+	public function setRegion(?Region $region = null)
 	{
 		$this->subnational = $region;
 		return $this;

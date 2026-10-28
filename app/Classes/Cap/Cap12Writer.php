@@ -15,9 +15,9 @@ class Cap12Writer extends AbstractWriter
 		$alertNode->appendChild($this->document->createElement('identifier', $this->alert->getCapIdentifier()));
 		$alertNode->appendChild($this->document->createElement('sender', $this->alert->getSender()));
 		$alertNode->appendChild($this->document->createElement('sent', $this->alert->sent_date->format('c')));
-		$alertNode->appendChild($this->document->createElement('status', ucfirst($this->alert->status)));
-		$alertNode->appendChild($this->document->createElement('msgType', ucfirst($this->alert->type)));
-		$alertNode->appendChild($this->document->createElement('scope', ucfirst($this->alert->scope)));
+		$alertNode->appendChild($this->document->createElement('status', ucfirst((string) $this->alert->status)));
+		$alertNode->appendChild($this->document->createElement('msgType', ucfirst((string) $this->alert->type)));
+		$alertNode->appendChild($this->document->createElement('scope', ucfirst((string) $this->alert->scope)));
 	}
 
 	protected function buildInfo()
@@ -25,13 +25,13 @@ class Cap12Writer extends AbstractWriter
 		$alertNode = $this->document->getElementsByTagName('alert')->item(0);
 
 		$infoNode = $alertNode->appendChild($this->document->createElement('info'));
-		$infoNode->appendChild($this->document->createElement('language', $this->alert->language_code));
-		$infoNode->appendChild($this->document->createElement('category', ucfirst($this->alert->category)));
-		$infoNode->appendChild($this->document->createElement('event', $this->alert->event));
+		$infoNode->appendChild($this->document->createElement('language', (string) $this->alert->language_code));
+		$infoNode->appendChild($this->document->createElement('category', ucfirst((string) $this->alert->category)));
+		$infoNode->appendChild($this->document->createElement('event', (string) $this->alert->event));
 
-		$infoNode->appendChild($this->document->createElement('urgency', ucfirst($this->alert->urgency)));
-		$infoNode->appendChild($this->document->createElement('severity', ucfirst($this->alert->severity)));
-		$infoNode->appendChild($this->document->createElement('certainty', ucfirst($this->alert->certainty)));
+		$infoNode->appendChild($this->document->createElement('urgency', ucfirst((string) $this->alert->urgency)));
+		$infoNode->appendChild($this->document->createElement('severity', ucfirst((string) $this->alert->severity)));
+		$infoNode->appendChild($this->document->createElement('certainty', ucfirst((string) $this->alert->certainty)));
 
 		if ($this->alert->effective_date) {
 			$infoNode->appendChild($this->document->createElement('effective',
@@ -48,13 +48,13 @@ class Cap12Writer extends AbstractWriter
 
 		// Escape free text elements
 		$sender = $infoNode->appendChild($this->document->createElement('senderName'));
-		$sender->appendChild($this->document->createTextNode($this->alert->getSenderName()));
+		$sender->appendChild($this->document->createTextNode((string) $this->alert->getSenderName()));
 
 		$headline = $infoNode->appendChild($this->document->createElement('headline'));
-		$headline->appendChild($this->document->createTextNode($this->alert->headline));
+		$headline->appendChild($this->document->createTextNode((string) $this->alert->headline));
 
 		$desc = $infoNode->appendChild($this->document->createElement('description'));
-		$desc->appendChild($this->document->createTextNode($this->alert->description));
+		$desc->appendChild($this->document->createTextNode((string) $this->alert->description));
 
 		$infoNode->appendChild($this->document->createElement('web', $this->alert->getPublicUrl()));
 
@@ -62,11 +62,11 @@ class Cap12Writer extends AbstractWriter
 		$areaNode = $infoNode->appendChild($this->document->createElement('area'));
 
 		$areaDesc = $areaNode->appendChild($this->document->createElement('areaDesc'));
-		$areaDesc->appendChild($this->document->createTextNode($this->alert->area_description));
+		$areaDesc->appendChild($this->document->createTextNode((string) $this->alert->area_description));
 
 		if ($this->alert->area_polygon) {
 			$polygon = $areaNode->appendChild($this->document->createElement('polygon'));
-			$polygon->appendChild($this->document->createTextNode($this->alert->getAreaPolygonString()));
+			$polygon->appendChild($this->document->createTextNode((string) $this->alert->getAreaPolygonString()));
 		}
 	}
 

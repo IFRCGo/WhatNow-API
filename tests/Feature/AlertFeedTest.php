@@ -16,7 +16,7 @@ class AlertFeedTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->app->instance('middleware.disable', true);
+        $this->withoutMiddleware();
     }
 
     /**
@@ -59,8 +59,6 @@ class AlertFeedTest extends TestCase
         $response = $this->call('GET', '/' . config('app.api_version') . '/alerts/rss', [
             'severity' => $alert->severity,
         ]);
-
-        dd($response);
 
         $xml = new SimpleXMLElement($response->content());
         $item = $xml->xpath('//rss/channel/item/guid[text()="' . $alert->getPublicUrl() . '"]');

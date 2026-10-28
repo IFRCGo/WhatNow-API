@@ -13,7 +13,9 @@ class RenameRegionsToSubnational extends Migration
      */
     public function up()
     {
-        Schema::rename('regions', 'subnationals');
+        if (Schema::hasTable('regions') && ! Schema::hasTable('subnationals')) {
+            Schema::rename('regions', 'subnationals');
+        }
     }
 
     /**
@@ -23,8 +25,8 @@ class RenameRegionsToSubnational extends Migration
      */
     public function down()
     {
-
-        Schema::rename('subnationals', 'regions');
-
+        if (Schema::hasTable('subnationals') && ! Schema::hasTable('regions')) {
+            Schema::rename('subnationals', 'regions');
+        }
     }
 }

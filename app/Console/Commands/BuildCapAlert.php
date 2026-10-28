@@ -59,7 +59,7 @@ class BuildCapAlert extends Command
         $id = $this->argument('id');
 
         // Dispatch job in the current process
-        $this->dispatcher->dispatchNow(new GenerateCapAlertJob($id));
+        $this->dispatcher->dispatchSync(new GenerateCapAlertJob($id));
 
         $this->info('Done');
     }

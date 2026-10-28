@@ -2,13 +2,21 @@
 
 namespace Database\Factories;
 
-use Faker\Generator as Faker;
+use App\Models\Region;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
-$factory->define(\App\Models\Region::class, function (Faker $faker) {
-    $name = trim($faker->randomElement(['North', 'South', 'East', 'West']) . ' ' . $faker->randomElement(['', 'Coast', 'Plains', 'Lakes']));
+class RegionFactory extends Factory
+{
+    protected $model = Region::class;
 
-    return [
-        'title' => $name,
-        'slug' => str_slug($name),
-    ];
-});
+    public function definition(): array
+    {
+        $name = trim($this->faker->randomElement(['North', 'South', 'East', 'West']) . ' ' . $this->faker->randomElement(['', 'Coast', 'Plains', 'Lakes']));
+
+        return [
+            'title' => $name,
+            'slug' => Str::slug($name),
+        ];
+    }
+}

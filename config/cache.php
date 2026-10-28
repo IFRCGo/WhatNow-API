@@ -18,7 +18,7 @@ return [
     |
     */
 
-    'default' => env('CACHE_DRIVER', 'redis'),
+    'default' => env('CACHE_STORE', env('CACHE_DRIVER', 'redis')),
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return [
             'driver' => 'dynamodb',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'subnational' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+            'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
             'table' => env('DYNAMODB_CACHE_TABLE', 'cache'),
             'endpoint' => env('DYNAMODB_ENDPOINT'),
         ],

@@ -1,9 +1,13 @@
-FROM php:7.4-apache
+# PHP 8.3.36+ includes security patches for CVE-2026-109618 and CVE-2026-109619 (PHP2Shell)
+FROM php:8.3.36-apache
+
+RUN php -r 'if (version_compare(PHP_VERSION, "8.3.36", "<")) { fwrite(STDERR, "PHP >= 8.3.36 is required to patch CVE-2026-109618 and CVE-2026-109619\n"); exit(1); }'
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 RUN apt update && apt install -y \
     libzip-dev \
+    unzip \
     zip
 
 RUN docker-php-ext-install \

@@ -1,7 +1,10 @@
 <?php
 
+namespace Tests\Feature;
+
 use App\Models\Alert;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use SimpleXMLElement;
 use Tests\TestCase;
 
 class AlertTest extends TestCase
@@ -11,7 +14,7 @@ class AlertTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->app->instance('middleware.disable', true);
+        $this->withoutMiddleware();
     }
 
     /**

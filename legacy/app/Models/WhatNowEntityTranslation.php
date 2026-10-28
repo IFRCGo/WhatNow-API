@@ -26,13 +26,13 @@ class WhatNowEntityTranslation extends Model
 	public $timestamps = false;
 
 	/**
-	 * The attributes that should be mutated to dates.
+	 * The attributes that should be cast to native types.
 	 *
 	 * @var array
 	 */
-	protected $dates = [
-		'created_at',
-		'published_at'
+	protected $casts = [
+		'created_at' => 'datetime',
+		'published_at' => 'datetime',
 	];
 
 	/**
@@ -126,7 +126,7 @@ class WhatNowEntityTranslation extends Model
 	 * @param \DateTimeInterface|null $dateTime
 	 * @return WhatNowEntityTranslation
 	 */
-	public function publish(\DateTimeInterface $dateTime = null)
+	public function publish(?\DateTimeInterface $dateTime = null)
 	{
 		if(is_null($dateTime)){
 			$dateTime = new Carbon();

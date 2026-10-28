@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Middleware;
+
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
@@ -103,7 +105,6 @@ class ApiAuthMiddlewareTest extends TestCase
 
         $request->headers->set('x-api-key', '1234567890');
 
-        // Pass it to the middleware
         $middleware = new \App\Http\Middleware\BasicAuthMiddleware();
 
         try {

@@ -136,7 +136,7 @@ class GdpcAlertFeed implements RssFeedInterface, JsonFeedInterface
 	 * @param string $severity
 	 * @return $this
 	 */
-	public function setSeverityFilter(string $severity = null)
+	public function setSeverityFilter(?string $severity = null)
 	{
 		if (!is_null($severity)) {
 			$this->filterSeverity = $severity;
