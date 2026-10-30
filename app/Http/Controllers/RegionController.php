@@ -104,7 +104,7 @@ class RegionController extends Controller
             ], 500);
         }
 
-        $slug = empty($request->input('slug')) ? str_slug($request->input('title')) : $request->input('slug');
+        $slug = empty($request->input('slug')) ? \Illuminate\Support\Str::slug($request->input('title')) : $request->input('slug');
         $existing = $org->subnationals()->where('slug', '=', $request->input('slug'))->count();
 
         if ($existing > 0) {
@@ -189,7 +189,7 @@ class RegionController extends Controller
             'translations.*.description' => 'string',
         ]);
 
-        $slug = ! empty($request->input('slug')) ? str_slug($request->input('slug')) : $region->slug;
+        $slug = ! empty($request->input('slug')) ? \Illuminate\Support\Str::slug($request->input('slug')) : $region->slug;
 
         $region->update([
             'title' => $request->input('title'),
@@ -409,7 +409,7 @@ class RegionController extends Controller
             return response()->json([ 'error_message' => 'No translation found', 'errors' => []], 404);
         }
 
-        $translation->destroy();
+        $translation->delete();
 
         return response()->json([ 'message' => 'Region deleted'], 202);
     }

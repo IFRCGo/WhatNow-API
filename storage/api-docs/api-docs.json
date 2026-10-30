@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "https://api.whatnow.jazusoft.com/v2",
+            "url": "/v2",
             "description": "API Base URL"
         }
     ],
@@ -261,6 +261,74 @@
                 "security": []
             }
         },
+        "/apps/{tenant_user_id}/activate": {
+            "patch": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Activate all applications by tenant_user_id",
+                "operationId": "activateApplicationsByTenantUserId",
+                "parameters": [
+                    {
+                        "name": "tenant_user_id",
+                        "in": "path",
+                        "description": "Tenant user ID used to activate all linked applications",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "deprecated": true,
+                "security": []
+            }
+        },
+        "/apps/{tenant_user_id}/deactivate": {
+            "patch": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Deactivate all applications by tenant_user_id",
+                "operationId": "deactivateApplicationsByTenantUserId",
+                "parameters": [
+                    {
+                        "name": "tenant_user_id",
+                        "in": "path",
+                        "description": "Tenant user ID used to deactivate all linked applications",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "deprecated": true,
+                "security": []
+            }
+        },
         "/upload": {
             "post": {
                 "tags": [
@@ -319,6 +387,17 @@
                 ],
                 "summary": "Get all organisations (public)",
                 "operationId": "04f86edf4b63c5b0f297e462633924b4",
+                "parameters": [
+                    {
+                        "name": "published",
+                        "in": "query",
+                        "description": "Filter organisations by whether they have translations with published=true/false",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Successful response",
@@ -414,9 +493,9 @@
                                 "properties": {
                                     "url": {
                                         "type": "string",
-                                        "maxLength": 255,
                                         "example": "https://example.com",
-                                        "nullable": true
+                                        "nullable": true,
+                                        "maxLength": 255
                                     },
                                     "translations": {
                                         "type": "object",
@@ -428,13 +507,13 @@
                                                 },
                                                 "name": {
                                                     "type": "string",
-                                                    "maxLength": 255,
-                                                    "example": "International Federation of Red Cross and Red Crescent Societies"
+                                                    "example": "International Federation of Red Cross and Red Crescent Societies",
+                                                    "maxLength": 255
                                                 },
                                                 "attributionMessage": {
                                                     "type": "string",
-                                                    "maxLength": 2048,
-                                                    "example": "attributionMessage example"
+                                                    "example": "attributionMessage example",
+                                                    "maxLength": 2048
                                                 },
                                                 "contributors": {
                                                     "type": "array",
@@ -726,7 +805,7 @@
                     "Regions"
                 ],
                 "summary": "Get all subnationals for a specific organisation by country code",
-                "operationId": "d2296fe4eb4c2d71309b7bd2370494bd",
+                "operationId": "a516fb4439969f2a30618b6abb764730",
                 "parameters": [
                     {
                         "name": "country_code",
@@ -765,7 +844,7 @@
                     "Regions"
                 ],
                 "summary": "Get subnationals for a specific organisation by country code and language code",
-                "operationId": "e80be67aaefaf2057958c0e54908fbc9",
+                "operationId": "f02355522e69a9c86d62eedc5f85c3a6",
                 "parameters": [
                     {
                         "name": "country_code",
@@ -1096,14 +1175,14 @@
                 "tags": [
                     "Whatnow"
                 ],
-                "summary": "Obtiene un recurso publicado por ID (public)",
-                "description": "Retorna los detalles de un recurso publicado basado en el ID proporcionado.",
+                "summary": "Get a published resource by ID (public)",
+                "description": "Return the details of a published resource based on the provided ID.",
                 "operationId": "getPublishedById",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "ID del recurso publicado",
+                        "description": "Published resource ID",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1797,6 +1876,16 @@
             }
         }
     },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "description": "Enter your API key in the header",
+                "name": "x-api-key",
+                "in": "header"
+            }
+        }
+    },
     "tags": [
         {
             "name": "Organisation",
@@ -1819,18 +1908,9 @@
             "description": "Applications"
         }
     ],
-    "components": {
-        "securitySchemes": {
-            "ApiKeyAuth": {
-                "type": "apiKey",
-                "in": "header",
-                "name": "x-api-key"
-            }
-        }
-    },
     "security": [
         {
-            "BasicAuth": []
+            "ApiKeyAuth": []
         }
     ]
 }

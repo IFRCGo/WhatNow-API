@@ -1,94 +1,94 @@
 
 # WhatNow
 
-WhatNow es una aplicación web construida con Laravel 5.8 y Vue.js, diseñada para proporcionar una guía de preparación para desastres. Este documento te guiará a través de los pasos para instalar y configurar el proyecto en tu entorno de desarrollo.
+WhatNow is a web application built with Laravel 13 and Vue.js that provides disaster preparedness guidance. This document explains how to install and configure the project in your development environment.
 
-## Prerrequisitos
+## Prerequisites
 
-Asegúrate de tener las siguientes herramientas instaladas en tu sistema:
+Make sure the following tools are installed on your system:
 
-- **PHP (versión 7.4):**
+- **PHP (version 8.4.1 or later; Docker and CI use PHP 8.4):**
   ```bash
   php -v
   ```
-- **Composer (administrador de dependencias para PHP):**
+- **Composer (PHP dependency manager):**
   ```bash
   composer --version
   ```
-- **Node.js (versión recomendada 12 o superior):**
+- **Node.js (recommended version 12 or later):**
   ```bash
   node -v
   ```
-- **npm (administrador de paquetes de Node.js):**
+- **npm (Node.js package manager):**
   ```bash
   npm -v
   ```
-- **MySQL (versión 5.7 o superior):**
+- **MySQL (version 5.7 or later):**
   ```bash
   mysql --version
   ```
 
-## Instalación del Proyecto
+## Project Installation
 
-### Clona el Repositorio
+### Clone the Repository
 
 ```bash
-git clone https://github.com/YourUsername/nombre.git
-cd nombre
+git clone https://github.com/YourUsername/repository.git
+cd repository
 ```
 
-### Instala las Dependencias de PHP
+### Install PHP Dependencies
 
 ```bash
 composer install
 ```
 
-### Instala las Dependencias de JavaScript
+### Install JavaScript Dependencies
 
 ```bash
 npm install
 ```
 
-### Configuración del Entorno
+### Environment Configuration
 
-1. Copia el archivo de ejemplo `.env` y configúralo como tu archivo de entorno:
+1. Copy the example environment file to `.env`:
    ```bash
    cp .env.example .env
    ```
 
-2. Genera una clave de aplicación para Laravel:
+2. Generate a Laravel application key:
    ```bash
    php artisan key:generate
    ```
 
-### Configuración de la Base de Datos
+### Database Configuration
 
-1. Crea una base de datos MySQL, por ejemplo `redcross-local` y `redcross_log`.
+1. Create the MySQL databases, for example `redcross-local` and `redcross_log`.
 
-2. Abre el archivo `.env` y actualiza tus credenciales de base de datos según el entorno:
+2. Open `.env` and update the database credentials for your environment.
 
-3. Ejecuta las migraciones de base de datos:
+3. Run the database migrations:
    ```bash
    php artisan migrate
    ```
 
-4. Opcional: Para poblar la base de datos con datos de muestra iniciales, puedes ejecutar el siguiente comando:
+4. Optional: Run the following command to populate the database with initial sample data:
    ```bash
    php artisan db:seed
    ```
 
-### Iniciar el Servidor de Desarrollo
+### Start the Development Server
 
-Ejecuta el siguiente comando para iniciar el servidor de desarrollo de Laravel:
+Run the following command to start the Laravel development server:
 ```bash
 php artisan serve --port=8001
 ```
 
-## Configuración Adicional
+## Additional Configuration
 
-1. Si en la carpeta `storage` falta la subcarpeta `framework` o las carpetas `cache` y `sessions` dentro de ella, créalas para asegurar que Laravel funcione correctamente.
+1. If the `storage/framework` directory or its `cache` and `sessions` subdirectories are missing, create them so Laravel can run correctly.
 
-2. Dirígete al archivo `.env` y ajusta las siguientes configuraciones para conectar correctamente la API y el backoffice:
+2. Update the following settings in `.env` to connect the API and the backoffice:
 
    ```dotenv 
    RCN_API_VERSION=v1
@@ -97,11 +97,26 @@ php artisan serve --port=8001
    RCN_API_PASSWORD=password
    ```
 
-3. En el backoffice, ejecuta los siguientes comandos para compilar y servir la aplicación:
+3. In the backoffice, run the following commands to build and serve the application:
 
    ```bash
    npm run hot
    php artisan serve
    ```
 
-Ahora, la API y el backoffice estarán conectados y listos para usar.
+The API and the backoffice are now connected and ready to use.
+
+## Swagger URL for Docker Builds
+
+Set the GitHub Actions repository variables or secrets `SWAGGER_URL_DEV`, `SWAGGER_URL_QA`,
+and `SWAGGER_URL_PROD` to the public API origin for each deployment. Use the origin
+without `/v2`; the Swagger configuration appends that path. The workflows pass
+this value through the required `SWAGGER_URL` Docker build argument instead of
+copying a deployment-specific `.env` file.
+
+For local builds, set `SWAGGER_URL` in your shell and pass it explicitly:
+
+```bash
+: "${SWAGGER_URL:?Set the public API origin before building}"
+docker build --build-arg "SWAGGER_URL=$SWAGGER_URL" -f docker/Dockerfile -t whatnow-api .
+```

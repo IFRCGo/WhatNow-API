@@ -4,11 +4,14 @@ namespace App\Models;
 
 use App\Classes\Cap\CapEntityInterface;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 
 class Alert extends Model implements CapEntityInterface
 {
+    use HasFactory;
+
     /**
      * @var
      */
@@ -21,20 +24,12 @@ class Alert extends Model implements CapEntityInterface
      */
     protected $casts = [
         'area_polygon' => 'array',
-    ];
-
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [
-        'sent_date',
-        'onset_date',
-        'effective_date',
-        'expiry_date',
-        'created_at',
-        'updated_at',
+        'sent_date' => 'datetime',
+        'onset_date' => 'datetime',
+        'effective_date' => 'datetime',
+        'expiry_date' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     /**

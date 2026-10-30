@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class WhatNowEntity extends Model
 {
+	use HasFactory;
 	/**
 	 * The database table used by the model.
 	 *
@@ -23,13 +25,13 @@ class WhatNowEntity extends Model
 	protected $errors;
 
 	/**
-	 * The attributes that should be mutated to dates.
+	 * The attributes that should be cast to native types.
 	 *
 	 * @var array
 	 */
-	protected $dates = [
-		'created_at',
-		'updated_at'
+	protected $casts = [
+		'created_at' => 'datetime',
+		'updated_at' => 'datetime',
 	];
 
 	/**

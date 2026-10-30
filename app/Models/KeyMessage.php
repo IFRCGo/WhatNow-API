@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 
 class KeyMessage extends Model
 {
+    use HasFactory;
     /**
      * The database table used by the model.
      *
@@ -64,7 +66,7 @@ class KeyMessage extends Model
 
     public function entityStage()
     {
-        return $this->belongsTo(WhatnowEntityStage::class, 'entities_stage_id');
+        return $this->belongsTo(WhatNowEntityStage::class, 'entities_stage_id');
     }
 
     public function supportingMessages()

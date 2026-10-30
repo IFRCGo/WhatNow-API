@@ -89,10 +89,10 @@ class AlertRepository implements AlertRepositoryInterface
 	public function findAlerts(
 		$country = null,
 		array $eventTypes = [],
-		string $severity = null,
+		?string $severity = null,
 		$activeOnly = false,
-		DateTimeInterface $endDate = null,
-		DateTimeInterface $startDate = null
+		?DateTimeInterface $endDate = null,
+		?DateTimeInterface $startDate = null
 	) {
 		$query = $this->alertModel->query();
 
